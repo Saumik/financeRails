@@ -1,0 +1,27 @@
+<%= semantic_form_for(@line_item, :remote => true) do |f|%>
+        <%= f.radio_button :type, 0 %> Income, <%=f.radio_button :type, 1 %> Expense;
+    On  <%= f.text_field :event_date %>
+    To: <%= f.text_field :payee_name %>
+        <%= f.text_field :amount %>NIS For:
+        <%= f.text_field :category_name %><br/>
+        <%= check_box_tag :spanned, 1, @line_item.is_spanned %> Span payments for: <%= text_field_tag :spanned_amount, @line_item.spanned_months %> Months
+        <%= f.submit %>
+<% end %>
+
+<%=javascript_tag '$("#line_item_payee_name").autocomplete("' + url_for(:action => 'autocomplete_payee', :only_path => false) + '", {cacheLength: 0, delay: 0});'%>
+<%=javascript_tag '$("#line_item_category_name").autocomplete("' + url_for(:action => 'autocomplete_category', :only_path => false) + '", {cacheLength: 0, delay: 0});'%>
+<script type="text/javascript" language="JavaScript">
+    $(document).ready(function() {
+        $('#line_item_event_date').focus()
+        $('#line_item_event_date').select()
+
+        $('#line_item_payee_name').keydown(function () {
+
+            $.get('<%=url_for(:controller => :line_items, :action => :get_category_for_payee) %>', {payee: $(this).val()}, function(result) {
+                $('#line_item_category_name').val(result)
+            })
+        })
+    });
+
+
+</script>

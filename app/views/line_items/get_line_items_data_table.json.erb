@@ -1,0 +1,6 @@
+{
+    "sEcho": "<%=@dt_params[:echo] %>",
+    "iTotalRecords": "<%= @dt_params[:total_records]%>",
+    "iTotalDisplayRecords": "<%= @dt_params[:total_display_records] %>",
+    "aaData": [<%= @line_items_json.html_safe %>]
+}

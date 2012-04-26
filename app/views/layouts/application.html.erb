@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FinanceRails2</title>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<%= link_to 'Home', :controller => :line_items, :action => :index %> |
+<%= link_to 'Monthly Report', :controller => :report, :action => :month_expenses %> |
+<%= link_to 'Import', :controller => :external, :action => :import %> |
+<%= link_to 'Export JSON', :controller => :external, :action => :export_json %><br>
+<hr>
+<%= yield %>
+<%= yield :javascript %>
+</body>
+</html>

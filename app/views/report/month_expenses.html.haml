@@ -1,0 +1,42 @@
+Select Month:
+= link_to '<< Previous', :date => @selected_month.prev_month.to_i
+= form_tag '', :style => 'display:inline' do
+  = date_select('report', 'month', :discard_day => true, :default => @selected_month)
+  = submit_tag 'Refresh'
+= link_to 'Next >>', :date => @selected_month.next_month.to_i
+
+%h1 Income
+
+%table.display
+  %thead
+    %tr
+      %th.ui-state-default{:width => 200} Category
+      %th.ui-state-default Amount
+  %tbody
+    - @income.each do |cat, amount|
+      %tr
+        %td= cat
+        %td= format_number amount
+.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix
+  .dataTables_info{:style => 'padding: 5px'}
+    %b
+      Total:
+      = format_number(@total_income)
+
+%h1 Expenses
+  
+%table.display
+  %thead
+    %tr
+      %th.ui-state-default{:width => 200} Category
+      %th.ui-state-default Amount
+  %tbody
+    - @expenses.each do |cat, amount|
+      %tr{:class => cycle(:even, :odd)}
+        %td= cat
+        %td= format_number amount
+.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix
+  .dataTables_info{:style => 'padding: 5px'}
+    %b
+      Total:
+      = format_number(@total_expenses)

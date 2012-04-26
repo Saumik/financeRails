@@ -1,0 +1,31 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      var view = new PayeeView();
+    });
+%table.table.table-bordered.table-striped
+  %thead
+    %tr
+      %th Payee name
+      %th Processing Rules
+  - @payees.each do |item|
+    %tr
+      %td= item.payee_name
+      %td
+        = item.processing_rules.join(',')
+        %a.add_processing_rule{'data-name' => item.payee_name} (+)
+#add_processing_rule_overlay.modal.hide
+  .modal-body.well
+    = semantic_form_for :processing_rule, :url => {:action => :add_processing_rule}, :remote => true do |f|
+      = f.input :expression
+      = f.input :replacement
+      %a.btn.same Same
+  .modal-footer
+    %a.btn(data-dismiss='modal') Cancel
+    %a.btn.btn-primary.submit Submit
+
+        
+
+
+  
+      

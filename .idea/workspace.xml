@@ -4,8 +4,6 @@
     <list default="true" id="1918cb49-4b00-4659-b140-bf968736e27c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Gemfile" afterPath="$PROJECT_DIR$/Gemfile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/mongoid.yml" afterPath="$PROJECT_DIR$/config/mongoid.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/tasks/fetch.rake" afterPath="$PROJECT_DIR$/lib/tasks/fetch.rake" />
     </list>
     <ignored path="financeRails2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,10 +34,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Gemfile" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Gemfile" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Gemfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="51" column="20" selection-start="943" selection-end="943" vertical-scroll-proportion="0.0">
+            <state line="57" column="3" selection-start="1100" selection-end="1100" vertical-scroll-proportion="0.7815534">
               <folding />
             </state>
           </provider>
@@ -54,10 +52,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fetch.rake" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="fetch.rake" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/tasks/fetch.rake">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="93" selection-start="661" selection-end="661" vertical-scroll-proportion="0.61893207">
+            <state line="17" column="93" selection-start="661" selection-end="661" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -142,10 +140,10 @@
         <option value="$PROJECT_DIR$/spec/controllers/accounts_controller_spec.rb" />
         <option value="$PROJECT_DIR$/app/models/account.rb" />
         <option value="$PROJECT_DIR$/app/controllers/accounts_controller.rb" />
-        <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/config/mongoid.yml" />
         <option value="$PROJECT_DIR$/config/environment.rb" />
         <option value="$PROJECT_DIR$/lib/tasks/fetch.rake" />
+        <option value="$PROJECT_DIR$/Gemfile" />
       </list>
     </option>
   </component>
@@ -1687,13 +1685,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Gemfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="20" selection-start="943" selection-end="943" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.rvm/gems/ruby-1.9.3-p125@mbdev/gems/haml-3.1.6/vendor/sass/vendor/fssm/lib/fssm/support.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -1738,7 +1729,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/tasks/fetch.rake">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="93" selection-start="661" selection-end="661" vertical-scroll-proportion="0.61893207">
+        <state line="17" column="93" selection-start="661" selection-end="661" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Gemfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="3" selection-start="1100" selection-end="1100" vertical-scroll-proportion="0.7815534">
           <folding />
         </state>
       </provider>

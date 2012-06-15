@@ -1,9 +1,13 @@
-module SpannedLineItem
-  belongs_to :spanned, :class_name => 'SpannedLineItem'
-  field :virtual, :type => Boolean
-  field :master, :type => Boolean
+module SpannedLineItemSupport
+  def self.included(base)
+    base.class_eval do
+      belongs_to :spanned, :class_name => 'SpannedLineItem'
+      field :virtual, :type => Boolean
+      field :master, :type => Boolean
 
-  scope :regular, where(:master.ne => true)
+      scope :regular, where(:master.ne => true)
+    end
+  end
 
     # Spanning Support
 

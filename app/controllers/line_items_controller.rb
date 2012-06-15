@@ -16,6 +16,12 @@ class LineItemsController < ApplicationController
 
     LineItem.reset_balance
 
+    all_processing_rules = ProcessingRule.all
+    @changed_line_items.each do |line_item|
+      processing_rules = ProcessingRule.all_matching(all_processing_rules, line_item)
+      processing_rules.each { |rule| rule.perform(line_item) }
+    end
+
     @line_item = changed_line_item.clone_new
   end
 

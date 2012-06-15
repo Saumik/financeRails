@@ -1,0 +1,39 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      var view = new BudgetView();
+    });
+
+Budget items
+
+%a.open_create_budget_item Create budget item
+%ul#budgets
+  - @budget_items.each do |item|
+    %li
+      %span.name
+        = item.name
+      %span.limit
+        = item.limit
+
+#create_budget_item_modal.modal.hide
+  = semantic_form_for :budget_item, :url => {:action => :create}, :remote => true do |f|
+    .modal-body.well
+      %h2 Included Categories:
+      .btn-group.row-fluid
+        %a.offset1.btn.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+          Add Category
+          %span.caret
+        %ul.dropdown-menu
+          - @categories.each do |category|
+            %li{'data-name' =>  category}
+              %a.add_category
+                = category
+      .row-fluid
+        %ul.included_categories.span6
+      .row-fluid
+        = f.input :name, :input_html => {:class => 'span6'}
+        = f.input :limit, :input_html => {:class => 'span6'}
+      .expense-data.clear-fix
+    .modal-footer
+      %a.btn(data-dismiss='modal') Cancel
+      %button.btn.btn-primary.submit{:type => :submit} Submit

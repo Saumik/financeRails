@@ -7,11 +7,25 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<%= link_to 'Home', :controller => :line_items, :action => :index %> |
-<%= link_to 'Monthly Report', :controller => :report, :action => :month_expenses %> |
-<%= link_to 'Import', :controller => :external, :action => :import %> |
-<%= link_to 'Export JSON', :controller => :external, :action => :export_json %><br>
-<hr>
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="/">Smart Finance</a>
+      <ul class="nav">
+        <li><%= link_to 'Home', :controller => :line_items, :action => :index %></li>
+        <li><%= link_to 'Payees', :controller => :payee, :action => :index %></li>
+        <li><%= link_to 'Budget', :controller => :budgets, :action => :index %></li>
+        <li><%= link_to 'Monthly Report', :controller => :report, :action => :month_expenses %></li>
+        <li><%= link_to 'Import', :controller => :external, :action => :import %></li>
+        <li><%= link_to 'Export JSON', :controller => :external, :action => :export_json %></li>
+      </ul>
+      <% if user_signed_in? %>
+        <div class="logged-in-info">Welcome <%= current_user.email %> (<%= link_to "Logout", destroy_user_session_path, :method => :delete %>)</div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%== flash_notifications %>
 <%= yield %>
 <%= yield :javascript %>
 </body>

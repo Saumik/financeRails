@@ -1,0 +1,6 @@
+%ul
+  - @monthly_expenses.each do |monthly_expense|
+    %li
+      %b
+        = short_month monthly_expense[:date]
+      = monthly_expense[:expense]

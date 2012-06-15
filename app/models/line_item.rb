@@ -1,7 +1,9 @@
+require 'spanned_line_item_support'
+
 class LineItem
   include Mongoid::Document
   include Mongoid::Timestamps
-  include SpannedLineItem
+  include SpannedLineItemSupport
 
   TYPE = %w[income expense]
   INCOME = 0
@@ -41,6 +43,10 @@ class LineItem
     type == EXPENSE ? -1 : 1
   end
 
+  def signed_amount
+    amount * multiplier
+  end
+
   def event_date_string(str)
     event_date = Date.parse(str)
   end
@@ -75,9 +81,29 @@ class LineItem
     LineItem.only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
   end
 
-  def has_processing_rule_of_type(type)
+  def self.category_names
+    LineItem.only(:category_name).collect(&:category_name).delete_if(&:nil?).uniq.sort
+  end
+
+  def has_processing_rule_of_type(item_type, ignore_rule = nil)
     processing_rules.any? do |processing_rule|
-      processing_rule.type == type
+      processing_rule.item_type == item_type and (ignore_rule.nil? or processing_rule != ignore_rule)
     end
+  end
+
+  def self.rename_payee(old_name, new_name)
+    @line_items = LineItem.where(:payee_name => old_name)
+    @line_items.each do |item|
+      item.original_payee_name ||= old_name
+      item.payee_name = new_name
+      item.save
+    end
+  end
+
+  def self.expense_in_month(date, categories)
+    LineItem.where(
+        :event_date => {'$gte' => date.beginning_of_month.to_datetime,'$lt' => date.end_of_month.to_datetime},
+        :category_name.in => categories
+                ).default_sort.to_a.sum(&:signed_amount)
   end
 end

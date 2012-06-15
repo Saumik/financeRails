@@ -1,4 +1,10 @@
 FinanceRails2::Application.routes.draw do
+  resources :accounts
+
+  devise_for :users
+
+  get "budget/index"
+
   get "report/month_expenses"
   post "report/month_expenses"
 
@@ -6,6 +12,8 @@ FinanceRails2::Application.routes.draw do
   get "external/export_json"
   post "external/process_confirm_import"
   post 'external/do_import'
+
+  post 'users/login' => 'users#login'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -76,7 +84,16 @@ FinanceRails2::Application.routes.draw do
   resources :payee do
     collection do
       post :add_processing_rule
+      get :run_processing_rule
+      post :rename_payee
     end
   end
 
+  resources :budgets do
+    collection do
+      get :expense_summary
+    end
+  end
+
+  root :to => redirect("/line_items")
 end

@@ -11,15 +11,22 @@ class PayeeController < ApplicationController
     end
   end
 
+  def run_processing_rule
+    @processing_rule = ProcessingRule.find(params[:processing_rule_id])
+    @processing_rule.perform_all
+
+    render :nothing => true
+  end
+
   def add_processing_rule
-    @processing_rule = ProcessingRule.create(params[:processing_rule].merge(:type => 'process', :item_type => 'payee'))
+    @processing_rule = ProcessingRule.create(params[:processing_rule].merge(:type => 'process', :item_type => params[:item_type]))
+    @processing_rule.perform_all
 
-    LineItem.all.each do |line_item|
-      if !line_item.has_processing_rule_of_type(@processing_rule.type) and @processing_rule.matches?(line_item)
-        @processing_rule.perform(@line_item)
-      end
-    end
+    render :nothing => true
+  end
 
+  def rename_payee
+    LineItem.rename_payee(params[:payee][:name], params[:payee][:replacement])
     render :nothing => true
   end
 end

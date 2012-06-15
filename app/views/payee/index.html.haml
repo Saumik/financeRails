@@ -10,22 +10,51 @@
       %th Processing Rules
   - @payees.each do |item|
     %tr
-      %td= item.payee_name
       %td
-        = item.processing_rules.join(',')
+        = item.payee_name
+        (
+        %a.open_rename_payee{'data-payee-name' => item.payee_name} Rename
+        )
+      %td
+        - with_comma_separated(item.processing_rules) do |processing_rule|
+          = processing_rule.to_s
+          (
+          = link_to('Run', {:action => 'run_processing_rule', :processing_rule_id => processing_rule.id}, :remote => true)
+          )
         %a.add_processing_rule{'data-name' => item.payee_name} (+)
 #add_processing_rule_overlay.modal.hide
-  .modal-body.well
-    = semantic_form_for :processing_rule, :url => {:action => :add_processing_rule}, :remote => true do |f|
-      = f.input :expression
-      = f.input :replacement
-      %a.btn.same Same
-  .modal-footer
-    %a.btn(data-dismiss='modal') Cancel
-    %a.btn.btn-primary.submit Submit
-
-        
-
+  .tabbable
+    %ul.nav.nav-tabs
+      %li.active
+        %a{:href => '#payee-tab', 'data-toggle' => 'tab'} Payee
+      %li
+        %a{:href => '#category-tab', 'data-toggle' => 'tab'} Category
+    .tab-content
+      #payee-tab.tab-pane.active
+        = semantic_form_for :processing_rule, :url => {:action => :add_processing_rule, :item_type => :payee}, :namespace => 'pr_payee', :remote => true do |f|
+          .modal-body.well
+            = f.input :expression
+            = f.input :replacement
+            %a.btn.same Same
+          .modal-footer
+            %a.btn(data-dismiss='modal') Cancel
+            %button.btn.btn-primary.submit{:type => :submit} Submit
+      #category-tab.tab-pane
+        = semantic_form_for :processing_rule, :url => {:action => :add_processing_rule, :item_type => :category}, :namespace => 'pr_category', :remote => true do |f|
+          .modal-body.well
+            = f.input :expression, :input_html => {:class => 'input-xlarge expression'}
+            = f.input :replacement, :input_html => {:class => 'input-xlarge replacement'}
+          .modal-footer
+            %a.btn(data-dismiss='modal') Cancel
+            %button.btn.btn-primary.submit{:type => :submit} Submit
+#rename_payee.modal.hide
+  = semantic_form_for :payee, :url => {:action => :rename_payee}, :remote => true do |f|
+    .modal-body.well
+      = f.input :name, :input_html => {:class => 'input-xlarge'}
+      = f.input :replacement, :input_html => {:class => 'input-xlarge'}
+    .modal-footer
+      %a.btn(data-dismiss='modal') Cancel
+      %button.btn.btn-primary.submit{:type => :submit} Submit
 
   
       

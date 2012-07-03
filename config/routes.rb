@@ -95,5 +95,11 @@ FinanceRails2::Application.routes.draw do
     end
   end
 
+  resources :groceries, :as => :grocery_line_items do
+    collection do
+      get :report
+    end
+  end
+
   root :to => redirect("/line_items")
 end

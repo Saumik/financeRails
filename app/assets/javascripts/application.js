@@ -10,6 +10,7 @@
 //= require jquery.dataTables.pagination_bootstrap
 //= require jquery-ui
 //= require jquery_ujs
+//= require select2
 //= require underscore-1.3.1
 //= require backbone-0.9.2
 //= require handlebars.runtime

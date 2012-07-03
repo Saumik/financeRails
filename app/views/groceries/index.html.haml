@@ -1,0 +1,29 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      var store_names = #{GroceryLineItem.all_store_names}
+      var item_names = #{GroceryLineItem.all_item_names}
+      var last_prices_for_item = #{GroceryLineItem.all_last_prices.to_json}
+      var view = new financeRails.views.GroceriesView({stores: store_names, item_names: item_names, last_prices_for_item: last_prices_for_item});
+    });
+= render :partial => 'groceries/nav'
+// {new_item}
+.create_area
+  = form_for @new_item, :remote => true, :html => {:class => 'new_item'}  do |f|
+    = render :partial => 'form', :locals => {:f => f}
+%table.main_table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th Date
+      %th Name
+
+      %th Amount
+      %th
+  %tbody
+    = render :collection => @items, :partial => 'item'
+//{edit_item}
+.edit_form_area.modal.hide
+  .modal-body.well
+  .modal-footer
+    %a.btn(data-dismiss='modal') Cancel
+    %button.btn.btn-primary.submit{:type => :submit} Submit

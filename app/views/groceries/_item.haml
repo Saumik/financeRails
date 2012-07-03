@@ -1,0 +1,10 @@
+%tr{'data-item-id' => item.id.to_s}
+  %td= item.store
+  %td= item.event_date
+  %td= item.name
+  %td=amount_label item
+  %td
+    = link_to 'Edit', edit_item_path(item), :remote => true, :class => 'btn edit'
+    &nbsp;
+    &nbsp;
+    = link_to 'Delete', item_path(item), :remote => true, :method => 'delete', :confirm => 'Are you sure delete to delete ' + item.try(:name).to_s + ' transaction?', :class => 'btn delete'

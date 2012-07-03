@@ -16,4 +16,12 @@ module ApplicationHelper
     flash.each {|type, message| res << content_tag(:div, message, :class => type) }
     res
   end
+
+  def month_name(m)
+    Date::MONTHNAMES[m]
+  end
+
+  def currency(amount)
+    number_to_currency(amount)
+  end
 end

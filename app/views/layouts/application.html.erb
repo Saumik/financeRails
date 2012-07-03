@@ -16,6 +16,7 @@
         <li><%= link_to 'Payees', :controller => :payee, :action => :index %></li>
         <li><%= link_to 'Budget', :controller => :budgets, :action => :index %></li>
         <li><%= link_to 'Monthly Report', :controller => :report, :action => :month_expenses %></li>
+        <li><%= link_to 'Groceries', :controller => :groceries, :action => :index %></li>
         <li><%= link_to 'Import', :controller => :external, :action => :import %></li>
         <li><%= link_to 'Export JSON', :controller => :external, :action => :export_json %></li>
       </ul>
@@ -26,7 +27,9 @@
   </div>
 </div>
 <%== flash_notifications %>
-<%= yield %>
+<div class="<%=controller_name%>_section <%=action_name%>">
+  <%= yield %>
+</div>
 <%= yield :javascript %>
 </body>
 </html>

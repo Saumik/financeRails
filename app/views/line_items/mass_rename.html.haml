@@ -4,14 +4,25 @@
       var payees = #{LineItem.payees}
       var categories = #{LineItem.categories}
       var last_data_for_payee = #{LineItem.all_last_data_for_payee.to_json}
-      var view = new financeRails.views.LineItemsView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
+      var view = new financeRails.views.line_items.MassRenameView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
     });
 
-#payees_list
-  %table.main_table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th.payee_name.st-width Original Payee Name
-        %th.payee_name.st-width Rename To
-        %th.actions             Actions
-    %tbody
+= form_tag url_for(:action => :mass_rename), :onkeypress => 'return event.keyCode != 13;' do
+  #payees_list
+    %table.main_table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th.payee_name_col.st-width Original Payee Name
+          %th.payee_name_col.st-width Rename To
+          %th.assign_category_col.st-width Assign Category
+      %tbody
+        - @payees.keys.sort.each_with_index do |payee_name, index|
+          %tr
+            %td.payee_name_col
+              = payee_name
+              = hidden_field_tag "mass_rename[#{index}][original_payee_name]", payee_name, :class => 'original_payee_name'
+            %td.payee_name_col
+              = text_field_tag "mass_rename[#{index}][payee_name]", capitalize_words(payee_name), :class => 'typeahead payee_name'
+            %td.assign_category_col
+              = text_field_tag "mass_rename[#{index}][category_name]", @payees[payee_name], :class => 'typeahead category_name'
+  = button_tag 'Submit Changes', class: 'btn-primary'

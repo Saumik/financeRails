@@ -20,7 +20,6 @@ gem 'therubyracer'
 group :assets do
   gem 'sass-rails'
   gem 'handlebars_assets'
-  gem 'bootstrap-sass', '~> 2.0.2'
   gem 'coffee-rails'
   gem 'uglifier'
 end

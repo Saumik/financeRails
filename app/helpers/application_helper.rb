@@ -18,4 +18,8 @@ module ApplicationHelper
   def currency(amount)
     number_to_currency(amount)
   end
+
+  def capitalize_words(str)
+   str.split(' ').map {|w| w.capitalize }.join(' ')
+  end
 end

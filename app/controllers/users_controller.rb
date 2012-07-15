@@ -7,7 +7,7 @@ class UsersController < ApplicationController
         redirect_to '/'
       end
     else
-      render :controller => :sessions, :action => :new
+      redirect_to :controller => :sessions, :action => :new
     end
   end
 end

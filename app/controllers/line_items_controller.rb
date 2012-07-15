@@ -1,7 +1,17 @@
 class LineItemsController < ApplicationController
-  def index
-    @account = current_user.accounts.find(params[:account_id]) if params[:account_id]
+  before_filter :prepare_account
 
+  def prepare_account
+    if params[:account_id]
+      session[:account_id] = params[:account_id]
+    end
+
+    if session[:account_id]
+      @account = current_user.accounts.find(session[:account_id])
+    end
+  end
+
+  def index
     unless @account.present?
       render 'common/select_account' and return
     end
@@ -101,6 +111,19 @@ class LineItemsController < ApplicationController
   end
 
   def mass_rename
-    @payees = LineItem.all_unrenamed_payees
+    perform_mass_rename if request.post?
+    @payees = @account.line_items.all_unrenamed_payees
+  end
+
+  private
+
+  def perform_mass_rename
+    category_processing_rules = ProcessingRule.get_category_name_rules
+    params[:mass_rename].each do |(index, mass_rename_item)|
+      unless mass_rename_item[:category_name].blank?
+        LineItem.mass_rename_and_assign_category(@account, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
+        ProcessingRule.create_rename_and_assign_rule_if_not_exists(category_processing_rules, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
+      end
+    end
   end
 end

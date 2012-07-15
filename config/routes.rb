@@ -79,6 +79,7 @@ FinanceRails2::Application.routes.draw do
       get :get_line_items_data_table
       get :get_category_for_payee
       get :mass_rename
+      post :mass_rename
     end
   end
 

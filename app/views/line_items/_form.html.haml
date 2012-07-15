@@ -5,10 +5,10 @@ Expense;
 On
 = f.text_field :event_date, class: 'event_date'
 To:
-= f.text_field :payee_name, class: 'payee_name'
+= f.text_field :payee_name, class: 'typeahead payee_name'
 = f.text_field :amount, class: 'amount'
 NIS For:
-= f.text_field :category_name, class: 'category_name'
+= f.text_field :category_name, class: 'typeahead category_name'
 %br
 = check_box_tag :spanned, 1, f.object.is_spanned
 Span payments for:

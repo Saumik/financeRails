@@ -85,6 +85,10 @@ class LineItem
     LineItem.only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
   end
 
+  def self.valid_payees
+    LineItem.only(:payee_name).where(:original_payee_name.ne => nil).collect(&:payee_name).delete_if(&:nil?).uniq.sort
+  end
+
   def self.categories
     LineItem.only(:category_name).collect(&:category_name).delete_if(&:nil?).uniq.sort
   end
@@ -111,6 +115,16 @@ class LineItem
     end
   end
 
+  def self.mass_rename_and_assign_category(account, original_payee_name, payee_name, category_name)
+    @line_items = account.line_items.where(:payee_name => original_payee_name, :original_payee_name => nil)
+    @line_items.each do |item|
+      item.original_payee_name ||= payee_name
+      item.payee_name = payee_name
+      item.category_name = category_name
+      item.save
+    end
+  end
+
   def self.expense_in_month(date, categories)
     LineItem.where(
         :event_date => {'$gte' => date.beginning_of_month.to_datetime,'$lt' => date.end_of_month.to_datetime},
@@ -119,7 +133,10 @@ class LineItem
   end
 
   def self.all_unrenamed_payees
-    LineItem.where(:original_payee_name => nil).collect(&:payee_name).uniq.sort
+    LineItem.where(:original_payee_name => nil).inject({}) do |result, line_item|
+      result[line_item.payee_name] ||= line_item.category_name if line_item.payee_name.present?
+      result
+    end
   end
 
   def to_json_as_imported

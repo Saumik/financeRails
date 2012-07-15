@@ -1,0 +1,6 @@
+= form_tag({:action => 'process_confirm_import'}, :multipart => true) do
+  %span Account:
+  = collection_select(:account, :id, current_user.accounts, :id, :name)
+  = label_tag :upload, 'Upload File:'
+  = file_field_tag :upload
+  = submit_tag "Upload"

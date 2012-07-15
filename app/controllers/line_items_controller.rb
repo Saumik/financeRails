@@ -1,7 +1,13 @@
 class LineItemsController < ApplicationController
   def index
-    @line_item = LineItem.new
-    #@line_items = LineItem.list_all
+    @account = current_user.accounts.find(params[:account_id]) if params[:account_id]
+
+    unless @account.present?
+      render 'common/select_account' and return
+    end
+
+    @new_item = @account.line_items.build
+    @items = @account.line_items.default_sort
   end
 
   def create
@@ -18,42 +24,39 @@ class LineItemsController < ApplicationController
 
     all_processing_rules = ProcessingRule.all
     @changed_line_items.each do |line_item|
-      processing_rules = ProcessingRule.all_matching(all_processing_rules, line_item)
-      processing_rules.each { |rule| rule.perform(line_item) }
+      ProcessingRule.perform_all_matching(all_processing_rules, line_item)
     end
 
     @line_item = changed_line_item.clone_new
   end
 
   def edit
-    @line_item = LineItem.find(params[:id])
+    @item = LineItem.find(params[:id])
 
-    if(@line_item.spanned)
-      @line_item = LineItem.find(@line_item.spanned.master_line_item_id)
-      puts @line_item.spanned.master_line_item_id
+    if(@item.spanned)
+      @item = LineItem.find(@line_item.spanned.master_line_item_id)
     end
+
+    render :layout => false
   end
 
   def update
-    @changed_line_item = LineItem.find(params[:id])
-    @changed_line_item.update_attributes(params[:line_item])
+    @item = LineItem.find(params[:id])
+    @item.update_attributes(params[:line_item])
     LineItem.reset_balance
 
-    @line_item = LineItem.new
-    @line_item.event_date = @changed_line_item.event_date
+    render :json => {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}
   end
 
   def destroy
-    @changed_line_item = LineItem.find(params[:id])
-    @changed_line_item.delete
+    @item = LineItem.find(params[:id])
+    @item.delete
     LineItem.reset_balance
-
-    @line_item = LineItem.new
-    @line_item.event_date = @changed_line_item.event_date
+    render :json => {:remove_id => params[:id]}
   end
 
   def show
-    
+
   end
 
   def autocomplete_payee
@@ -95,5 +98,9 @@ class LineItemsController < ApplicationController
     raise ActionController::RoutingError.new('Not Found') if line_item.nil?
 
     render :text => line_item.category_name
+  end
+
+  def mass_rename
+    @payees = LineItem.all_unrenamed_payees
   end
 end

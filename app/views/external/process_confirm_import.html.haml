@@ -1,0 +1,31 @@
+= form_tag(:action => :do_import) do
+  = hidden_field_tag :account_id, @account.id
+  = submit_tag
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Type
+      %th Date
+      %th Amount
+      %th Payee Name
+      %th Category Name
+      %th Balance
+      %th Comment
+  - @imported_data.each do |line_item|
+    %tbody
+      %tr
+        %td= line_item.type_name
+        %td= line_item[:event_date]
+        %td= line_item[:amount]
+        %td= line_item[:payee_name]
+        %td= line_item[:category_name]
+        %td= line_item[:balance]
+        %td
+          = line_item[:comment]
+          - if @account.imported_line? (line_item.to_json_as_imported)
+            %span.label.label-warning Already Imported!
+
+= form_tag(:action => :do_import) do
+  = hidden_field_tag :account_id, @account.id
+  = submit_tag

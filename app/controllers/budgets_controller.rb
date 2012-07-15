@@ -6,7 +6,7 @@ class BudgetsController < ApplicationController
 
   def index
     @budget_items = BudgetItem.all
-    @categories = LineItem.category_names
+    @categories = LineItem.categories
   end
 
   def expense_summary

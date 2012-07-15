@@ -11,12 +11,6 @@ module ApplicationHelper
     results.join(',')
   end
 
-  def flash_notifications
-    res = ''
-    flash.each {|type, message| res << content_tag(:div, message, :class => type) }
-    res
-  end
-
   def month_name(m)
     Date::MONTHNAMES[m]
   end

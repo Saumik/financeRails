@@ -78,6 +78,7 @@ FinanceRails2::Application.routes.draw do
       get :autocomplete_category
       get :get_line_items_data_table
       get :get_category_for_payee
+      get :mass_rename
     end
   end
 

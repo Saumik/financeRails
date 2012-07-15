@@ -26,9 +26,31 @@
     </div>
   </div>
 </div>
-<%== flash_notifications %>
 <div class="<%=controller_name%>_section <%=action_name%>">
-  <%= yield %>
+  <%= render :partial => 'nav' rescue nil %>
+
+  <% if current_user %>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="left-bar span2">
+          <%= render 'common/left_bar' %>
+        </div>
+        <div class="main_area span10">
+          <% if flash[:error].present? %>
+            <div class="alert alert-error">
+              <button class="close" data-dismiss="alert">×</button>
+              <strong>Error:</strong> <%= flash[:error] %>
+            </div>
+          <% end %>
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="full-container">
+      <%= yield %>
+    </div>
+  <% end %>
 </div>
 <%= yield :javascript %>
 </body>

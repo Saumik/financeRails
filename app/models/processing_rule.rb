@@ -57,6 +57,10 @@ class ProcessingRule
     processing_rules.find_all { |rule| rule.matches?(line_item) }
   end
 
+  def self.perform_all_matching(processing_rules, line_item)
+      processing_rules.find_all { |rule| rule.matches?(line_item) }.each { |rule| rule.perform(line_item) }
+    end
+
   def to_s
     item_type.capitalize + ' Process: ' + ' > ' + replacement
   end

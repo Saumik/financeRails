@@ -1,0 +1,20 @@
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th.main=@presenter.first_column_title
+      - @presenter.columns.each do |column|
+        %th.secondary
+          = @presenter.header_for(column)
+  - @presenter.store_names.each do |store|
+    %tr.store-row
+      %td.store_name
+        = store
+    - @presenter.items_for_store(store).each do |item|
+      %tr.item-row
+        %td
+          = item
+        - @presenter.months.each do |(month, year)|
+          %td
+            =currency @presenter.total_amount_of_store_item_in_month(store, item, month, year)
+
+

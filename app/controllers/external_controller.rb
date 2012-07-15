@@ -8,7 +8,8 @@ class ExternalController < ApplicationController
   end
 
   def process_confirm_import
-
+    @account = current_user.accounts.find(params[:account][:id])
+    redirect_to :import and return unless @account.present?
     data = params[:upload].read
 
     if params[:upload].original_filename.ends_with? '.qif'
@@ -20,7 +21,7 @@ class ExternalController < ApplicationController
     end
 
     cache_client = Dalli::Client.new('127.0.0.1:11211')
-    cache_client.set 'imported_1', @imported_data.collect(&:to_json)
+    cache_client.set 'imported_1', @imported_data.collect { |line_item| line_item.to_json_as_imported }
   end
 
   def import_from_money(data)
@@ -104,18 +105,25 @@ class ExternalController < ApplicationController
   end
 
   def do_import
-    LineItem.delete_all
+    @account = current_user.accounts.find(params[:account_id])
+    redirect_to :import and return unless @account.present?
 
     cache_client = Dalli::Client.new('127.0.0.1:11211')
 
+    all_processing_rules = ProcessingRule.all
     cache_client.get('imported_1').each do |json_str|
-      LineItem.create(JSON.parse(json_str))
+      unless @account.imported_line?(json_str)
+        line_item = @account.line_items.create(JSON.parse(json_str))
+        ProcessingRule.perform_all_matching(all_processing_rules, line_item)
+
+        @account.imported_lines.create(:imported_line => json_str, :line_item_id => line_item.id)
+      end
     end
 
     LineItem.reset_balance
 
     cache_client.delete 'imported_1'
-    redirect_to :controller => 'line_items', :action => :index
+    redirect_to :controller => 'line_items', :action => :index, :account_id => @account.id
   end
 
   def export_json

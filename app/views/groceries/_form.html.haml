@@ -1,10 +1,10 @@
-= f.text_field :event_date, class: 'span2'
-= f.text_field :store, 'data-provide' => 'typeahead', :class => 'span2 typeahead store', :placeholder => 'Store Name'
-= f.text_field :name, 'data-provide' => 'typeahead', :class => 'span2 typeahead name', :placeholder => 'Item Name'
-= f.text_field :units, class: 'span2 units', :placeholder => 'Units'
+= f.text_field :event_date
+= f.text_field :store, 'data-provide' => 'typeahead', :class => 'typeahead store', :placeholder => 'Store Name'
+= f.text_field :name, 'data-provide' => 'typeahead', :class => 'typeahead name', :placeholder => 'Item Name'
+= f.text_field :units, class: 'units', :placeholder => 'Units'
 %span.word Units at
-= f.text_field :price_per_unit, class: 'span2 price_per_unit', placeholder: 'Price Per Unit'
+= f.text_field :price_per_unit, class: 'price_per_unit', placeholder: 'Price Per Unit'
 %span /
-= f.text_field :unit_type, :value => 'lb', class: 'span2 unit_type'
+= f.text_field :unit_type, :value => 'lb', class: 'unit_type'
 - if f.object.new_record?
   = f.submit 'Add', class: 'btn-small btn-primary'

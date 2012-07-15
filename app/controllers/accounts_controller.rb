@@ -25,8 +25,9 @@ class AccountsController < ApplicationController
   # POST /accounts
   # POST /accounts.json
   def create
-    render action: "new" and return unless current_user.valid_password?(params[:account][:user_password])
-    @account = current_user.accounts.build(params[:account])
+    redirect_to url_for(:action => :new), :flash => { :error => "Your password does not match!" } and return unless current_user.valid_password?(params[:account][:user_password])
+    @account = current_user.accounts.build()
+    @account.name = params[:account][:name]
     @account.store_password(params[:account][:user_password], params[:account][:account_password])
 
     if @account.save

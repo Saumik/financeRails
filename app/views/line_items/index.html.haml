@@ -1,0 +1,33 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      var payees = #{LineItem.payees}
+      var categories = #{LineItem.categories}
+      var last_data_for_payee = #{LineItem.all_last_data_for_payee.to_json}
+      var view = new financeRails.views.LineItemsView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
+    });
+
+// {new_item}
+.create_area
+  =semantic_form_for(@new_item, :remote => true) do |f|
+    = render :partial => 'form', :locals => {:f => f}
+#items_list
+  %table.main_table.table.table-striped.table-bordered
+    %thead
+      %tr
+        %th.type.st-width       Type
+        %th.event_date.st-width Event Date
+        %th.amount.st-width     Amount
+        %th.payee_name          Payee
+        %th.category_name       Category
+        %th                     Balance
+        %th.actions             Actions
+    %tbody
+      = render :collection => @items, :partial => 'item'
+
+//{edit_item}
+.edit_form_area.modal.hide
+  .modal-body.well
+  .modal-footer
+    %a.btn(data-dismiss='modal') Cancel
+    %button.btn.btn-primary.submit{:type => :submit} Submit

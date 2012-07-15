@@ -1,9 +1,0 @@
-$('#main_form').html("<%= escape_javascript(render :partial =>  'form') %>")
-
-<%@changed_line_items.each do |changed_item| %>
-window.lineItemTable.fnSettings().aoDrawCallback.push({ "fn": function() {
-    $('#line_item_<%=changed_item.id%>').highlight();
-    window.lineItemTable.fnSettings().aoDrawCallback.pop();
-}});
-<% end %>
-window.lineItemTable.fnDraw();

@@ -5,6 +5,9 @@ class LineItem
   include Mongoid::Timestamps
   include SpannedLineItemSupport
 
+  belongs_to :account
+  has_one :imported_line, :dependent => :destroy
+
   TYPE = %w[income expense]
   INCOME = 0
   EXPENSE = 1
@@ -19,6 +22,7 @@ class LineItem
   field :payee_name
   field :original_payee_name
   field :comment
+  field :account_id
 
   field :balance, :type => BigDecimal
 
@@ -77,12 +81,19 @@ class LineItem
     LineItem.new(:event_date => event_date)
   end
 
-  def self.payee_names
+  def self.payees
     LineItem.only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
   end
 
-  def self.category_names
+  def self.categories
     LineItem.only(:category_name).collect(&:category_name).delete_if(&:nil?).uniq.sort
+  end
+
+  def self.all_last_data_for_payee
+    LineItem.all.inject({}) do |result, item|
+      result[item.payee_name.to_s] = { amount: item.amount.to_f, category_name: item.category_name }
+      result
+    end
   end
 
   def has_processing_rule_of_type(item_type, ignore_rule = nil)
@@ -105,5 +116,13 @@ class LineItem
         :event_date => {'$gte' => date.beginning_of_month.to_datetime,'$lt' => date.end_of_month.to_datetime},
         :category_name.in => categories
                 ).default_sort.to_a.sum(&:signed_amount)
+  end
+
+  def self.all_unrenamed_payees
+    LineItem.where(:original_payee_name => nil).collect(&:payee_name).uniq.sort
+  end
+
+  def to_json_as_imported
+    to_json(:only => [:amount, :event_date, :payee_name, :type, :comments])
   end
 end

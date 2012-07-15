@@ -1,10 +1,10 @@
 window.financeRails ||= {}
 window.financeRails.views ||= {}
-window.financeRails.views.groceries ||= {}
+window.financeRails.views.line_items ||= {}
 
-class window.financeRails.views.GroceriesView extends Backbone.View
-  el: '.groceries_section'
-  domain: financeRails.views.groceries
+class window.financeRails.views.LineItemsView extends Backbone.View
+  el: '.line_items_section'
+  domain: financeRails.views.line_items
   #events:
 
   initialize: (options) ->

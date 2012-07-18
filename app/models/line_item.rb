@@ -51,6 +51,10 @@ class LineItem
     amount * multiplier
   end
 
+  def original_name
+    original_payee_name.present? ? original_payee_name : payee_name
+  end
+
   def event_date_string(str)
     event_date = Date.parse(str)
   end

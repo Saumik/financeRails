@@ -1,17 +1,18 @@
 = f.radio_button :type, 0
 Income,
 = f.radio_button :type, 1
-Expense;
-On
+Expense. On
 = f.text_field :event_date, class: 'event_date'
 To:
 = f.text_field :payee_name, class: 'typeahead payee_name'
 = f.text_field :amount, class: 'amount'
-NIS For:
+$ For:
 = f.text_field :category_name, class: 'typeahead category_name'
 %br
 = check_box_tag :spanned, 1, f.object.is_spanned
 Span payments for:
 = text_field_tag :spanned_amount, f.object.spanned_months
 Months
-= f.submit 'Add', class: 'btn-primary'
+%br
+= check_box_tag :always_assign, true
+Always rename and categorize as specified

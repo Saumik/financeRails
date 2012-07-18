@@ -1,5 +1,6 @@
 class LineItemsController < ApplicationController
   before_filter :prepare_account
+  around_update :on_around_update_assign_old_payee_name
 
   def prepare_account
     if params[:account_id]
@@ -24,7 +25,7 @@ class LineItemsController < ApplicationController
     changed_line_item = LineItem.create(params[:line_item])
 
     @changed_line_items = []
-    if(params[:spanned])
+    if params[:spanned]
       @changed_line_items += changed_line_item.span(params[:spanned_amount].to_i)
     else
       @changed_line_items << changed_line_item
@@ -35,6 +36,10 @@ class LineItemsController < ApplicationController
     all_processing_rules = ProcessingRule.all
     @changed_line_items.each do |line_item|
       ProcessingRule.perform_all_matching(all_processing_rules, line_item)
+    end
+
+    if params[:always_assign]
+      ProcessingRule.create_category_rename_rule(changed_line_item.payee_name, changed_line_item.category_name)
     end
 
     @line_item = changed_line_item.clone_new
@@ -52,7 +57,14 @@ class LineItemsController < ApplicationController
 
   def update
     @item = LineItem.find(params[:id])
+
+    original_item_name = @item.original_name
     @item.update_attributes(params[:line_item])
+
+    if params[:always_assign] and @item.category_name.present? and @item.payee_name.present?
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(ProcessingRule.get_category_name_rules, original_item_name, @item.payee_name, @item.category_name)
+    end
+
     LineItem.reset_balance
 
     render :json => {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}
@@ -124,6 +136,15 @@ class LineItemsController < ApplicationController
         LineItem.mass_rename_and_assign_category(@account, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
         ProcessingRule.create_rename_and_assign_rule_if_not_exists(category_processing_rules, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
       end
+    end
+  end
+
+  def on_around_update_assign_old_payee_name
+    previous_name = payee_name
+    yield
+    if payee_name != previous_name and original_payee_name.blank?
+      original_payee_name = previous_name
+      save
     end
   end
 end

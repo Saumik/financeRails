@@ -18,8 +18,8 @@ class window.financeRails.views.line_items.FormView extends Backbone.View
   render: ->
     @$el.find('.event_date').focus()
     @$el.find('.event_date').select()
-    @$el.find('.payee_name').typeahead({source: @payees})
-    @$el.find('.category_name').typeahead({source: @categories})
+    @$el.find('.payee_name').typeahead({source: @payees, show_current: true})
+    @$el.find('.category_name').typeahead({source: @categories, show_current: true})
 
   onChangeTypeAhead: (e) ->
     $(e.currentTarget).next('input').first().focus()

@@ -9,8 +9,10 @@
 
 // {new_item}
 .create_area
-  =semantic_form_for(@new_item, :remote => true) do |f|
+  =semantic_form_for(@new_item, :remote => true, :html => {:class => 'well'}) do |f|
     = render :partial => 'form', :locals => {:f => f}
+    .actions
+      = f.submit 'Add New Item', class: 'btn btn-primary'
 #items_list
   %table.main_table.table.table-striped.table-bordered
     %thead

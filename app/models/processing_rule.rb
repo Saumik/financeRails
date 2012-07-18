@@ -65,11 +65,15 @@ class ProcessingRule
     processing_rules.find_all { |rule| rule.matches?(line_item) }.each { |rule| rule.perform(line_item) }
   end
 
+  def self.create_category_rename_rule(payee_name, category_name)
+    ProcessingRule.create(:type => 'process', :item_type => ProcessingRule::CATEGORY_TYPE, :expression => payee_name, :replacement => category_name)
+  end
+
   def self.create_rename_and_assign_rule_if_not_exists(category_processing_rules, original_payee_name, payee_name, category_name)
     ProcessingRule.create(:type => 'process', :item_type => PAYEE_TYPE, :expression => original_payee_name, :replacement => payee_name)
     category_name_has_rule = category_processing_rules.find_all { |rule| rule.matches?(category_name) }
     if category_name_has_rule.length == 0
-      ProcessingRule.create(:type => 'process', :item_type => CATEGORY_TYPE, :expression => payee_name, :replacement => category_name)
+      category_processing_rules << ProcessingRule.create(:type => 'process', :item_type => CATEGORY_TYPE, :expression => payee_name, :replacement => category_name)
     end
   end
 

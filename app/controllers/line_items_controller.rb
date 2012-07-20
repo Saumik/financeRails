@@ -1,17 +1,4 @@
 class LineItemsController < ApplicationController
-  before_filter :prepare_account
-  around_update :on_around_update_assign_old_payee_name
-
-  def prepare_account
-    if params[:account_id]
-      session[:account_id] = params[:account_id]
-    end
-
-    if session[:account_id]
-      @account = current_user.accounts.find(session[:account_id])
-    end
-  end
-
   def index
     unless @account.present?
       render 'common/select_account' and return
@@ -136,15 +123,6 @@ class LineItemsController < ApplicationController
         LineItem.mass_rename_and_assign_category(@account, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
         ProcessingRule.create_rename_and_assign_rule_if_not_exists(category_processing_rules, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
       end
-    end
-  end
-
-  def on_around_update_assign_old_payee_name
-    previous_name = payee_name
-    yield
-    if payee_name != previous_name and original_payee_name.blank?
-      original_payee_name = previous_name
-      save
     end
   end
 end

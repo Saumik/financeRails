@@ -9,6 +9,7 @@ FinanceRails2::Application.routes.draw do
   post "report/month_expenses"
 
   get "external/import"
+  get "external/import_json"
   get "external/export_json"
   post "external/process_confirm_import"
   post 'external/do_import'

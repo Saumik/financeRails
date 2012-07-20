@@ -1,19 +1,14 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      var view = new BudgetView();
+      var view = new financeRails.views.budgets.BudgetView();
     });
 
-Budget items
+.well
+  %h2 Budget items
+  %a.btn.btn-primary.open_create_budget_item Create budget item
 
-%a.open_create_budget_item Create budget item
-%ul#budgets
-  - @budget_items.each do |item|
-    %li
-      %span.name
-        = item.name
-      %span.limit
-        = item.limit
+= render 'monthly_report'
 
 #create_budget_item_modal.modal.hide
   = semantic_form_for :budget_item, :url => {:action => :create}, :remote => true do |f|

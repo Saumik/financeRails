@@ -1,7 +1,7 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      var view = new PayeeView();
+      var view = new financeRails.views.PayeeView();
     });
 %table.table.table-bordered.table-striped
   %thead
@@ -17,11 +17,12 @@
         )
       %td
         - with_comma_separated(item.processing_rules) do |processing_rule|
-          = processing_rule.to_s
-          (
-          = link_to('Run', {:action => 'run_processing_rule', :processing_rule_id => processing_rule.id}, :remote => true)
-          )
-        %a.add_processing_rule{'data-name' => item.payee_name} (+)
+          .rule
+            = processing_rule.to_s
+            (
+            = link_to('Run', {:action => 'run_processing_rule', :processing_rule_id => processing_rule.id}, :remote => true)
+            )
+        %a.btn.add_processing_rule{'data-name' => item.payee_name} Add
 #add_processing_rule_overlay.modal.hide
   .tabbable
     %ul.nav.nav-tabs

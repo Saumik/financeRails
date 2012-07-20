@@ -1,42 +1,37 @@
-Select Month:
-= link_to '<< Previous', :date => @selected_month.prev_month.to_i
-= form_tag '', :style => 'display:inline' do
-  = date_select('report', 'month', :discard_day => true, :default => @selected_month)
-  = submit_tag 'Refresh'
-= link_to 'Next >>', :date => @selected_month.next_month.to_i
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      var view = new financeRails.views.report.ReportView();
+    });
 
-%h1 Income
-
-%table.display
+%table.table.table-striped.table-bordered
   %thead
     %tr
-      %th.ui-state-default{:width => 200} Category
-      %th.ui-state-default Amount
+      %th.name Category Name
+      - @presenter.months.each do |(month, year)|
+        %th.date
+          = "#{month_name(month)} #{year}"
   %tbody
-    - @income.each do |cat, amount|
-      %tr
-        %td= cat
-        %td= format_number amount
-.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix
-  .dataTables_info{:style => 'padding: 5px'}
-    %b
-      Total:
-      = format_number(@total_income)
-
-%h1 Expenses
-  
-%table.display
-  %thead
-    %tr
-      %th.ui-state-default{:width => 200} Category
-      %th.ui-state-default Amount
-  %tbody
-    - @expenses.each do |cat, amount|
-      %tr{:class => cycle(:even, :odd)}
-        %td= cat
-        %td= format_number amount
-.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix
-  .dataTables_info{:style => 'padding: 5px'}
-    %b
-      Total:
-      = format_number(@total_expenses)
+    - @presenter.report_sections.each do |section|
+      %tr.section-row
+        %td.section_name
+          = section.to_s.capitalize
+      - @presenter.categories_matching(section).each do |category_name|
+        %tr.item-row
+          %td
+            = category_name
+          - @presenter.months.each do |(month, year)|
+            %td{:class => @presenter.section_class(section)}
+              =currency @presenter.total_amount_of_type_in_month(section, category_name, month, year)
+    - @presenter.report_sections.each do |section|
+      %tr.total
+        %td.total
+          = @presenter.total_label_section(section)
+        - @presenter.months.each do |(month, year)|
+          %td{:class => "total #{@presenter.section_class(section)}"}
+            = currency @presenter.month_section_total(section, month, year)
+    %tr.total
+      %td Total
+      - @presenter.months.each do |(month, year)|
+        %td.total
+          = currency @presenter.month_total(month, year)

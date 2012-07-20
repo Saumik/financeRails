@@ -1,12 +1,14 @@
 require 'ostruct'
 
 class PayeeController < ApplicationController
+  before_filter :assign_section
+
   def index
     @processing_rules = ProcessingRule.get_payee_rules.to_a
-    @payees = LineItem.payee_names.collect do |payee_name|
+    @payees = LineItem.payees.collect do |payee_name|
       OpenStruct.new(
         payee_name: payee_name,
-        processing_rules: @processing_rules.select {|processing_rule| processing_rule.matches? (payee_name) }
+        processing_rules: @processing_rules.select {|processing_rule| processing_rule.matches? (payee_name) or processing_rule.results_in? (payee_name) }
       )
     end
   end
@@ -28,5 +30,11 @@ class PayeeController < ApplicationController
   def rename_payee
     LineItem.rename_payee(params[:payee][:name], params[:payee][:replacement])
     render :nothing => true
+  end
+
+  private
+
+  def assign_section
+    @override_section = 'line_items'
   end
 end

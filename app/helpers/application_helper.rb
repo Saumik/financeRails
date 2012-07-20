@@ -19,6 +19,10 @@ module ApplicationHelper
     number_to_currency(amount)
   end
 
+  def sign_and_currency(amount)
+    amount > 0 ? '+' + currency(amount) : '-' + currency(amount)
+  end
+
   def capitalize_words(str)
    str.split(' ').map {|w| w.capitalize }.join(' ')
   end

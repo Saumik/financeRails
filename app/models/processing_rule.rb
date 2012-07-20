@@ -26,6 +26,15 @@ class ProcessingRule
     end
   end
 
+  def results_in?(item)
+    return false if type != 'process'
+    payee_name = item.instance_of?(LineItem) ? item.payee_name : item
+    category_name = item.instance_of?(LineItem) ? item.category_name : item
+
+    item_type == PAYEE_TYPE and replacement == payee_name or
+        item_type == CATEGORY_TYPE and replacement == category_name
+  end
+
   def self.get_payee_rules
     where(:type => 'process', :item_type.in => [PAYEE_TYPE, CATEGORY_TYPE ])
   end
@@ -78,6 +87,6 @@ class ProcessingRule
   end
 
   def to_s
-    item_type.capitalize + ' Process: ' + ' > ' + replacement
+    item_type.capitalize + ' Process: ' + expression.to_s + ' > ' + replacement
   end
 end

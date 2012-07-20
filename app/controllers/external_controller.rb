@@ -126,10 +126,47 @@ class ExternalController < ApplicationController
     redirect_to :controller => 'line_items', :action => :index, :account_id => @account.id
   end
 
-  def export_json
-    date_str = Time.now.strftime("%d-%m-%Y")
+  def import_json
+    db_name = Rails.configuration.mongoid.database.name
+    dump_folder = @backup_folders[params[:position].to_i]
+    import_folder = "#{Dir.pwd}/dumps/#{dump_folder}"
+    command = "mongorestore -d #{db_name} --drop #{import_folder}/"
+    output = `#{command}`
 
-    send_data LineItem.all.to_json, :filename => "export_#{date_str}.json"
+    result=$?.success?
+
+    flash[:notice] = "Executed #{command}"
+    if result
+      flash[:success] = "Imported #{dump_folder}"
+    else
+      flash[:error] = "Failed to import"
+    end
+
+    redirect_to :controller => :line_items, :action => :index
+  end
+
+  def export_json
+    db_name = Rails.configuration.mongoid.database.name
+    date_str = Time.now.strftime("%d-%m-%Y--%H-%M")
+    result_folder = "#{Dir.pwd}/dumps/dump-#{db_name}-#{date_str}"
+    command = "mongodump -d #{db_name} -o #{result_folder}"
+    `mkdir #{Dir.pwd}/dumps/`
+    `mkdir #{result_folder}`
+    `#{command}`
+    result=$?.success?
+    if result
+      `mv #{result_folder}/#{db_name}/* #{result_folder}`
+      `rmdir #{result_folder}/#{db_name}`
+    end
+
+    flash[:notice] = "Output: #{command}"
+    if result
+      flash[:success] = "Exported the file to #{result_folder}"
+    else
+      flash[:error] = "Failed to export"
+    end
+
+    redirect_to :controller => :line_items, :action => :index
   end
 
 end

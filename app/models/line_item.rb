@@ -5,6 +5,8 @@ class LineItem
   include Mongoid::Timestamps
   include SpannedLineItemSupport
 
+  around_update :on_around_update_assign_old_payee_name
+
   belongs_to :account
   has_one :imported_line, :dependent => :destroy
 
@@ -129,13 +131,6 @@ class LineItem
     end
   end
 
-  def self.expense_in_month(date, categories)
-    LineItem.where(
-        :event_date => {'$gte' => date.beginning_of_month.to_datetime,'$lt' => date.end_of_month.to_datetime},
-        :category_name.in => categories
-                ).default_sort.to_a.sum(&:signed_amount)
-  end
-
   def self.all_unrenamed_payees
     LineItem.where(:original_payee_name => nil).inject({}) do |result, line_item|
       result[line_item.payee_name] ||= line_item.category_name if line_item.payee_name.present?
@@ -145,5 +140,36 @@ class LineItem
 
   def to_json_as_imported
     to_json(:only => [:amount, :event_date, :payee_name, :type, :comments])
+  end
+
+  # ---------------------------
+  # Reporting Functions
+
+  def self.sum_with_filters(filters = {})
+    filter_chain = Mongoid::Criteria.new(LineItem)
+    if(filters[:categories])
+      filter_chain = filter_chain.where(:category_name.in => filters[:categories])
+    end
+    if(filters[:in_month_of_date])
+      filter_chain = filter_chain.where(:event_date => {'$gte' => filters[:in_month_of_date].beginning_of_month.to_datetime,'$lt' => filters[:in_month_of_date].end_of_month.to_datetime})
+    end
+    if(filters[:type])
+      filter_chain = filter_chain.where(:type => filters[:type])
+    end
+    filter_chain.default_sort.to_a.sum(&:signed_amount)
+  end
+
+  # end reporting functions
+  # ---------------------------
+
+  private
+
+  def on_around_update_assign_old_payee_name
+    previous_name = payee_name
+    yield
+    if payee_name != previous_name and original_payee_name.blank?
+      original_payee_name = previous_name
+      save
+    end
   end
 end

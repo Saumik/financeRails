@@ -1,4 +1,8 @@
-class BudgetView extends Backbone.View
+window.financeRails ||= {}
+window.financeRails.views ||= {}
+window.financeRails.views.budgets ||= {}
+
+class window.financeRails.views.budgets.BudgetView extends Backbone.View
   el: 'body'
   events:
     'click .open_create_budget_item': 'onOpenCreateBudgetItem'
@@ -8,6 +12,7 @@ class BudgetView extends Backbone.View
     @render()
 
   render: ->
+    $('.inner-nav .budgets').addClass('active')
 
   onOpenCreateBudgetItem: (e) ->
     dlg = new CreateBudgetItemDlg();
@@ -22,5 +27,3 @@ class BudgetView extends Backbone.View
   closeNearestModal: (e) ->
     $(e.target).closest('.modal').modal('hide')
     window.location.reload();
-
-window.BudgetView = BudgetView

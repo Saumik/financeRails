@@ -25,7 +25,7 @@
 
 #budgets {
   list-style: none;
-  width: 200px;
+  margin: 0;
   li {
     margin: 5px;
     padding: 5px;
@@ -35,5 +35,23 @@
   }
   .limit {
     float: right;
+  }
+}
+
+.report_table {
+  margin-top: 0;
+
+  .limit {
+  }
+
+  .amount-left {
+    margin-left: 10px;
+    display: inline-block;
+    &.positive {
+      color: green;
+    }
+    &.negative {
+      color: red;
+    }
   }
 }

@@ -1,0 +1,22 @@
+%table.table.table-striped.table-bordered.report_table
+  %thead
+    %tr
+      %th.name Budget Title
+      - @presenter.months.each do |(month, year)|
+        %th.date
+          = "#{month_name(month)} #{year}"
+      %th.total Total
+  %tbody
+    - @presenter.budget_items.each do |budget_item|
+      %tr.item-row
+        %td
+          = budget_item.name + ' - '
+          %span.limit= budget_item.limit
+        - @presenter.months.each do |(month, year)|
+          %td
+            =currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month, year)
+        %td
+          - amount_left = @presenter.amount_left_budget_item_in_year(budget_item)
+          = currency @presenter.total_expenses_for_budget_item_in_year(budget_item)
+          %span{:class => 'amount-left ' + (amount_left > 0 ? 'positive' : 'negative')}
+            = sign_and_currency amount_left

@@ -1,4 +1,7 @@
-class PayeeView extends Backbone.View
+window.financeRails ||= {}
+window.financeRails.views ||= {}
+
+class window.financeRails.views.PayeeView extends Backbone.View
   el: 'body'
   events:
     'click .open_rename_payee': 'onOpenRenamePayee'
@@ -12,6 +15,7 @@ class PayeeView extends Backbone.View
     @render()
 
   render: ->
+    $('.inner-nav .payee').addClass('active')
 
   onOpenRenamePayee: (e) ->
     $('#rename_payee').modal();
@@ -32,5 +36,3 @@ class PayeeView extends Backbone.View
   closeNearestModal: (e) ->
     $(e.target).closest('.modal').modal('hide')
     window.location.reload();
-
-window.PayeeView = PayeeView

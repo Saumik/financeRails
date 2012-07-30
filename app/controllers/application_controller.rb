@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include DateTimeHelpers
   protect_from_forgery
 
-  before_filter :authenticate_user!, :except => [:login, :index]
+  before_filter :authenticate_user!, :except => [:login]
   before_filter :prepare_account
   before_filter :prepare_backup_list, :except => [:login]
 

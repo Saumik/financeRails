@@ -17,7 +17,7 @@ class LineItemsReportPresenter
   end
 
   def categories_matching(section)
-    LineItem.where(:type => @section_to_type[section]).to_a.collect(&:category_name).uniq.delete_if(&:blank?)
+    LineItem.where(:type => @section_to_type[section]).to_a.collect(&:category_name).uniq.delete_if(&:blank?).sort
   end
 
   def total_amount_of_type_in_month(section, category_name, month, year)

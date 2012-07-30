@@ -71,4 +71,28 @@ describe ProcessingRule do
     end
   end
 
+  describe '#create_category_rename_rule' do
+    it "should not create the item if a rule already exists"
+    it 'should create the rename otherwise'
+  end
+
+  describe '#create_rename_and_assign_rule_if_not_exists' do
+    let!(:line_item) { FactoryGirl.create :line_item_6 }
+    it "should not create the item if a rule already exists" do
+      all_processing_rules = []
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
+      all_processing_rules.length.should == 1
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
+      all_processing_rules.length.should == 1
+
+      created_rules = ProcessingRule.all
+      created_rules.length.should == 3
+
+      created_rules.each { |rule| rule.perform(line_item) }
+
+      line_item.payee_name.should == 'Safeway'
+      line_item.category_name.should == 'Shopping'
+      line_item.original_payee_name.should == 'Safeway SF Caus'
+    end
+  end
 end

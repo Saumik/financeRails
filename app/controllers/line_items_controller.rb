@@ -26,7 +26,7 @@ class LineItemsController < ApplicationController
     end
 
     if params[:always_assign]
-      ProcessingRule.create_category_rename_rule(changed_line_item.payee_name, changed_line_item.category_name)
+      ProcessingRule.create_category_rename_rule(all_processing_rules, changed_line_item.payee_name, changed_line_item.category_name)
     end
 
     @line_item = changed_line_item.clone_new

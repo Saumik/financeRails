@@ -91,6 +91,7 @@ FinanceRails2::Application.routes.draw do
     collection do
       post :add_processing_rule
       get :run_processing_rule
+      get :delete_processing_rule
       post :rename_payee
     end
   end

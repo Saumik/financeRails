@@ -8,6 +8,7 @@ class window.financeRails.views.PayeeView extends Backbone.View
     'click .add_processing_rule': 'onAddProcessingRule'
     'click #add_processing_rule_overlay .same': 'onClickSame'
     'ajax:success #rename_payee form': 'closeNearestModal'
+    'ajax:success .delete_processing_rule': 'onDeleteProcessingRuleOk'
     'ajax:success #add_processing_rule_overlay form': 'closeNearestModal'
 
   initialize: ->
@@ -29,6 +30,9 @@ class window.financeRails.views.PayeeView extends Backbone.View
     $('#add_processing_rule_overlay').centerModalInWindow();
     @current_data_name = $(e.srcElement).attr('data-name')
     $('form .expression').val(@current_data_name)
+
+  onDeleteProcessingRuleOk: (e, data, xhr) ->
+    @$el.find('[data-item_id=' + data.remove_id + ']').remove();
 
   onClickSame: ->
     $('#processing_rule_payee').val(@current_data_name)

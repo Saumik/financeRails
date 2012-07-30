@@ -17,10 +17,12 @@
         )
       %td
         - with_comma_separated(item.processing_rules) do |processing_rule|
-          .rule
+          .rule{:data => {:item_id => processing_rule.id}}
             = processing_rule.to_s
             (
             = link_to('Run', {:action => 'run_processing_rule', :processing_rule_id => processing_rule.id}, :remote => true)
+            ,
+            = link_to('Delete', {:action => 'delete_processing_rule', :id => processing_rule.id}, :confirm => 'Are you sure?', :remote => true, :class => 'delete_processing_rule')
             )
         %a.btn.add_processing_rule{'data-name' => item.payee_name} Add
 #add_processing_rule_overlay.modal.hide

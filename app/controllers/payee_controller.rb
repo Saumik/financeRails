@@ -27,6 +27,11 @@ class PayeeController < ApplicationController
     render :nothing => true
   end
 
+  def delete_processing_rule
+    ProcessingRule.find(params[:id]).destroy()
+    render :json => {:remove_id => params[:id]}
+  end
+
   def rename_payee
     LineItem.rename_payee(params[:payee][:name], params[:payee][:replacement])
     render :nothing => true

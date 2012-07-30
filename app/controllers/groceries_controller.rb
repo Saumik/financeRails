@@ -31,7 +31,7 @@ class GroceriesController < ApplicationController
 
   def destroy
     @item = MAIN_OBJECT.find(params[:id])
-    @item.delete
+    @item.destroy
     render :json => {:remove_id => params[:id]}
   end
 

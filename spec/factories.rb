@@ -67,6 +67,7 @@ FactoryGirl.define do
     [:line_item_2, LineItem::EXPENSE, 100, Date.new(2012, 1, 2), 'Shopping', 'Safeway'],
     [:line_item_3, LineItem::INCOME, 100, Date.new(2012, 2, 1), 'Shopping', 'Safeway'],
     [:line_item_4, LineItem::INCOME, 100, Date.new(2012, 1, 1), 'Shopping', 'Safeway'],
-    [:line_item_5, LineItem::INCOME, 100, Date.new(2012, 1, 1), 'Shopping', 'Safeway']
+    [:line_item_5, LineItem::INCOME, 100, Date.new(2012, 1, 1), 'Shopping', 'Safeway'],
+    [:line_item_6, LineItem::EXPENSE, 100, Date.new(2012, 1, 1), '', 'Safeway SF Caus']
   ] end
 end

@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
       session[:account_id] = params[:account_id]
     end
 
-    if session[:account_id]
+    if session[:account_id] and logged_in?
       @account = current_user.accounts.find(session[:account_id])
     end
   end

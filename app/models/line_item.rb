@@ -142,16 +142,20 @@ class LineItem
     to_json(:only => [:amount, :event_date, :payee_name, :type, :comments])
   end
 
+  def self.in_month_of_date(in_month_of_date, filter_chain = Mongoid::Criteria.new(LineItem))
+    filter_chain.where(:event_date => {'$gte' => in_month_of_date.beginning_of_month.to_datetime,'$lt' => in_month_of_date.end_of_month.to_datetime})
+  end
+
   # ---------------------------
   # Reporting Functions
 
   def self.sum_with_filters(filters = {})
-    filter_chain = Mongoid::Criteria.new(LineItem)
+    filter_chain =
     if(filters[:categories])
-      filter_chain = filter_chain.where(:category_name.in => filters[:categories])
+      filter_chain = where(:category_name.in => filters[:categories])
     end
     if(filters[:in_month_of_date])
-      filter_chain = filter_chain.where(:event_date => {'$gte' => filters[:in_month_of_date].beginning_of_month.to_datetime,'$lt' => filters[:in_month_of_date].end_of_month.to_datetime})
+      in_month_of_date(filters[:in_month_of_date], filter_chain)
     end
     if(filters[:type])
       filter_chain = filter_chain.where(:type => filters[:type])
@@ -160,6 +164,23 @@ class LineItem
   end
 
   # end reporting functions
+  # ---------------------------
+
+  # ---------------------------
+  # Mobile support functions
+
+  def self.create_from_mobile(params)
+    params.symbolize_keys!
+    LineItem.create(:type => params[:type],
+                    :amount => params[:amount],
+                    :event_date => params[:event_date],
+                    :category_name => params[:category_name],
+                    :payee_name => params[:payee_name],
+                    :comment => params[:comment]
+                    )
+  end
+
+  # end mobile support functions
   # ---------------------------
 
   private

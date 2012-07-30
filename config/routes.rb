@@ -1,4 +1,7 @@
 FinanceRails2::Application.routes.draw do
+  get "mobile/index"
+  post "mobile/sync"
+
   resources :accounts
 
   devise_for :users

@@ -16,5 +16,7 @@
 //= require handlebars.runtime
 // Loads all Bootstrap javascripts
 //= require bootstrap
-//= require_tree .
+//= require bootstrap-modal
+//= require bootstrap-tab
+//= require_tree ./regular
 //= require_tree ./templates

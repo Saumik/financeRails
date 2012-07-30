@@ -1,0 +1,21 @@
+It will fail, keep it simple.
+
+2011: 66MySQL, Redis, memcache
+2012: 80mysql, 110 redis, 70 memcache, solr
+
+For MySQL: Innotop, Maatkit. Support for Percona
+
+Clustering vs. Sharding. Automatic vs. manual distribution
+
+When sharing:
+Lose Join, no unique capability. ID Lookup is built in into the ID structure and no central allocation service.
+
+MysQL stores blobs - JSON and thinking Serialized thrift - Saves migrations across many service.
+
+Pyres - resque queue with scripting farm to move items across shards. And all background tasks run on it.
+
+redis is quirky and new. memcache is easy and more performant sometimes. also (timestamp, updates to id)
+
+Analytics: Cafka, EMR, (throw logs and analyze it with Amazon MAp Reduce Hourly). Statstie (performance)
+
+Looking into handlesocket. Sendgrid for sending emails

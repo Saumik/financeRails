@@ -1,0 +1,78 @@
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      var view = new financeRails.views.mobile.Index();
+    });
+%div#main-page{:data => {:role => :page}}
+  %div{:data => {:role => :header}}
+    %h1
+      Transactions
+  %div{:data => {:role => :content}}
+    %ul.line_items{'data-role' => 'listview'}
+
+  %div.ui-bar{:data => {:role => :footer, :position => :fixed}}
+    %a.add-btn{'data-role' => 'button', 'data-icon' => 'plus', :href => '#add-line-item', 'data-iconpos' => 'notext'}
+
+%div#add-line-item{:data => {:role => :page}}
+  %div{:data => {:role => :header}}
+    %a{:href => '#main-page', :data => {:icon => 'arrow-l', :role => 'button'}} Back
+    %h1 Create
+  %div{:data => {:role => :content}}
+    %form#add-line-item-form
+      %div{:data => {:role => :fieldcontain}}
+        %label{:for => 'type'} Type:
+        %select#type{:name => 'type', :data => {:role => :slider}}
+          %option{:value => LineItem::EXPENSE} Expense
+          %option{:value => LineItem::INCOME} Income
+      %div{:data => {:role => :fieldcontain}}
+        %label{:for => 'event_date'} Event Date:
+        %input#event_date{:type => :date, :name => :event_date}
+      %div{:data => {:role => :fieldcontain}}
+        %label{:for => 'amount'} Amount:
+        %input#amount{:type => :text, :name => :amount}
+      %div{:data => {:role => :fieldcontain}}
+        %label{:for => 'payee_name'} Payee Name:
+        %input#payee_name{:type => :text, :name => :payee_name}
+      %div{:data => {:role => :fieldcontain}}
+        %label{:for => 'category_name'} Category Name:
+        %input#category_name{:type => :text, :name => :category_name}
+      %div{:data => {:role => :fieldcontain}}
+        %label{:for => 'comment'} Comment:
+        %input#comment{:type => :text, :name => :comment}
+      %button.submit-btn{:type => 'submit'} Add Item
+
+%div#view-item{:data => {:role => :page}}
+  %div{:data => {:role => :header}}
+    %a{:href => '#main-page', :data => {:icon => 'arrow-l', :role => 'button'}} Back
+    %h1 View Item
+  %div{:data => {:role => :content}}
+    .ui-grid-a
+      .ui-block-a
+        %a{:href => '#add-line-item', :data => {:role => :button}} Add Item
+      .ui-block-b
+        %a{:href => '#add-line-item', :data => {:role => :button}} Edit Item
+    %table
+      %tbody
+        %tr
+          %td Type:
+          %td.type
+        %tr
+          %td Event Date:
+          %td.event_date
+        %tr
+          %td Amount:
+          %td.amount
+        %tr
+          %td Payee Name:
+          %td.payee_name
+        %tr
+          %td Category Name:
+          %td.category_name
+        %tr
+          %td Comment:
+          %td.comment
+    .ui-grid-a
+      .ui-block-a
+        %a{:href => '#add-line-item', :data => {:role => :button}} Add Item
+      .ui-block-b
+        %a{:href => '#add-line-item', :data => {:role => :button}} Edit Item

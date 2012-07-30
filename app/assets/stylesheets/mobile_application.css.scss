@@ -1,0 +1,28 @@
+/*
+ * This is a manifest file that'll automatically include all the stylesheets available in this directory
+ * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
+*= require_self
+*/
+
+@import 'jquery.mobile-1.1.1';
+@import 'jquery.mobile.structure-1.1.1';
+@import 'jquery.mobile.theme-1.1.1';
+
+#main-page {
+  .event_date {
+    display: inline-block;
+    float: left;
+  }
+  .amount {
+    display: inline-block;
+    float: right;
+  }
+  .payee_name {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 10px;
+  }
+}

@@ -150,16 +150,10 @@ class LineItem
   # Reporting Functions
 
   def self.sum_with_filters(filters = {})
-    filter_chain =
-    if(filters[:categories])
-      filter_chain = where(:category_name.in => filters[:categories])
-    end
-    if(filters[:in_month_of_date])
-      in_month_of_date(filters[:in_month_of_date], filter_chain)
-    end
-    if(filters[:type])
-      filter_chain = filter_chain.where(:type => filters[:type])
-    end
+    filter_chain = Mongoid::Criteria.new(LineItem)
+    filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories]
+    filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date]
+    filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type]
     filter_chain.default_sort.to_a.sum(&:signed_amount)
   end
 

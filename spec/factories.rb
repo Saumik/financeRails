@@ -39,6 +39,11 @@ FactoryGirl.define do
       expression 'Safe*'
       replacement 'mb'
     end
+    factory :processing_rule_payee_partial do
+      item_type 'payee'
+      expression 'Safe'
+      replacement 'mb'
+    end
     factory :processing_rule_category_1 do
       item_type 'category'
       expression 'Safeway'

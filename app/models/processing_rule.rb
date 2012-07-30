@@ -10,7 +10,7 @@ class ProcessingRule
   CATEGORY_TYPE = "category"
 
   def wildcard_match(exp, matcher)
-    !!Regexp.new(exp.gsub('*', '.*')).match(matcher)
+    !!Regexp.new('^' + exp.gsub('*', '.*') + '$').match(matcher)
   end
 
   def matches?(item)
@@ -36,7 +36,7 @@ class ProcessingRule
   end
 
   def self.get_payee_rules
-    where(:type => 'process', :item_type.in => [PAYEE_TYPE, CATEGORY_TYPE ])
+    where(:type => 'process', :item_type.in => [PAYEE_TYPE ])
   end
 
   def self.get_category_name_rules

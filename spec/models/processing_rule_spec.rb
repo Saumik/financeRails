@@ -18,6 +18,11 @@ describe ProcessingRule do
       it 'should match line item' do
         processing_rule_payee.matches?(line_item).should be_true
       end
+      it 'should not payee with longer name' do
+        processing_rule_partial = FactoryGirl.create :processing_rule_payee_partial
+        processing_rule_partial.matches?(line_item).should == false
+
+      end
     end
 
     describe '#perform - should apply the processing rule to line item' do
@@ -102,9 +107,11 @@ describe ProcessingRule do
     it 'should perform all rules available on the line item' do
       all_processing_rules = []
       ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
-      created_rules = ProcessingRule.all
-      created_rules.length.should == 2
-      ProcessingRule.perform_all_matching(created_rules, line_item)
+      created_payee_rules = ProcessingRule.get_payee_rules
+      created_category_rules = ProcessingRule.get_category_name_rules
+      (created_category_rules.length + created_payee_rules.length).should == 2
+      ProcessingRule.perform_all_matching(created_payee_rules, line_item)
+      ProcessingRule.perform_all_matching(created_category_rules, line_item)
       line_item.payee_name.should == 'Safeway'
       line_item.category_name.should == 'Shopping'
       line_item.original_payee_name.should == 'Safeway SF Caus'

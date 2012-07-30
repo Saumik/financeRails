@@ -19,4 +19,5 @@
 //= require bootstrap-modal
 //= require bootstrap-tab
 //= require_tree ./regular
+//= require_tree ./lib
 //= require_tree ./templates

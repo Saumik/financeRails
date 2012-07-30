@@ -47,6 +47,7 @@ describe ProcessingRule do
     end
 
     describe "#perform_all" do
+      let!(:original_name) {line_item.payee_name}
       it "should process all line items" do
         processing_rule_payee.perform_all
         line_item.reload
@@ -90,6 +91,21 @@ describe ProcessingRule do
 
       created_rules.each { |rule| rule.perform(line_item) }
 
+      line_item.payee_name.should == 'Safeway'
+      line_item.category_name.should == 'Shopping'
+      line_item.original_payee_name.should == 'Safeway SF Caus'
+    end
+  end
+
+  describe '#perform_all_matching' do
+    let!(:line_item) { FactoryGirl.create :line_item_6 }
+    it 'should perform all rules available on the line item' do
+      all_processing_rules = []
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
+      ProcessingRule.create(:type => 'process', :item_type => ProcessingRule::CATEGORY_TYPE, :expression => line_item.payee_name, :replacement => 'Shopping')
+      created_rules = ProcessingRule.all
+      created_rules.length.should == 3
+      ProcessingRule.perform_all_matching(created_rules, line_item)
       line_item.payee_name.should == 'Safeway'
       line_item.category_name.should == 'Shopping'
       line_item.original_payee_name.should == 'Safeway SF Caus'

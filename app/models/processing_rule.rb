@@ -60,7 +60,7 @@ class ProcessingRule
 
   def perform_all
     LineItem.all.each do |line_item|
-      if line_item.matches?(line_item)
+      if matches?(line_item)
         perform(line_item)
       end
     end

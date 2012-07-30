@@ -4,7 +4,7 @@ class PayeeController < ApplicationController
   before_filter :assign_section
 
   def index
-    @processing_rules = ProcessingRule.get_payee_rules.to_a
+    @processing_rules = ProcessingRule.all.to_a
     @payees = LineItem.payees.collect do |payee_name|
       OpenStruct.new(
         payee_name: payee_name,

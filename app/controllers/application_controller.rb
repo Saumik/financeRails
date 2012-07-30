@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   before_filter :authenticate_user!, :except => [:login]
-  before_filter :prepare_account
+  before_filter :prepare_account, :except => [:login]
   before_filter :prepare_backup_list, :except => [:login]
 
   def prepare_account

@@ -40,4 +40,19 @@ describe LineItem do
       LineItem.expense_in_month(line_item_3.event_date.to_date, ['Shopping']).to_i.should == 100
     end
   end
+  describe '#mass_rename_and_assign_category' do
+    let!(:account) {FactoryGirl.create :account}
+    it 'should assign category and rename payee' do
+      line_item = FactoryGirl.create :line_item_6, :account_id => account.id
+      LineItem.mass_rename_and_assign_category(account, line_item.payee_name, 'Safeway', 'Shopping')
+      line_item.reload
+      line_item.payee_name.should == 'Safeway'
+      line_item.category_name.should == 'Shopping'
+      line_item = FactoryGirl.create :line_item_6, :account_id => account.id, :payee_name => 'Safeway 2'
+      LineItem.mass_rename_and_assign_category(account, line_item.payee_name, 'Safeway', 'Shopping')
+      line_item.reload
+      line_item.payee_name.should == 'Safeway'
+      line_item.category_name.should == 'Shopping'
+    end
+  end
 end

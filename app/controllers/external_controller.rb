@@ -110,11 +110,13 @@ class ExternalController < ApplicationController
 
     cache_client = Dalli::Client.new('127.0.0.1:11211')
 
-    all_processing_rules = ProcessingRule.all
+    all_payee_rules = ProcessingRule.get_payee_rules
+    all_category_rules = ProcessingRule.get_category_name_rules
     cache_client.get('imported_1').each do |json_str|
       unless @account.imported_line?(json_str)
         line_item = @account.line_items.create(JSON.parse(json_str))
-        ProcessingRule.perform_all_matching(all_processing_rules, line_item)
+        ProcessingRule.perform_all_matching(all_payee_rules, line_item)
+        ProcessingRule.perform_all_matching(all_category_rules, line_item)
 
         @account.imported_lines.create(:imported_line => json_str, :line_item_id => line_item.id)
       end

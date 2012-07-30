@@ -60,6 +60,10 @@ FactoryGirl.define do
     password_confirmation 'mypassword'
   end
 
+  factory :account do
+    name 'Test'
+  end
+
   #noinspection RubyArgCount
   create_as_matrix(:line_item) do [
     [:name, :type, :amount, :event_date, :category_name, :payee_name],

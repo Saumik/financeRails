@@ -20,9 +20,11 @@ class LineItemsController < ApplicationController
 
     LineItem.reset_balance
 
-    all_processing_rules = ProcessingRule.all
+    all_payee_rules = ProcessingRule.get_payee_rules
+    all_category_rules = ProcessingRule.get_category_name_rules
     @changed_line_items.each do |line_item|
-      ProcessingRule.perform_all_matching(all_processing_rules, line_item)
+      ProcessingRule.perform_all_matching(all_payee_rules, line_item)
+      ProcessingRule.perform_all_matching(all_category_rules, line_item)
     end
 
     if params[:always_assign]

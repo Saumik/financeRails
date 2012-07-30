@@ -102,9 +102,8 @@ describe ProcessingRule do
     it 'should perform all rules available on the line item' do
       all_processing_rules = []
       ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
-      ProcessingRule.create(:type => 'process', :item_type => ProcessingRule::CATEGORY_TYPE, :expression => line_item.payee_name, :replacement => 'Shopping')
       created_rules = ProcessingRule.all
-      created_rules.length.should == 3
+      created_rules.length.should == 2
       ProcessingRule.perform_all_matching(created_rules, line_item)
       line_item.payee_name.should == 'Safeway'
       line_item.category_name.should == 'Shopping'

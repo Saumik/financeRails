@@ -24,12 +24,12 @@
           <ul class="dropdown-menu">
             <% @backup_folders.each_with_index do |folder, index| %>
               <li>
-                <%= link_to folder, :controller => :external, :action => :import_json, :position => index %>
+                <%= link_to folder, :controller => '/external', :action => :import_json, :position => index %>
               </li>
             <% end %>
           </ul>
         </li>
-        <li><%= link_to 'Export DB', :controller => :external, :action => :export_json %></li>
+        <li><%= link_to 'Export DB', :controller => '/external', :action => :export_json %></li>
       </ul>
       <% if user_signed_in? %>
         <div class="logged-in-info">Welcome <%= current_user.email %> (<%= link_to "Logout", destroy_user_session_path, :method => :delete %>)</div>

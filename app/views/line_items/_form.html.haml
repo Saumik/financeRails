@@ -19,3 +19,8 @@ Always rename and categorize as specified
 %br
 Comments:
 = f.text_field :comment, class: 'comment'
+%br
+Tags:
+- LineItem::TAGS.each do |tag|
+  = f.check_box :tags, {:name => "line_item[tags][]"}, tag
+  = tag

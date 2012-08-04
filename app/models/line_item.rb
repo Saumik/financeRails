@@ -5,6 +5,8 @@ class LineItem
   include Mongoid::Timestamps
   include SpannedLineItemSupport
 
+  TAGS = ['Cash', 'Exclude from Reports']
+
   around_update :on_around_update_assign_old_payee_name
 
   belongs_to :account
@@ -20,11 +22,12 @@ class LineItem
   field :type, :type => Integer, :default => 1
   field :amount, :type => BigDecimal, :default => 0
   field :event_date, :type => Date, :default => Time.now.to_date
-  field :category_name
-  field :payee_name
+  field :category_name, :type => String
+  field :payee_name, :type => String
   field :original_payee_name
-  field :comment
+  field :comment, :type => String
   field :account_id
+  field :tags, :type => Array, :default => []
 
   field :balance, :type => BigDecimal
 

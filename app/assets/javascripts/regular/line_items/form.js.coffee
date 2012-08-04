@@ -27,7 +27,7 @@ class window.financeRails.views.line_items.FormView extends Backbone.View
   onChangePayeeName: (e) ->
     payee_name = $(e.currentTarget).val();
     last_value = @last_data_for_payee[payee_name]
-    if last_value
+    if last_value and @$el.find('.amount').length == 0
       @$el.find('.amount').val(last_value.amount)
       @$el.find('.category_name').val(last_value.category_name)
       @$el.find('.amount').focus();

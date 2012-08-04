@@ -8,6 +8,7 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
   events:
     #{new_item}
     'ajax:success .create_area': 'onCreateServerOk'
+    'click .create_item_btn': 'onClickCreate'
     # {edit_item}
     'ajax:success .btn.edit': 'onEditFormArrived',
     'click .edit_form_area .btn-primary.submit': 'onEditClickOk',
@@ -47,6 +48,9 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
 
 
   #{new_item}
+  onClickCreate: (e) ->
+    $('.create_area form').submit()
+
   onCreateServerOk: (e, data, xhr) ->
     @$el.find('.main_table').prepend(data.content)
     @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');

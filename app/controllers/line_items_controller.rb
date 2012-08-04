@@ -9,6 +9,8 @@ class LineItemsController < ApplicationController
   end
 
   def create
+    render :nothing => true and return if params[:line_item][:amount].to_i == 0
+
     changed_line_item = LineItem.create(params[:line_item])
 
     @changed_line_items = []
@@ -31,7 +33,11 @@ class LineItemsController < ApplicationController
       ProcessingRule.create_category_rename_rule(all_processing_rules, changed_line_item.payee_name, changed_line_item.category_name)
     end
 
+    changed_line_item.reload
+    @item = changed_line_item
     @line_item = changed_line_item.clone_new
+
+    render :json => {:prepend => true, :content => render_to_string('_item', :layout => false, :locals => {:item => @item}) }
   end
 
   def edit

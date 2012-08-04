@@ -22,16 +22,16 @@
             = category_name
           - @presenter.months.each do |(month, year)|
             %td{:class => @presenter.section_class(section)}
-              =currency @presenter.total_amount_of_type_in_month(section, category_name, month, year)
+              !=currency_abs @presenter.total_amount_of_type_in_month(section, category_name, month, year)
     - @presenter.report_sections.each do |section|
       %tr.total
         %td.total
           = @presenter.total_label_section(section)
         - @presenter.months.each do |(month, year)|
           %td{:class => "total #{@presenter.section_class(section)}"}
-            = currency @presenter.month_section_total(section, month, year)
+            != currency @presenter.month_section_total(section, month, year)
     %tr.total
       %td Total
       - @presenter.months.each do |(month, year)|
         %td.total
-          = currency @presenter.month_total(month, year)
+          != currency @presenter.month_total(month, year)

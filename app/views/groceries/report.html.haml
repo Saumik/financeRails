@@ -21,4 +21,4 @@
           = item
         - @presenter.months.each do |(month, year)|
           %td
-            =currency @presenter.total_amount_of_store_item_in_month(store, item, month, year)
+            !=currency @presenter.total_amount_of_store_item_in_month(store, item, month, year)

@@ -6,7 +6,7 @@
   %li.payee
     = link_to 'Payee & Rules', controller: :payee, action: :index
   %li.mass_rename
-    = link_to 'Mass Rename', action: :mass_rename
+    = link_to 'Mass Rename', controller: :line_items, action: :mass_rename
   %li.budgets
     = link_to 'Budgets', controller: :budgets, action: :index
 

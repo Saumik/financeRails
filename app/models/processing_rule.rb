@@ -10,7 +10,7 @@ class ProcessingRule
   CATEGORY_TYPE = "category"
 
   def wildcard_match(exp, matcher)
-    !!Regexp.new('^' + exp.gsub('*', '.*') + '$').match(matcher)
+    !!Regexp.new('^' + Regexp.escape(exp) + '$').match(matcher)
   end
 
   def matches?(item)

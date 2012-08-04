@@ -22,7 +22,7 @@
               = payee_name
               = hidden_field_tag "mass_rename[#{index}][original_payee_name]", payee_name, :class => 'original_payee_name'
             %td.payee_name_col
-              = text_field_tag "mass_rename[#{index}][payee_name]", capitalize_words(payee_name), :class => 'typeahead payee_name'
+              = text_field_tag "mass_rename[#{index}][payee_name]", capitalize_words(payee_name), :class => 'typeahead payee_name', :autocomplete => false
             %td.assign_category_col
-              = text_field_tag "mass_rename[#{index}][category_name]", @payees[payee_name], :class => 'typeahead category_name'
+              = text_field_tag "mass_rename[#{index}][category_name]", @payees[payee_name], :class => 'typeahead category_name', :autocomplete => false
   = button_tag 'Submit Changes', class: 'btn-primary'

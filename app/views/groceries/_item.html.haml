@@ -2,7 +2,7 @@
   %td= item.store
   %td= item.event_date
   %td= item.name
-  %td=amount_label item
+  %td!=amount_label item
   %td
     = link_to 'Edit', edit_item_path(item), :remote => true, :class => 'btn btn-primary edit'
     &nbsp;

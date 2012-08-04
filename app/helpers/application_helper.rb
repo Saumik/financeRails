@@ -1,6 +1,10 @@
 module ApplicationHelper
   def format_number(num)
-    number_with_precision(num, :precision => 2)
+    number_with_precision(num, :precision => 2, :strip_insignificant_zeros => true)
+  end
+
+  def date_format(date)
+    date.strftime('%m/%d/%Y')
   end
 
   def with_comma_separated(arr)
@@ -16,7 +20,11 @@ module ApplicationHelper
   end
 
   def currency(amount)
-    number_to_currency(amount)
+    '<span class="dollar">$</span>' + format_number(amount)
+  end
+
+  def currency_abs(amount)
+    '<span class="dollar">$</span>' + format_number(amount.abs)
   end
 
   def sign_and_currency(amount)

@@ -38,7 +38,8 @@
   </div>
 </div>
 <div class="<%=controller_name%>_section <%=action_name%>">
-  <%= render :partial => @override_section ? @override_section + '/nav' : 'nav' rescue nil %>
+  <% controllers_without_nav = %w(sessions external) %>
+  <%= render :partial => @override_section ? @override_section + '/nav' : 'nav' unless controllers_without_nav.include? controller_name %>
 
   <% if current_user %>
     <div class="container-fluid">

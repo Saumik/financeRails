@@ -144,6 +144,8 @@ class ExternalController < ApplicationController
       flash[:error] = "Failed to import"
     end
 
+    randomize_data if Rails.env.development?
+
     redirect_to :controller => :line_items, :action => :index
   end
 
@@ -169,6 +171,17 @@ class ExternalController < ApplicationController
     end
 
     redirect_to :controller => :line_items, :action => :index
+  end
+
+  private
+
+  def randomize_data
+    LineItem.all.each do |line_item|
+      line_item.amount = (line_item.amount * (1+rand)).round(2)
+      line_item.save
+    end
+
+    LineItem.reset_balance
   end
 
 end

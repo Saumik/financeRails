@@ -63,7 +63,12 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
 
   onEditServerOk: (e, data, xhr) ->
     financeRails.common.closeNearestModal(e);
-    @$el.find('[data-item-id=' + data.replace_id + ']').replaceWith(data.content)
+
+    datatable = $('.main_table').dataTable()
+    newcontent = data.content
+
+    datatable.fnUpdateRawHTML(data.content, @$el.find('[data-item-id=' + data.replace_id + ']').get(0), 0)
+    #@$el.find('[data-item-id=' + data.replace_id + ']').replaceWith(data.content)
     @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');
 
   #{delete_item}

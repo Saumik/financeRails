@@ -5964,7 +5964,45 @@
 			}
 			return 0;
 		};
-		
+
+        /**
+         * Update a table cell or row - this method will accept either a single value to
+         * update the cell with, an array of values with one element for each column or
+         * an object in the same format as the original data source. The function is
+         * self-referencing in order to make the multi column updates easier.
+         *  @param {object|array|string} mData Data to update the cell/row with
+         *  @param {node|int} mRow TR element you want to update or the aoData index
+         *  @param {int} [iColumn] The column to update (not used of mData is an array or object)
+         *  @param {bool} [bRedraw=true] Redraw the table or not
+         *  @param {bool} [bAction=true] Perform predraw actions or not
+         *  @returns {int} 0 on success, 1 on error
+         *  @dtopt API
+         *
+         *  @example
+         *    $(document).ready(function() {
+         *      var oTable = $('#example').dataTable();
+         *      oTable.fnUpdate( 'Example update', 0, 0 ); // Single cell
+         *      oTable.fnUpdate( ['a', 'b', 'c', 'd', 'e'], 1, 0 ); // Row
+         *    } );
+         */
+        this.fnUpdateRawHTML = function( rawData, dataRow, iColumn, bRedraw, bAction )
+        {
+            var oSettings = _fnSettingsFromNode( this[DataTable.ext.iApiIndex] );
+            var iVisibleColumn, i, iLen, sDisplay;
+            var iRow = _fnNodeToDataIndex(oSettings, dataRow);
+
+            if (rawData !== null && typeof rawData === 'string')
+            {
+                /* Object update - update the whole row - assume the developer gets the object right */
+                $(rawData).find('td').each(function(index, item) {
+                    _fnSetCellData( oSettings, iRow, index, item );
+                });
+                var columnsOnlydata = _($(rawData).children()).map(function(item) { return $(item).prop('outerHTML') }).join(' ');
+                $(dataRow).html(columnsOnlydata);
+            }
+            return 0;
+        };
+
 		
 		/**
 		 * Provide a common method for plug-ins to check the version of DataTables being used, in order

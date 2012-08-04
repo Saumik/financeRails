@@ -93,3 +93,4 @@ $.extend( $.fn.dataTableExt.oPagination, {
 		}
 	}
 } );
+

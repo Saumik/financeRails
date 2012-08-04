@@ -11,7 +11,9 @@ class LineItemsController < ApplicationController
   def create
     render :nothing => true and return if params[:line_item][:amount].to_i == 0
 
-    changed_line_item = LineItem.create(params[:line_item])
+    changed_line_item = @account.line_items.build(params[:line_item])
+    changed_line_item.tags.reject!(&:blank?)
+    changed_line_item.save
 
     @changed_line_items = []
     if params[:spanned]
@@ -54,7 +56,9 @@ class LineItemsController < ApplicationController
     @item = LineItem.find(params[:id])
 
     original_item_name = @item.original_name
-    @item.update_attributes(params[:line_item])
+    @item.attributes = params[:line_item]
+    @item.tags.reject!(&:blank?)
+    @item.save
 
     if params[:always_assign] and @item.category_name.present? and @item.payee_name.present?
       ProcessingRule.create_rename_and_assign_rule_if_not_exists(ProcessingRule.get_category_name_rules, original_item_name, @item.payee_name, @item.category_name)

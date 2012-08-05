@@ -1,6 +1,9 @@
 table {
-    margin: 1em 0;
-    clear: both;
+  margin: 1em 0;
+  clear: both;
+  td {
+    white-space: nowrap;
+  }
 }
 
 th.st-width {

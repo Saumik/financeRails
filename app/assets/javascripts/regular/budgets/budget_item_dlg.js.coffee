@@ -27,7 +27,7 @@ class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
     $('.included_categories').html(HandlebarsTemplates['templates/budgets/dlg_budget_category']({categories: @active_categories}))
     category_names = _(@active_categories).map (category) -> category.name
     $.pjax {
-      url: '/budgets/expense_summary?categories=' + encodeURI(JSON.stringify(category_names)),
+      url: '/budgets/expense_summary?categories=' + encodeURIComponent(JSON.stringify(category_names)),
       container: '.expense-data',
       push: false
     }

@@ -5993,12 +5993,14 @@
 
             if (rawData !== null && typeof rawData === 'string')
             {
+                var columnsOnlydata = _($(rawData).children()).map(function(item) { return $(item).prop('outerHTML') }).join(' ');
+                $(dataRow).html(columnsOnlydata);
+
                 /* Object update - update the whole row - assume the developer gets the object right */
                 $(rawData).find('td').each(function(index, item) {
                     _fnSetCellData( oSettings, iRow, index, item );
                 });
-                var columnsOnlydata = _($(rawData).children()).map(function(item) { return $(item).prop('outerHTML') }).join(' ');
-                $(dataRow).html(columnsOnlydata);
+
             }
             return 0;
         };

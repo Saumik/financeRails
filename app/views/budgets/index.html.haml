@@ -10,7 +10,7 @@
 
 = render 'monthly_report'
 
-#create_budget_item_modal.modal.hide
+#budget_item_modal.modal.hide
   = semantic_form_for :budget_item, :url => {:action => :create}, :remote => true do |f|
     .modal-body.well
       %h2 Included Categories:
@@ -26,8 +26,8 @@
       .row-fluid
         %ul.included_categories.span6
       .row-fluid
-        = f.input :name, :input_html => {:class => 'span6'}
-        = f.input :limit, :input_html => {:class => 'span6'}
+        = f.input :name, :input_html => {:class => 'span6 name'}
+        = f.input :limit, :input_html => {:class => 'span6 limit'}
       .expense-data.clear-fix
     .modal-footer
       %a.btn(data-dismiss='modal') Cancel

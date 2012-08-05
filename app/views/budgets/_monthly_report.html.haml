@@ -6,12 +6,16 @@
         %th.date
           = "#{month_name(month)} #{year}"
       %th.total Total
+      %th.actions
   %tbody
     - @presenter.budget_items.each do |budget_item|
-      %tr.item-row
+      %tr.item-row{:data => {:id => budget_item.id}}
         %td
           = budget_item.name + ' - '
           %span.limit!= currency budget_item.limit
+          %ul.categories
+            - budget_item.categories.each do |category|
+              %li=category
         - @presenter.months.each do |(month, year)|
           %td
             !=currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month, year)
@@ -20,3 +24,13 @@
           != currency @presenter.total_expenses_for_budget_item_in_year(budget_item)
           %span{:class => 'amount-left ' + (amount_left > 0 ? 'positive' : 'negative')}
             != currency amount_left
+        %td.actions
+          = link_to 'Edit', '#', :class => 'btn btn-primary edit_btn'
+    %tr
+      %td.total
+        Total:
+        != currency @presenter.total_limit
+      - @presenter.months.each do |(month, year)|
+        %td
+      %td
+      %td

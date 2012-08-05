@@ -32,4 +32,8 @@ class BudgetReportPresenter
   def amount_left_budget_item_in_year(budget_item)
     @totals[budget_item.name] + budget_item.limit.to_i.to_f * 12
   end
+
+  def total_limit
+    @budget_items.collect(&:limit).compact.sum
+  end
 end

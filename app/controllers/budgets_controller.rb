@@ -12,6 +12,20 @@ class BudgetsController < ApplicationController
     @presenter = BudgetReportPresenter.new
   end
 
+  def edit
+    @item = BudgetItem.find(params[:id])
+
+    render :layout => false
+  end
+
+  def update
+    @item = BudgetItem.find(params[:id])
+    @item.attributes = params[:budget_item]
+    @item.save
+
+    render :json => {:refresh => 'true'}
+  end
+
   def expense_summary
     @monthly_expenses = []
     months_between(5.months.ago.to_date, Date.today).each do |date|

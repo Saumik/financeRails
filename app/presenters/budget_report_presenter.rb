@@ -3,7 +3,8 @@ class BudgetReportPresenter
   def initialize
     @budget_items = BudgetItem.all
     last_date = LineItem.desc(:event_date).first.event_date.end_of_month
-    first_date = LineItem.where(:event_date.gt => last_date.beginning_of_year).asc(:event_date).first.event_date.beginning_of_month
+    #first_date = LineItem.where(:event_date.gt => last_date.beginning_of_year).asc(:event_date).first.event_date.beginning_of_month
+    first_date = LineItem.asc(:event_date).first.event_date.beginning_of_month
     @months = []
     current_month = first_date
     while current_month <= last_date do

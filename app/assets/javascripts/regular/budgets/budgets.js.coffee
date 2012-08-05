@@ -7,6 +7,7 @@ class window.financeRails.views.budgets.BudgetView extends Backbone.View
   events:
     'click .open_create_budget_item': 'onOpenCreateBudgetItem'
     'click .edit_btn': 'onClickEdit'
+    'ajax:success .btn.delete': 'onDeleteOk'
 
   initialize: (options) ->
     _.bindAll @
@@ -22,6 +23,9 @@ class window.financeRails.views.budgets.BudgetView extends Backbone.View
   onClickEdit: (e) ->
     dlg = new financeRails.views.budgets.BudgetItemDlg();
     dlg.openDialog({id: $(e.currentTarget).parents('tr').data('id')});
+
+  onDeleteOk: (e) ->
+    window.location.reload();
 
   closeNearestModal: (e) ->
     $(e.target).closest('.modal').modal('hide')

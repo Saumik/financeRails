@@ -26,6 +26,7 @@
             != currency amount_left
         %td.actions
           = link_to 'Edit', '#', :class => 'btn btn-primary edit_btn'
+          = link_to 'Delete', budget_path(budget_item), :remote => true, :method => :delete, :confirm => 'Are you sure delete to delete ' + budget_item.try(:name).to_s + '?', :class => 'btn btn-danger delete'
     %tr
       %td.total
         Total:

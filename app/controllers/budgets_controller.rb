@@ -1,4 +1,5 @@
 class BudgetsController < ApplicationController
+  MAIN_OBJECT = BudgetItem
   before_filter :assign_section
   def create
     @budget_item = BudgetItem.create(params[:budget_item])
@@ -33,6 +34,12 @@ class BudgetsController < ApplicationController
     end
 
     render :layout => false
+  end
+
+  def destroy
+    @item = MAIN_OBJECT.find(params[:id])
+    @item.destroy
+    render :json => {:refresh_page => 'true'}
   end
 
   private

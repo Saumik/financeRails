@@ -3,6 +3,9 @@ class BudgetReportPresenter
   def initialize
     @budget_items = BudgetItem.all
     last_date = LineItem.desc(:event_date).first.event_date.end_of_month
+    if last_date.month == Date.today.month
+      last_date = (Date.today - 1.month).end_of_month
+    end
     #first_date = LineItem.where(:event_date.gt => last_date.beginning_of_year).asc(:event_date).first.event_date.beginning_of_month
     first_date = LineItem.asc(:event_date).first.event_date.beginning_of_month
     @months = []

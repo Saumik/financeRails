@@ -6,7 +6,8 @@ class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
   el: '#budget_item_modal'
   active_categories: []
   events:
-    'click .add_category': 'onAddCategory'
+    'click .add_category': 'onAddCategory',
+    'click .remove': 'onRemoveCategory'
     'ajax:success #budget_item_modal form': 'reloadPage',
 
   initialize: ->
@@ -31,6 +32,7 @@ class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
       container: '.expense-data',
       push: false
     }
+    @delegateEvents()
 
   onAddCategory: (e) ->
     clicked_item = $(e.currentTarget)
@@ -38,6 +40,9 @@ class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
 
     @active_categories.push {name: clicked_item.parent().attr('data-name')}
     @render()
+
+  onRemoveCategory: (e) ->
+    $(e.currentTarget).parents('li').remove();
 
   loadExisting: (id) ->
     $.ajax({

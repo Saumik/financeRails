@@ -33,7 +33,7 @@ class LineItem
 
   has_and_belongs_to_many :processing_rules, inverse_of: nil
 
-  scope :default_sort, desc(:event_date).asc(:created_at)
+  scope :default_sort, desc(:event_date, :created_at, :id)
 
   def type_name
     TYPE[type].capitalize

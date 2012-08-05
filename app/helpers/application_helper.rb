@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def currency(amount)
-    '<span class="dollar">$</span>' + format_number(amount)
+    '<span class="dollar">$</span>' + format_number(amount).to_i.to_s
   end
 
   def currency_abs(amount)

@@ -146,7 +146,7 @@ class LineItem
   end
 
   def self.in_month_of_date(in_month_of_date, filter_chain = Mongoid::Criteria.new(LineItem))
-    filter_chain.where(:event_date => {'$gte' => in_month_of_date.beginning_of_month.to_datetime,'$lt' => in_month_of_date.end_of_month.to_datetime})
+    filter_chain.where(:event_date => {'$gte' => in_month_of_date.beginning_of_month.to_datetime,'$lte' => in_month_of_date.end_of_month.to_datetime})
   end
 
   # ---------------------------

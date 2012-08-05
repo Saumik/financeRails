@@ -8,7 +8,7 @@ class window.financeRails.views.budgets.BudgetView extends Backbone.View
     'click .open_create_budget_item': 'onOpenCreateBudgetItem'
     'click .edit_btn': 'onClickEdit'
 
-  initialize: ->
+  initialize: (options) ->
     _.bindAll @
     @render()
 

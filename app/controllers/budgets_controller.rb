@@ -7,7 +7,7 @@ class BudgetsController < ApplicationController
 
   def index
     @budget_items = BudgetItem.all
-    @categories = LineItem.categories
+    @categories = LineItem.categories - BudgetItem.existing_categories
 
     @presenter = BudgetReportPresenter.new
   end

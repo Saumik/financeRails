@@ -33,7 +33,7 @@ class LineItemsReportPresenter
   end
 
   def month_total(month, year)
-    (@month_totals["income:#{month}:#{year}"] || 0.0).to_f - (@month_totals["expense:#{month}:#{year}"] || 0.0).to_f
+    (@month_totals["income:#{month}:#{year}"] || 0.0).to_f - (@month_totals["expenses:#{month}:#{year}"] || 0.0).to_f
   end
 
   def total_label_section(section)

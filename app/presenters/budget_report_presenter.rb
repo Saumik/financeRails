@@ -33,7 +33,7 @@ class BudgetReportPresenter
   end
 
   def amount_left_budget_item_in_year(budget_item)
-    @totals[budget_item.name] + budget_item.limit.to_i.to_f * 12
+    @totals[budget_item.name] + budget_item.limit.to_i.to_f * @months.length
   end
 
   def total_limit

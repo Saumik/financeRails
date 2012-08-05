@@ -5,7 +5,11 @@ class LineItemsController < ApplicationController
     end
 
     @new_item = @account.line_items.build
+
     @items = @account.line_items.default_sort
+
+    @items = @items.where(:tags => params[:tag]) if(params[:tag])
+
   end
 
   def create

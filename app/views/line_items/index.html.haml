@@ -7,6 +7,12 @@
       var view = new financeRails.views.LineItemsView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
     });
 
+- content_for :side_bar_content do
+  %h2 Tags
+  %ul.tags.nav.nav-list
+    - LineItem::TAGS.each do |tag|
+      %li{:class => (params[:tag] == tag ? 'active' : '')}= link_to tag, controller: :line_items, action: :index, :tag => tag
+
 // {new_item}
 .create_area
   =semantic_form_for(@new_item, :remote => true, :html => {:class => 'well'}) do |f|

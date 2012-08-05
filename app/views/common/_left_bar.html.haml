@@ -3,3 +3,5 @@
 %ul.accounts.nav.nav-list
   - current_user.accounts.each do |account|
     %li{:class => @account == account ? 'active' : ''}= link_to account.name, :controller => :line_items, :account_id => account.id
+
+= yield :side_bar_content

@@ -181,6 +181,11 @@ class ExternalController < ApplicationController
       line_item.save
     end
 
+    BudgetItem.all.each do |budget_item|
+      budget_item.limit = (budget_item.limit * (1+rand)).round.to_i
+      budget_item.save
+    end
+
     LineItem.reset_balance
   end
 

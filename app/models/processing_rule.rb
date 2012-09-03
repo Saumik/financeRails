@@ -46,8 +46,6 @@ class ProcessingRule
   def perform(item)
     return if item.has_processing_rule_of_type(item_type)
 
-    item.processing_rules << self
-
     if item_type == PAYEE_TYPE
       item.original_payee_name = item.payee_name
       item.payee_name = replacement
@@ -56,6 +54,7 @@ class ProcessingRule
       item.category_name = replacement
       item.save
     end
+    item.processing_rules << self
   end
 
   def perform_all

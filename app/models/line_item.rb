@@ -5,13 +5,6 @@ class LineItem
   include Mongoid::Timestamps
   include SpannedLineItemSupport
 
-  TAGS = ['Cash', 'Exclude from Reports']
-
-  around_update :on_around_update_assign_old_payee_name
-
-  belongs_to :account
-  has_one :imported_line, :dependent => :destroy
-
   TYPE = %w[income expense]
   INCOME = 0
   EXPENSE = 1
@@ -21,6 +14,13 @@ class LineItem
 
   TRANSFER_IN = 'Transfer In'
   TRANSFER_OUT = 'Transfer Out'
+  TAGS = ['Cash', 'Exclude from Reports']
+  INCOME_CATEGORIES = ['Salary']
+
+  around_update :on_around_update_assign_old_payee_name
+
+  belongs_to :account
+  has_one :imported_line, :dependent => :destroy
 
   field :type, :type => Integer, :default => 1
   field :amount, :type => BigDecimal, :default => 0
@@ -45,6 +45,18 @@ class LineItem
 
   def income?
     type == INCOME
+  end
+
+  def self.income_items
+    where(:category_name.in => INCOME_CATEGORIES)
+  end
+
+  def self.expense_items
+    where(:category_name.nin => INCOME_CATEGORIES)
+  end
+
+  class << self
+    alias :expenses_items :expense_items
   end
 
   def expense?
@@ -151,9 +163,10 @@ class LineItem
 
   def self.sum_with_filters(filters = {}, post_process = nil)
     filter_chain = Mongoid::Criteria.new(LineItem)
-    filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories]
-    filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date]
-    filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type]
+    filter_chain = send(filters[:section].to_s + '_items') if filters[:section].present?
+    filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories].present?
+    filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date].present?
+    filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type].present?
     filter_chain = post_process.present? ? post_process.perform_after(filter_chain.default_sort.to_a) : filter_chain.default_sort.to_a
     filter_chain.sum(&:signed_amount)
   end

@@ -16,6 +16,7 @@ class LineItemsController < ApplicationController
     render :nothing => true and return if params[:line_item][:amount].to_i == 0
 
     changed_line_item = @account.line_items.build(params[:line_item])
+    changed_line_item.source = LineItem::SOURCE_MANUAL
     changed_line_item.tags.reject!(&:blank?)
     changed_line_item.save
 

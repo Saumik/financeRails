@@ -14,6 +14,7 @@ module Importers
         amount_money = amount.scan(/[0-9.\-]+/).join.to_f
 
         line_item = LineItem.new
+        line_item.source = LineItem::SOURCE_IMPORT
         line_item.type = amount.include?('(') ? LineItem::EXPENSE : LineItem::INCOME
         line_item.amount = amount_money.abs
         line_item.comment = "Check #{check_number}" if check_number.present?

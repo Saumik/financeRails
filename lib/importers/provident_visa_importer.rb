@@ -14,6 +14,7 @@ module Importers
         next nil if amount_money == 0.0
 
         line_item = LineItem.new
+        line_item.source = LineItem::SOURCE_IMPORT
         line_item.type = amount_money > 0 ? LineItem::EXPENSE : LineItem::INCOME
         line_item.amount = amount_money.abs
         line_item.comment = "Transaction #{reference_number}" if reference_number.present?

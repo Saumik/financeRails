@@ -16,6 +16,9 @@ class LineItem
   INCOME = 0
   EXPENSE = 1
 
+  SOURCE_IMPORT = 0
+  SOURCE_MANUAL = 1
+
   TRANSFER_IN = 'Transfer In'
   TRANSFER_OUT = 'Transfer Out'
 
@@ -28,6 +31,7 @@ class LineItem
   field :comment, :type => String
   field :account_id
   field :tags, :type => Array, :default => []
+  field :source, :type => Integer, :default => 0
 
   field :balance, :type => BigDecimal
 
@@ -128,7 +132,7 @@ class LineItem
   end
 
   def self.all_unrenamed_payees
-    LineItem.where(:original_payee_name => nil).inject({}) do |result, line_item|
+    LineItem.where(source: SOURCE_IMPORT, original_payee_name: nil).inject({}) do |result, line_item|
       result[line_item.payee_name] ||= line_item.category_name if line_item.payee_name.present?
       result
     end
@@ -174,8 +178,9 @@ class LineItem
                     :event_date => params[:event_date],
                     :category_name => params[:category_name],
                     :payee_name => params[:payee_name],
-                    :comment => params[:comment]
-                    )
+                    :comment => params[:comment],
+                    :source => SOURCE_MANUAL
+    )
   end
 
   # end mobile support functions

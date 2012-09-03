@@ -154,7 +154,8 @@ class LineItem
     filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories]
     filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date]
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type]
-    post_process.perform_after(filter_chain.default_sort.to_a).sum(&:signed_amount)
+    filter_chain = post_process.present? ? post_process.perform_after(filter_chain.default_sort.to_a) : filter_chain.default_sort.to_a
+    filter_chain.sum(&:signed_amount)
   end
 
   def self.search_with_filters(filters = {})

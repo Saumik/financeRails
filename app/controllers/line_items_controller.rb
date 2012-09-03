@@ -60,14 +60,14 @@ class LineItemsController < ApplicationController
   def update
     @item = LineItem.find(params[:id])
 
-    original_item_name = @item.payee_name
+    original_payee_name = @item.payee_name
     @item.attributes = params[:line_item]
     @item.tags.reject!(&:blank?)
-    @item.original_payee_name = original_payee_name if @item.payee_name != original_item_name and @item.original_payee_name.blank?
+    @item.original_payee_name = original_payee_name if @item.payee_name != original_payee_name and @item.original_payee_name.blank?
     @item.save
 
     if params[:always_assign] and @item.category_name.present? and @item.payee_name.present?
-      ProcessingRule.create_rename_and_assign_rule_if_not_exists(ProcessingRule.get_category_name_rules, original_item_name, @item.payee_name, @item.category_name)
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(ProcessingRule.get_category_name_rules, original_payee_name, @item.payee_name, @item.category_name)
     end
 
     LineItem.reset_balance

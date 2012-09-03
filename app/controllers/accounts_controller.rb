@@ -1,4 +1,6 @@
 class AccountsController < ApplicationController
+  respond_to :js, :only => :edit
+
   # GET /accounts
   # GET /accounts.json
   def index
@@ -29,6 +31,7 @@ class AccountsController < ApplicationController
     @account = current_user.accounts.build()
     @account.name = params[:account][:name]
     @account.store_password(params[:account][:user_password], params[:account][:account_password])
+    @account.import_format = params[:account][:import_format]
 
     if @account.save
       redirect_to @account, notice: 'Account was successfully created.'
@@ -44,8 +47,7 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       if @account.update_attributes(params[:account])
-        format.html { redirect_to @account, notice: 'Account was successfully updated.' }
-        format.json { head :no_content }
+        format.js { }
       else
         format.html { render action: "edit" }
         format.json { render json: @account.errors, status: :unprocessable_entity }

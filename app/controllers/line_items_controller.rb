@@ -59,9 +59,10 @@ class LineItemsController < ApplicationController
   def update
     @item = LineItem.find(params[:id])
 
-    original_item_name = @item.original_name
+    original_item_name = @item.payee_name
     @item.attributes = params[:line_item]
     @item.tags.reject!(&:blank?)
+    @item.original_payee_name = original_payee_name if @item.payee_name != original_item_name and @item.original_payee_name.blank?
     @item.save
 
     if params[:always_assign] and @item.category_name.present? and @item.payee_name.present?
@@ -80,8 +81,37 @@ class LineItemsController < ApplicationController
     render :json => {:remove_id => params[:id]}
   end
 
+  #noinspection RubyArgCount
   def show
 
+  end
+
+  def search_overlay
+    search_params = {}
+    search_params[:in_month_of_date] = Date.new(params[:year].to_i, params[:month].to_i, 1) if params[:month].present? and params[:year].present?
+    search_params[:categories] = params[:categories].split(',') if params[:categories].present?
+    @line_items = LineItem.search_with_filters(search_params)
+  end
+
+  def split
+    @item = LineItem.find(params[:id])
+
+    render :layout => false
+  end
+
+  def perform_split
+    @item = LineItem.find(params[:id])
+
+    added_items = []
+    (0..params[:amount_of_items].to_i-1).each do |index|
+      new_item = @item.split_from_item(params[:line_item][:splitted][index.to_s])
+      @item.amount -= new_item.amount.to_f
+      added_items << (render_to_string('_item', :layout => false, :locals => {:item => new_item}))
+    end
+
+    @item.save
+
+    render :json => { :add_items => added_items, :replace_id => @item.id, :content => render_to_string('_item', :layout => false, :locals => {:item => @item}) }
   end
 
   def autocomplete_payee
@@ -141,4 +171,4 @@ class LineItemsController < ApplicationController
       end
     end
   end
-end
+  end

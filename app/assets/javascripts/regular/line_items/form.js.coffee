@@ -4,8 +4,8 @@ window.financeRails.views.line_items ||= {}
 
 class window.financeRails.views.line_items.FormView extends Backbone.View
   events:
-      'change .typeahead': 'onChangeTypeAhead',
-      'change .payee_name': 'onChangePayeeName'
+    'change .typeahead': 'onChangeTypeAhead'
+    'change .payee_name': 'onChangePayeeName'
 
   initialize: (options) ->
     _.bindAll @

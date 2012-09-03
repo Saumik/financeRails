@@ -22,7 +22,7 @@ class LineItemsReportPresenter
 
   def total_amount_of_type_in_month(section, category_name, month, year)
     current_date = Date.new(year, month, 1)
-    LineItem.sum_with_filters(:type => @section_to_type[section], :categories => [category_name], :in_month_of_date => current_date).tap do |amount|
+    LineItem.sum_with_filters({:type => @section_to_type[section], :categories => [category_name], :in_month_of_date => current_date}, LineItemReportProcess.new).tap do |amount|
       @month_totals["#{section}:#{month}:#{year}"] ||= 0
       @month_totals["#{section}:#{month}:#{year}"] += amount.to_f.abs
     end

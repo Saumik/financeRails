@@ -28,4 +28,5 @@
 
 = form_tag(:action => :do_import) do
   = hidden_field_tag :account_id, @account.id
-  = submit_tag
+  = submit_tag 'Perform Import'
+  = submit_tag 'Delete Previous Import', :confirm => 'Are you sure? all Already Imported items will be removed?'

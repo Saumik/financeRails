@@ -1,30 +1,6 @@
 require 'spec_helper'
 
 describe LineItem do
-  describe '#reset_balance' do
-    before do
-
-    end
-    it 'should work for regular line items' do
-      line_item_1 = FactoryGirl.create :line_item_1
-      line_item_2 = FactoryGirl.create :line_item_2
-      LineItem.reset_balance
-      line_item_2.reload
-      line_item_2.balance.to_i.should == 0
-    end
-    it 'should work for spanned line items' do
-      line_item_1 = FactoryGirl.create :line_item_1
-      line_item_2 = FactoryGirl.create :line_item_2
-      line_item_2.span(3)
-      LineItem.reset_balance
-      line_item_2.reload
-      line_item_2.balance.to_i.should == 0
-      line_item_2.master.should == true
-      line_item_2.spanned.should_not be_nil
-      puts LineItem.all.collect(&:to_json).inspect
-      line_item_2.spanned.line_items.length.should == 3
-    end
-  end
   describe '#rename_payee' do
     it 'should rename the payee name'
     it 'should put under original_payee_name the old name'
@@ -53,6 +29,27 @@ describe LineItem do
       line_item.reload
       line_item.payee_name.should == 'Safeway'
       line_item.category_name.should == 'Shopping'
+    end
+  end
+  describe '#split_from_item' do
+    it 'should create another line item from existing' do
+      line_item_1 = FactoryGirl.create :line_item_1
+      new_item = line_item_1.split_from_item(amount: '20', category_name: 'Groceries')
+      new_item.reload
+      new_item.payee_name = line_item_1.payee_name
+      new_item.amount.should == 20
+      new_item.category_name.should == 'Groceries'
+      new_item.id.should_not == line_item_1.id
+      LineItem.count.should == 2
+    end
+  end
+  describe '#clone_all' do
+    it 'should not affect the original item' do
+      line_item_1 = FactoryGirl.create :line_item_1
+      original_id = line_item_1.id
+
+      line_item_1.clone_all
+      line_item_1.id.should == original_id
     end
   end
 end

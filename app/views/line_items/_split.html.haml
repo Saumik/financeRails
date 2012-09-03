@@ -1,0 +1,26 @@
+.split_form_area.modal.hide
+  = form_for @item, :method => :post, :url => line_item_path(@item) + '/perform_split', :remote => true, :html => { :class => 'split_form remote_form' } do |f|
+    .modal-body.well
+      Splitting:
+      %span.amount!= currency @item[:amount]
+      to
+      = @item.payee_name
+      for
+      =@item.category_name
+      - 5.times.each do |index|
+        #item.item{:id => index}
+          = f.fields_for :splitted, :index => index do |split_f|
+            = split_f.text_field :amount, class: 'amount'
+            $ For:
+            = split_f.text_field :category_name, class: 'typeahead category_name'
+          %a.btn.btn-small.add-item
+            %i.icon-plus-sign
+          %a.btn.btn-small.remove-item
+            %i.icon-minus-sign
+      = hidden_field_tag :amount_of_items, '', :class => :amount_of_items
+      Amount Left:
+      %span.amount#amount-left
+      , will remain unchanged
+    .modal-footer
+      %a.btn(data-dismiss='modal') Cancel
+      %button.edit_item_btn.btn.btn-primary.submit{:type => :submit} Submit

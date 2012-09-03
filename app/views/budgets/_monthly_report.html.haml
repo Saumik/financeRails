@@ -18,7 +18,8 @@
               %li=category
         - @presenter.months.each do |(month, year)|
           %td
-            !=currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month, year)
+            = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: year, categories: budget_item.categories.join(',')),  {remote: true}, {class: 'open-search-line-items'} do
+              !=currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month, year)
         %td
           - amount_left = @presenter.amount_left_budget_item_in_year(budget_item)
           != currency @presenter.total_expenses_for_budget_item_in_year(budget_item)

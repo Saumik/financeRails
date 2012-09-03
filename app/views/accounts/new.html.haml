@@ -1,5 +1,8 @@
 %h1 New account
 
-= render 'form'
+= semantic_form_for @account do |f|
+  = render :partial => 'form', :locals => {:f => f}
+  .actions
+    = f.submit 'Save'
 
 = link_to 'Back', accounts_path

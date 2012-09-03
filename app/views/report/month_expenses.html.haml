@@ -22,7 +22,8 @@
             = category_name
           - @presenter.months.each do |(month, year)|
             %td{:class => @presenter.section_class(section)}
-              !=currency_abs @presenter.total_amount_of_type_in_month(section, category_name, month, year)
+              = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: year, categories: category_name),  {remote: true}, {class: 'open-search-line-items'} do
+                !=currency_abs @presenter.total_amount_of_type_in_month(section, category_name, month, year)
     - @presenter.report_sections.each do |section|
       %tr.total
         %td.total

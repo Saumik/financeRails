@@ -64,22 +64,6 @@ class LineItem
     event_date = Date.parse(str)
   end
 
-  def self.reset_balance
-    current_balance = 0
-
-    default_sort.reverse.each do |item|
-
-      if(!item.virtual)
-        current_balance += item.amount * item.multiplier
-      end
-
-      if(item.balance != current_balance)
-        item.balance = current_balance
-        item.save
-      end
-    end
-  end
-
   def clone_all
     attribute_values = attributes.select {|a| !%w(id, _id, created_at).include? a}
     attribute_values.delete('_id')
@@ -88,6 +72,15 @@ class LineItem
 
   def clone_new
     LineItem.new(:event_date => event_date)
+  end
+
+  # splitted_item_fields should have the fields :amount, :category_name
+  def split_from_item(splitted_item_fields)
+    new_item = clone_all
+    new_item.amount = splitted_item_fields[:amount].to_f
+    new_item.category_name = splitted_item_fields[:category_name]
+    new_item.save!
+    new_item
   end
 
   def self.payees
@@ -152,12 +145,20 @@ class LineItem
   # ---------------------------
   # Reporting Functions
 
-  def self.sum_with_filters(filters = {})
+  def self.sum_with_filters(filters = {}, post_process)
     filter_chain = Mongoid::Criteria.new(LineItem)
     filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories]
     filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date]
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type]
-    filter_chain.default_sort.to_a.sum(&:signed_amount)
+    post_process.perform_after(filter_chain.default_sort.to_a).sum(&:signed_amount)
+  end
+
+  def self.search_with_filters(filters = {})
+    filter_chain = Mongoid::Criteria.new(LineItem)
+    filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories]
+    filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date]
+    filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type]
+    filter_chain.default_sort
   end
 
   # end reporting functions

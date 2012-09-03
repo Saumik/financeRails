@@ -1,12 +1,14 @@
 jQuery.fn.centerModalInWindow = function () {
+    if($(this).hasClass('auto-resize')) {
+        $(this).css('width', $(window).width() - 200);
+    }
+    var top = (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop();
+    var left = ($(window).width() - $(this).outerWidth()) / 2;
     this.css({
-        'position': 'fixed',
-        'left': '50%',
-        'top': '50%',
-    });
-    this.css({
-        'margin-left': -this.width() / 2 + 'px',
-        'margin-top': -this.height() / 2 + 'px'
+        'position': 'absolute',
+        'left': left < 0 ? 0 : left,
+        'top': top < 30 ? 30 : top,
+        'margin': 0
     });
     return this;
 }

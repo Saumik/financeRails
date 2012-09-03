@@ -1,0 +1,18 @@
+.search-line-item-overlay.modal.auto-resize.hide
+  .modal-header
+    %a.close-model-right{:data => {:dismiss => 'modal', 'aria-hidden' => true}} Close
+    %h3 Filtered Line Items
+  .modal-body.well
+    %table.main_table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th.type.st-width       Type
+          %th.event_date.st-width Event Date
+          %th.amount.st-width     Amount
+          %th.payee_name          Payee
+          %th.category_name       Category
+          %th                     Balance
+          %th.actions             Actions
+      %tbody
+        != render :collection => @line_items, :partial => 'item'
+

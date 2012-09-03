@@ -1,0 +1,7 @@
+.edit_account_area.modal.hide
+  = semantic_form_for @account, :remote => true, :html => { :class => 'edit_account remote_form' } do |f|
+    .modal-body.well
+      = render :partial => 'form', :locals => {:f => f}
+    .modal-footer
+      %a.btn(data-dismiss='modal') Cancel
+      %input.edit_item_btn.btn.btn-primary.submit{:type => :submit}

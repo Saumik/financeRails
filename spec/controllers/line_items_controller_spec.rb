@@ -1,6 +1,29 @@
 require 'spec_helper'
 
-class LineItemsControllerTest < ActionController::TestCase
+describe LineItemsController do
+  include Devise::TestHelpers
 
+  describe '#perform_split' do
+    it 'should work' do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in FactoryGirl.create(:user)
 
+      line_item_1 = FactoryGirl.create :line_item_1
+      original_amount = line_item_1.amount
+
+      post :perform_split, {:line_item =>{
+          :splitted=>{
+              "0"=>{"amount"=>"10", "category_name"=>"Food:Groceries"},
+              "1"=>{"amount"=>"", "category_name"=>""},
+              "2"=>{"amount"=>"", "category_name"=>""},
+              "3"=>{"amount"=>"", "category_name"=>""},
+              "4"=>{"amount"=>"", "category_name"=>""}}},
+          "amount_of_items"=>"1", :id => line_item_1.id
+        }
+
+      LineItem.count.should == 2
+      line_item_1.reload
+      line_item_1.amount.should == original_amount - 10
+    end
+  end
 end

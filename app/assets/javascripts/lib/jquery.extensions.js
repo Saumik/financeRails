@@ -4,10 +4,11 @@ jQuery.fn.centerModalInWindow = function () {
     }
     var top = (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop();
     var left = ($(window).width() - $(this).outerWidth()) / 2;
+    var topMost = $(window).scrollTop() + 30;
     this.css({
         'position': 'absolute',
         'left': left < 0 ? 0 : left,
-        'top': top < 30 ? 30 : top,
+        'top': top < topMost ? topMost : top,
         'margin': 0
     });
     return this;

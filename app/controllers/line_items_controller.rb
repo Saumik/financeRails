@@ -1,4 +1,5 @@
 class LineItemsController < ApplicationController
+
   def index
     unless @account.present?
       render 'common/select_account' and return
@@ -78,7 +79,7 @@ class LineItemsController < ApplicationController
   def destroy
     @item = LineItem.find(params[:id])
     @item.delete
-    LineItem.reset_balance
+    @account.reset_balance
     render :json => {:remove_id => params[:id]}
   end
 
@@ -103,16 +104,20 @@ class LineItemsController < ApplicationController
   def perform_split
     @item = LineItem.find(params[:id])
 
-    added_items = []
+    @added_items = []
     (0..params[:amount_of_items].to_i-1).each do |index|
       new_item = @item.split_from_item(params[:line_item][:splitted][index.to_s])
       @item.amount -= new_item.amount.to_f
-      added_items << (render_to_string('_item', :layout => false, :locals => {:item => new_item}))
+      @added_items << (render_to_string('_item', :layout => false, :locals => {:item => new_item}))
     end
 
     @item.save
 
-    render :json => { :add_items => added_items, :replace_id => @item.id, :content => render_to_string('_item', :layout => false, :locals => {:item => @item}) }
+    @content = render_to_string('_item', :layout => false, :locals => {:item => @item})
+    respond_to do |format|
+      format.js { render :layout => false }
+      format.any { render :text => "Invalid format", :status => 403 }
+    end
   end
 
   def autocomplete_payee

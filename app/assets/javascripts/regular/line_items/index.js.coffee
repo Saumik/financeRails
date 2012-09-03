@@ -14,10 +14,6 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     'ajax:success .edit_form_area' : 'onEditServerOk'
     # {delete_item}
     'ajax:success .btn.delete': 'onDeleteOk'
-    'ajax:success .btn.split': 'onSplitFormArrived'
-    # split item
-#    'click .split_form_area .btn-primary.submit': 'onSplitClickOk'
-#    'ajax:success .split_form_area' : 'onSplitServerOk'
 
   initialize: (options) ->
     # {new_item}
@@ -80,31 +76,3 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
   #{delete_item}
   onDeleteOk: (e, data, xhr) ->
     @$el.find('[data-item-id=' + data.remove_id + ']').remove();
-
-  onSplitFormArrived: (e, data, xhr) ->
-    $('.split_form_area .modal-body').html(data)
-    $('.split_form_area').modal();
-    $('.split_form_area').centerModalInWindow();
-    @form_view = new @domain.SplitFormView($.extend(@options, {el: '.split_form_area', amount_left: $(e.currentTarget).data('amount')}))
-
-  onSplitClickOk: ->
-    $('.split_form').submit()
-
-  onSplitServerOk: (e, data, xhr) ->
-    financeRails.common.closeNearestModal(e);
-
-    # draw splitted items
-    _(data.add_items).each (item) =>
-      @$el.find('.main_table').prepend($(item))
-      @$el.find($(item).attr('id')).highlight()
-
-    # update edited item
-
-    newcontent = data.content
-    datatable = $('.main_table').dataTable()
-    if datatable
-      datatable.fnUpdateRawHTML(data.content, @$el.find('[data-item-id=' + data.replace_id + ']').get(0), 0)
-    else
-      @$el.find('[data-item-id=' + data.replace_id + ']').replace(data.content)
-    @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');
-

@@ -28,7 +28,7 @@ class LineItemsController < ApplicationController
       @changed_line_items << changed_line_item
     end
 
-    LineItem.reset_balance
+    @account.reset_balance
 
     all_payee_rules = ProcessingRule.get_payee_rules
     all_category_rules = ProcessingRule.get_category_name_rules

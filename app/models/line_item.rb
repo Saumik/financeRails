@@ -149,7 +149,7 @@ class LineItem
   # ---------------------------
   # Reporting Functions
 
-  def self.sum_with_filters(filters = {}, post_process)
+  def self.sum_with_filters(filters = {}, post_process = nil)
     filter_chain = Mongoid::Criteria.new(LineItem)
     filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories]
     filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date]

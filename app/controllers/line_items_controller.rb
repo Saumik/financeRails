@@ -70,7 +70,7 @@ class LineItemsController < ApplicationController
       ProcessingRule.create_rename_and_assign_rule_if_not_exists(ProcessingRule.get_category_name_rules, original_payee_name, @item.payee_name, @item.category_name)
     end
 
-    LineItem.reset_balance
+    @account.reset_balance
 
     render :json => {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}
   end

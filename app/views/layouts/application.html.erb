@@ -38,7 +38,7 @@
   </div>
 </div>
 <div class="<%=controller_name%>_section <%=action_name%>">
-  <% controllers_without_nav = %w(sessions external accounts) %>
+  <% controllers_without_nav = %w(sessions external accounts registrations) %>
   <%= render :partial => @override_section ? @override_section + '/nav' : 'nav' unless controllers_without_nav.include? controller_name %>
 
   <% if current_user %>

@@ -7,7 +7,8 @@ class UsersController < ApplicationController
         redirect_to '/'
       end
     else
-      redirect_to :controller => :sessions, :action => :new
+      flash[:error] = 'Invalid username or password'
+      redirect_to '/users/sign_in'
     end
   end
 end

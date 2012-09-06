@@ -29,9 +29,9 @@ class window.financeRails.views.mobile.Index extends Backbone.View
       $('.line_items').html('')
       for item in @currentData
         $('.line_items').append('<li><a class="view-item" data-item-index="' + @currentData.indexOf(item) + '" href="#view-item">
-               <span class="event_date">' + moment(item.event_date).format('M/D') + '</span>
-               <span class="amount">$' + item.amount + '</span>
-                <span class="payee_name">' + item.payee_name + '</span></a></li>')
+               <span class="event_date">' + moment(item.line_item.event_date).format('M/D') + '</span>
+               <span class="amount">$' + item.line_item.amount + '</span>
+                <span class="payee_name">' + item.line_item.payee_name + '</span></a></li>')
       $('.line_items').listview('refresh');
 
   sync: ->
@@ -70,11 +70,11 @@ class window.financeRails.views.mobile.Index extends Backbone.View
   onPageChangeViewItem: (e, options) ->
     $.mobile.changePage('#main-page') if !@currentData[@currentIndex]
     $('#view-item .type').html(@currentData[@currentIndex].type == 0 ? 'Income' : 'Expense')
-    $('#view-item .event_date').html(moment(@currentData[@currentIndex].event_date).format('M/D/YYYY'))
-    $('#view-item .amount').html('$' + @currentData[@currentIndex].amount)
-    $('#view-item .payee_name').html(@currentData[@currentIndex].payee_name)
-    $('#view-item .category_name').html(@currentData[@currentIndex].category_name)
-    $('#view-item .comment').html(@currentData[@currentIndex].comment)
+    $('#view-item .event_date').html(moment(@currentData[@currentIndex].line_item.event_date).format('M/D/YYYY'))
+    $('#view-item .amount').html('$' + @currentData[@currentIndex].line_item.amount)
+    $('#view-item .payee_name').html(@currentData[@currentIndex].line_item.payee_name)
+    $('#view-item .category_name').html(@currentData[@currentIndex].line_item.category_name)
+    $('#view-item .comment').html(@currentData[@currentIndex].line_item.comment)
 
   onPageChange: (e, data) ->
     @delegateEvents();

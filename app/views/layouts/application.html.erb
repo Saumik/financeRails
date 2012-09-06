@@ -38,7 +38,7 @@
   </div>
 </div>
 <div class="<%=controller_name%>_section <%=action_name%>">
-  <% controllers_without_nav = %w(sessions external accounts registrations) %>
+  <% controllers_without_nav = %w(sessions external accounts registrations passwords) %>
   <%= render :partial => @override_section ? @override_section + '/nav' : 'nav' unless controllers_without_nav.include? controller_name %>
 
   <% if current_user %>
@@ -48,30 +48,14 @@
           <%= render 'common/left_bar' %>
         </div>
         <div class="main_area span10">
-          <% if flash[:error].present? %>
-            <div class="alert alert-error">
-              <button class="close" data-dismiss="alert">×</button>
-              <strong>Error:</strong> <%= flash[:error] %>
-            </div>
-          <% end %>
-          <% if flash[:success].present? %>
-            <div class="alert alert-success">
-              <button class="close" data-dismiss="alert">×</button>
-              <strong><%= flash[:success] %></strong>
-            </div>
-          <% end %>
-          <% if flash[:notice].present? %>
-            <div class="alert alert-info">
-              <button class="close" data-dismiss="alert">×</button>
-              <strong><%= flash[:notice] %></strong>
-            </div>
-          <% end %>
+          <%= render partial: 'common/flash_messages' %>
           <%= yield %>
         </div>
       </div>
     </div>
   <% else %>
     <div class="full-container">
+      <%= render partial: 'common/flash_messages' %>
       <%= yield %>
     </div>
   <% end %>

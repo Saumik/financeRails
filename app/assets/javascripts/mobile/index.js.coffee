@@ -69,7 +69,7 @@ class window.financeRails.views.mobile.Index extends Backbone.View
 
   onPageChangeViewItem: (e, options) ->
     $.mobile.changePage('#main-page') if !@currentData[@currentIndex]
-    $('#view-item .type').html(@currentData[@currentIndex].type == 0 ? 'Income' : 'Expense')
+    $('#view-item .type').html(@currentData[@currentIndex].line_item.type == 0 ? 'Income' : 'Expense')
     $('#view-item .event_date').html(moment(@currentData[@currentIndex].line_item.event_date).format('M/D/YYYY'))
     $('#view-item .amount').html('$' + @currentData[@currentIndex].line_item.amount)
     $('#view-item .payee_name').html(@currentData[@currentIndex].line_item.payee_name)

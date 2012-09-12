@@ -11,7 +11,7 @@ class User
   else
     devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :registerable
   end
-  
+
   ## Database authenticatable
   field :email,              :type => String, :null => false, :default => ""
   field :encrypted_password, :type => String, :null => false, :default => ""

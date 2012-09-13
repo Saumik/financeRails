@@ -26,7 +26,7 @@
           %option{:value => LineItem::INCOME} Income
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'event_date'} Event Date:
-        %input#event_date{:type => :date, :name => :event_date, :value => Date.today}
+        %input#event_date{:type => :text, :name => :event_date, :value => Date.today}
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'amount'} Amount:
         %input#amount{:type => :text, :name => :amount}

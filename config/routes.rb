@@ -18,6 +18,8 @@ FinanceRails2::Application.routes.draw do
   post 'external/do_import'
 
   post 'users/login' => 'users#login'
+  get 'users/my_profile' => 'users#my_profile'
+  put 'users/update_profile' => 'users#update_profile'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

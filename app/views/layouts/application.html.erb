@@ -33,14 +33,14 @@
           <li><%= link_to 'Export DB', :controller => '/external', :action => :export_json %></li>
         </ul>
         <% if user_signed_in? %>
-          <div class="logged-in-info">Welcome <%= current_user.email %> (<%= link_to "Logout", destroy_user_session_path, :method => :delete %>)</div>
+          <div class="logged-in-info">Welcome <%= link_to current_user.email, '/users/my_profile' %> (<%= link_to "Logout", destroy_user_session_path, :method => :delete %>)</div>
         <% end %>
       </div>
     </div>
   </div>
 <% end %>
 <div class="<%=controller_name%>_section <%=action_name%>">
-  <% controllers_without_nav = %w(sessions external accounts registrations passwords) %>
+  <% controllers_without_nav = %w(sessions external accounts registrations passwords users) %>
   <%= render :partial => @override_section ? @override_section + '/nav' : 'nav' unless controllers_without_nav.include? controller_name %>
 
   <% if current_user %>

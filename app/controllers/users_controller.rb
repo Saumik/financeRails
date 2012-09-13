@@ -11,4 +11,17 @@ class UsersController < ApplicationController
       redirect_to '/users/sign_in'
     end
   end
+
+  def my_profile
+    @user = current_user
+  end
+
+  def update_profile
+    @user = current_user
+    @user.default_account_id = params[:user][:default_account_id]
+    @user.save!
+
+    flash[:success] = 'Profile was updated'
+    redirect_to '/users/my_profile'
+  end
 end

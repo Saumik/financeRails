@@ -13,6 +13,9 @@ class window.financeRails.views.mobile.Index extends Backbone.View
     'click .add-btn': 'onClickAdd'
     'click a.view-item': 'onClickViewItem'
     'click #add-line-item-form .submit-btn': 'onSubmitAddLineItem'
+    'click .select-payee': 'onClickSelectPayee'
+    'click .select-category': 'onClickSelectCategory'
+    'financeRails:pagechange #add-line-item': 'onPageChangeAddLineItem'
     'financeRails:pagechange #main-page': 'onPageChangeMainPage'
     'financeRails:pagechange #view-item': 'onPageChangeViewItem'
 
@@ -56,6 +59,7 @@ class window.financeRails.views.mobile.Index extends Backbone.View
   onSubmitAddLineItem: (e) ->
     e.preventDefault();
     item = $('#add-line-item-form').serializeObject();
+    item.modified = true
     @currentData.push item
     @modifiedIndices.push @currentData.length - 1
     @sync()
@@ -66,6 +70,11 @@ class window.financeRails.views.mobile.Index extends Backbone.View
 
   onPageChangeMainPage: (e, options) ->
     @render();
+
+  onPageChangeAddLineItem: (e) ->
+    $('#add-line-item-form #payee_name').val(@selectedPayee) if @selectedPayee
+    $('#add-line-item-form #category_name').val(@selectedCategory) if @selectedCategory
+
 
   onPageChangeViewItem: (e, options) ->
     $.mobile.changePage('#main-page') if !@currentData[@currentIndex]
@@ -81,3 +90,10 @@ class window.financeRails.views.mobile.Index extends Backbone.View
     if data.options
       data.toPage.trigger('financeRails:pagechange', data.options)
 
+  onClickSelectPayee: (e) ->
+    @selectedPayee = $(e.currentTarget).text();
+    history.back();
+
+  onClickSelectCategory: (e) ->
+    @selectedCategory = $(e.currentTarget).text();
+    history.back();

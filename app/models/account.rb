@@ -37,4 +37,14 @@ class Account
       end
     end
   end
+
+  # ---------------------------
+  # Mobile support functions
+
+  def create_from_mobile(params)
+    line_items.create(LineItem.serialize_from_mobile(params))
+  end
+
+  # end mobile support functions
+  # ---------------------------
 end

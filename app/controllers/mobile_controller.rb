@@ -7,12 +7,13 @@ class MobileController < MobileApplicationController
   def sync
     data_received = JSON.parse(params[:client_data])
 
+    current_account = User.first.default_account
     data_received.each do |item|
       if item['id'].blank?
-        LineItem.create_from_mobile(item)
+        current_account.create_from_mobile(item)
       end
     end
-
+    current_account.reset_balance
 
     respond_to do |format|
       format.json do

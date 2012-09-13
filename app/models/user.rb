@@ -2,6 +2,7 @@ class User
   include Mongoid::Document
 
   has_many :accounts
+  has_one :default_account, class_name: 'Account'
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -45,4 +46,5 @@ class User
   # field :authentication_token, :type => String
 
   field :last_date, :type => Date
+  field :default_account_id
 end

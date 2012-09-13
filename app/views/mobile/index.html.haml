@@ -3,7 +3,7 @@
     $(document).ready(function() {
       var view = new financeRails.views.mobile.Index();
     });
-%div#main-page{:data => {:role => :page}}
+%div#main-page{data: {role: :page}}
   %div{:data => {:role => :header}}
     %h1
       Transactions
@@ -21,21 +21,23 @@
     %form#add-line-item-form
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'type'} Type:
-        %select#type{:name => 'type', :data => {:role => :slider}}
+        %select.select#type{:name => 'type'}
           %option{:value => LineItem::EXPENSE} Expense
           %option{:value => LineItem::INCOME} Income
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'event_date'} Event Date:
-        %input#event_date{:type => :date, :name => :event_date}
+        %input#event_date{:type => :date, :name => :event_date, :value => Date.today}
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'amount'} Amount:
         %input#amount{:type => :text, :name => :amount}
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'payee_name'} Payee Name:
         %input#payee_name{:type => :text, :name => :payee_name}
+        %a{:href => '#pick-payee', :data => {:role => :button, :inline => 'true', :mini => 'true'}} Pick
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'category_name'} Category Name:
         %input#category_name{:type => :text, :name => :category_name}
+        %a{:href => '#pick-category', :data => {:role => :button, :inline => 'true', :mini => 'true'}} Pick
       %div{:data => {:role => :fieldcontain}}
         %label{:for => 'comment'} Comment:
         %input#comment{:type => :text, :name => :comment}
@@ -76,3 +78,21 @@
         %a{:href => '#add-line-item', :data => {:role => :button}} Add Item
       .ui-block-b
         %a{:href => '#add-line-item', :data => {:role => :button}} Edit Item
+
+%div#pick-payee{:data => {:role => :page}}
+  %div{:data => {:role => :header}}
+    %a{:href => '#main-page', :data => {:icon => 'arrow-l', :rel => 'back', :role => 'button'}} Back
+    %h1 Pick a Payee
+  %ul.payees{'data-role' => 'listview'}
+    - LineItem.payees.each do |payee_name|
+      %li
+        %a.select-payee=payee_name
+
+%div#pick-category{:data => {:role => :page}}
+  %div{:data => {:role => :header}}
+    %a{:href => '#main-page', :data => {:icon => 'arrow-l', :rel => 'back', :role => 'button'}} Back
+    %h1 Pick a Category
+  %ul.payees{'data-role' => 'listview'}
+    - LineItem.categories.each do |category_name|
+      %li
+        %a.select-category=category_name

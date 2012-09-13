@@ -37,7 +37,7 @@ class LineItem
 
   has_and_belongs_to_many :processing_rules, inverse_of: nil
 
-  scope :default_sort, desc(:event_date).asc(:created_at, :id)
+  scope :default_sort, desc(:event_date, :created_at, :id)
 
   def type_name
     TYPE[type].capitalize
@@ -185,16 +185,15 @@ class LineItem
   # ---------------------------
   # Mobile support functions
 
-  def self.create_from_mobile(params)
+  def self.serialize_from_mobile(params)
     params.symbolize_keys!
-    LineItem.create(:type => params[:type],
-                    :amount => params[:amount],
-                    :event_date => params[:event_date],
-                    :category_name => params[:category_name],
-                    :payee_name => params[:payee_name],
-                    :comment => params[:comment],
-                    :source => SOURCE_MANUAL
-    )
+    {:type => params[:type],
+                        :amount => params[:amount],
+                        :event_date => params[:event_date],
+                        :category_name => params[:category_name],
+                        :payee_name => params[:payee_name],
+                        :comment => params[:comment],
+                        :source => SOURCE_MANUAL}
   end
 
   # end mobile support functions

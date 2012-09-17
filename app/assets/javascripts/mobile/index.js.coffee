@@ -15,6 +15,7 @@ class window.financeRails.views.mobile.Index extends Backbone.View
     'click #add-line-item-form .submit-btn': 'onSubmitAddLineItem'
     'click .select-payee': 'onClickSelectPayee'
     'click .select-category': 'onClickSelectCategory'
+    'click .show_all_payees': 'onClickShowAllPayees'
     'financeRails:pagechange #add-line-item': 'onPageChangeAddLineItem'
     'financeRails:pagechange #main-page': 'onPageChangeMainPage'
     'financeRails:pagechange #view-item': 'onPageChangeViewItem'
@@ -97,3 +98,8 @@ class window.financeRails.views.mobile.Index extends Backbone.View
   onClickSelectCategory: (e) ->
     @selectedCategory = $(e.currentTarget).text();
     history.back();
+
+  onClickShowAllPayees: (e) ->
+    $('ul.manual_payees').addClass('hidden');
+    $('a.show_all_payees').addClass('hidden');
+    $('ul.all_payees').removeClass('hidden');

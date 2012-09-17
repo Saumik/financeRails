@@ -116,6 +116,20 @@ class ExternalController < ApplicationController
     redirect_to :controller => :line_items, :action => :index
   end
 
+  def download_backup
+    folder_name = params[:folder_name].match(/^[A-Z0-9a-z\-_]+$/).to_s
+    redirect_to :back and return if folder_name.blank?
+    full_path = "#{Dir.pwd}/dumps/#{folder_name}"
+    `tar -cf #{full_path}.tgz -C #{full_path} .`
+    result=$?.success?
+    if result
+      send_file "#{full_path}.tgz"
+    else
+      flash[:error] = "Error while zipping #{full_path}.tgz"
+      redirect_to :back
+    end
+  end
+
   private
 
   def randomize_data

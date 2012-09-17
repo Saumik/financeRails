@@ -21,11 +21,19 @@ class LineItemsReportPresenter
     categories.to_a.collect(&:category_name).uniq.delete_if(&:blank?).sort
   end
 
-  def total_amount_of_type_in_month(section, category_name, month, year)
+  def root_categories_matching(section)
+    categories_matching(section).collect { |name| name.split(':').first }.uniq
+  end
+
+  def child_categories_of(section, category_name)
+    categories_matching(section).select { |name| name.split(':').first == category_name }.uniq
+  end
+
+  def total_amount_of_type_in_month(section, category_name, month, year, count_for_total)
     current_date = Date.new(year, month, 1)
-    LineItem.sum_with_filters({:categories => [category_name], :in_month_of_date => current_date}, LineItemReportProcess.new).tap do |amount|
+    LineItem.sum_with_filters({:matching_category_prefix => category_name, :in_month_of_date => current_date}, LineItemReportProcess.new).tap do |amount|
       @month_totals["#{section}:#{month}:#{year}"] ||= 0
-      @month_totals["#{section}:#{month}:#{year}"] += amount.to_f.abs
+      @month_totals["#{section}:#{month}:#{year}"] += amount.to_f.abs if count_for_total
     end
   end
 

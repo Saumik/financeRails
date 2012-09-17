@@ -16,14 +16,14 @@
       %tr.section-row
         %td.section_name
           = section.to_s.capitalize
-      - @presenter.categories_matching(section).each do |category_name|
+      - @presenter.root_categories_matching(section).each do |root_category_name|
+        - child_rows = @presenter.child_categories_of(section, root_category_name)
         %tr.item-row
-          %td
-            = category_name
-          - @presenter.months.each do |(month, year)|
-            %td{:class => @presenter.section_class(section)}
-              = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: year, categories: category_name),  {remote: true}, {class: 'open-search-line-items'} do
-                !=currency_abs @presenter.total_amount_of_type_in_month(section, category_name, month, year)
+          = render partial: 'report/monthly_expenses/report_row', locals: {category_name: root_category_name, section: section, expand: true}
+        - if child_rows.length > 1
+          - child_rows.each do |child_category_name|
+            %tr.item-row.hidden.child_row{data: {child_of: root_category_name }}
+              = render partial: 'report/monthly_expenses/report_row', locals: {category_name: child_category_name, section: section, expand: false}
     - @presenter.report_sections.each do |section|
       %tr.total
         %td.total

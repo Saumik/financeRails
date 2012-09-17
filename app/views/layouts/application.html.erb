@@ -25,7 +25,9 @@
             <ul class="dropdown-menu">
               <% @backup_folders.each_with_index do |folder, index| %>
                 <li>
-                  <%= link_to folder, :controller => '/external', :action => :import_json, :position => index %>
+                  <%= folder %>
+                  <%= link_to 'Import', :controller => '/external', :action => :import_json, :position => index %> |
+                  <%= link_to 'Download', :controller => '/external', :action => :download_backup, :folder_name => folder %> |
                 </li>
               <% end %>
             </ul>

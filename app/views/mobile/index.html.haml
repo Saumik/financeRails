@@ -83,11 +83,16 @@
   %div{:data => {:role => :header}}
     %a{:href => '#main-page', :data => {:icon => 'arrow-l', :rel => 'back', :role => 'button'}} Back
     %h1 Pick a Payee
-  %ul.payees{'data-role' => 'listview'}
+
+  %ul.manual_payees{'data-role' => 'listview'}
+    - LineItem.manual_payees.each do |payee_name|
+      %li
+        %a.select-payee=payee_name
+  %a.show_all_payees{:data => {:role => :button}} Show All Payees
+  %ul.all_payees.hidden{'data-role' => 'listview'}
     - LineItem.payees.each do |payee_name|
       %li
         %a.select-payee=payee_name
-
 %div#pick-category{:data => {:role => :page}}
   %div{:data => {:role => :header}}
     %a{:href => '#main-page', :data => {:icon => 'arrow-l', :rel => 'back', :role => 'button'}} Back

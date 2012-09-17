@@ -103,6 +103,10 @@ class LineItem
     LineItem.only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
   end
 
+  def self.manual_payees
+    LineItem.where(source: SOURCE_MANUAL).only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
+  end
+
   def self.valid_payees
     LineItem.only(:payee_name).where(:original_payee_name.ne => nil).collect(&:payee_name).delete_if(&:nil?).uniq.sort
   end
@@ -165,6 +169,7 @@ class LineItem
     filter_chain = Mongoid::Criteria.new(LineItem)
     filter_chain = send(filters[:section].to_s + '_items') if filters[:section].present?
     filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories].present?
+    filter_chain = filter_chain.where(category_name: /^#{filters[:matching_category_prefix]}.*/) if filters[:matching_category_prefix].present?
     filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date].present?
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type].present?
     filter_chain = post_process.present? ? post_process.perform_after(filter_chain.default_sort.to_a) : filter_chain.default_sort.to_a

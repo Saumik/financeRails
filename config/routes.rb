@@ -14,6 +14,7 @@ FinanceRails2::Application.routes.draw do
   get "external/import"
   get "external/import_json"
   get "external/export_json"
+  get "external/download_backup/:folder_name" => 'external#download_backup'
   post "external/process_confirm_import"
   post 'external/do_import'
 

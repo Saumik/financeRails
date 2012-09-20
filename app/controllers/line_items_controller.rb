@@ -44,7 +44,7 @@ class LineItemsController < ApplicationController
   def edit
     @item = LineItem.find(params[:id])
 
-    if(@item.spanned)
+    if @item.spanned
       @item = LineItem.find(@line_item.spanned.master_line_item_id)
     end
 
@@ -66,14 +66,22 @@ class LineItemsController < ApplicationController
 
     @account.reset_balance
 
-    render :json => {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}
+    @response_params = {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}.to_json
+
+    respond_to do |format|
+      format.js { render :layout => false }
+    end
   end
 
   def destroy
     @item = LineItem.find(params[:id])
     @item.delete
     @account.reset_balance
-    render :json => {:remove_id => params[:id]}
+
+    @data_response = {:remove_id => params[:id]}
+    respond_to do |format|
+      format.js { render :layout => false}
+    end
   end
 
   #noinspection RubyArgCount
@@ -84,7 +92,7 @@ class LineItemsController < ApplicationController
   def search_overlay
     search_params = {}
     search_params[:in_month_of_date] = Date.new(params[:year].to_i, params[:month].to_i, 1) if params[:month].present? and params[:year].present?
-    search_params[:categories] = params[:categories].split(',') if params[:categories].present?
+    search_params[:matching_category_prefix] = params[:categories].split(',') if params[:categories].present?
     @line_items = LineItem.search_with_filters(search_params)
   end
 
@@ -107,6 +115,7 @@ class LineItemsController < ApplicationController
     @item.save
 
     @content = render_to_string('_item', :layout => false, :locals => {:item => @item})
+    @data_response = {replace_id: @item.id.to_s, content: @content}
     respond_to do |format|
       format.js { render :layout => false }
       format.any { render :text => "Invalid format", :status => 403 }

@@ -11,9 +11,7 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     # {edit_item}
     'ajax:success .btn.edit': 'onEditFormArrived'
     'click .edit_form_area .btn-primary.submit': 'onEditClickOk'
-    'ajax:success .edit_form_area' : 'onEditServerOk'
-    # {delete_item}
-    'ajax:success .btn.delete': 'onDeleteOk'
+    'financeRails:line-item-modified': 'onLineItemModified'
 
   initialize: (options) ->
     # {new_item}
@@ -53,26 +51,10 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     @$el.find('.main_table').prepend(data.content)
     @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');
 
-  #{edit_item}
-  onEditFormArrived: (e, data, xhr) ->
-    $('.edit_form_area .modal-body').html(data)
-    $('.edit_form_area').modal();
-    $('.edit_form_area').centerModalInWindow();
-    @form_view = new @domain.FormView($.extend(@options, {el: '.edit_form_area'}))
-
-  onEditClickOk: (e) ->
-    $('.edit_form').submit();
-
-  onEditServerOk: (e, data, xhr) ->
-    financeRails.common.closeNearestModal(e);
-
+  onLineItemModified: (e, data) ->
     datatable = $('.main_table').dataTable()
     newcontent = data.content
 
     datatable.fnUpdateRawHTML(data.content, @$el.find('[data-item-id=' + data.replace_id + ']').get(0), 0)
     #@$el.find('[data-item-id=' + data.replace_id + ']').replaceWith(data.content)
     @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');
-
-  #{delete_item}
-  onDeleteOk: (e, data, xhr) ->
-    @$el.find('[data-item-id=' + data.remove_id + ']').remove();

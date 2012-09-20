@@ -47,6 +47,11 @@
   cursor: pointer;
 }
 
-.hidden {
-  display: none;
+// Twitter bootstrap overrides
+.modal-backdrop {
+  opacity: 0.1;
+}
+
+.typeahead.dropdown-menu {
+   z-index: 2000;
 }

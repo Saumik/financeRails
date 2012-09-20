@@ -1,0 +1,7 @@
+.edit_modal_dialog.modal.hide
+  = form_for @item, :remote => true, :html => { :class => 'edit_form remote_form' } do |f|
+    .modal-body.well
+      = render :partial => 'form', :locals => {:f => f}
+    .modal-footer
+      %a.btn(data-dismiss='modal') Cancel
+      %button.edit_item_btn.btn.btn-primary.submit{:type => :submit} Submit

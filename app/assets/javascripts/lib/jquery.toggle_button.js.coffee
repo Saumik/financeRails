@@ -29,10 +29,10 @@ $.fn.toggleButton = (options) ->
   onClickToggle = (e) ->
     expand = $(this).data('expand')
     if $(this).hasClass(options.plusIconClass)
-      $('.child_row[data-child_of=' + expand + ']', $el).removeClass('hidden')
+      $('.child_row[data-child_of=' + expand + ']', $el).removeClass('hide')
       $(this).removeClass(options.plusIconClass).addClass(options.minusIconClass)
     else
-      $('.child_row[data-child_of=' + expand + ']', $el).addClass('hidden')
+      $('.child_row[data-child_of=' + expand + ']', $el).addClass('hide')
       $(this).removeClass(options.minusIconClass).addClass(options.plusIconClass)
 
   @each ->

@@ -22,7 +22,7 @@
           = render partial: 'report/monthly_expenses/report_row', locals: {category_name: root_category_name, section: section, expand: true}
         - if child_rows.length > 1
           - child_rows.each do |child_category_name|
-            %tr.item-row.hidden.child_row{data: {child_of: root_category_name }}
+            %tr.item-row.hide.child_row{data: {child_of: root_category_name }}
               = render partial: 'report/monthly_expenses/report_row', locals: {category_name: child_category_name, section: section, expand: false}
     - @presenter.report_sections.each do |section|
       %tr.total

@@ -8,9 +8,6 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
   events:
     #{new_item}
     'ajax:success .create_area': 'onCreateServerOk'
-    # {edit_item}
-    'ajax:success .btn.edit': 'onEditFormArrived'
-    'click .edit_form_area .btn-primary.submit': 'onEditClickOk'
     'financeRails:line-item-modified': 'onLineItemModified'
 
   initialize: (options) ->

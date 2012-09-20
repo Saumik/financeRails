@@ -14,7 +14,8 @@ class LineItem
 
   TRANSFER_IN = 'Transfer In'
   TRANSFER_OUT = 'Transfer Out'
-  TAGS = ['Cash', 'Exclude from Reports']
+  TAG_EXCLUDE_FROM_REPORTS = 'Exclude from Reports'
+  TAGS = ['Cash', TAG_EXCLUDE_FROM_REPORTS]
   INCOME_CATEGORIES = ['Salary']
 
   around_update :on_around_update_assign_old_payee_name

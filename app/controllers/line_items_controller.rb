@@ -92,7 +92,10 @@ class LineItemsController < ApplicationController
   def search_overlay
     search_params = {}
     search_params[:in_month_of_date] = Date.new(params[:year].to_i, params[:month].to_i, 1) if params[:month].present? and params[:year].present?
-    search_params[:matching_category_prefix] = params[:categories] if params[:categories].present?
+    if params[:categories].present?
+      search_params[:matching_category_prefix] = params[:categories] if params[:categories].length == 1
+      search_params[:categories] = params[:categories] if params[:categories].length > 1
+    end
     @line_items = LineItem.search_with_filters(search_params)
   end
 

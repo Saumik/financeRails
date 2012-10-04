@@ -25,7 +25,7 @@ module SpannedLineItemSupport
   end
 
   def months_span
-    12 * (span_until.year - span_from.year) + span_until.month - span_from.month
+    12 * (span_until.year - span_from.year) + (span_until.month - span_from.month + 1)
   end
 
   module ClassMethods

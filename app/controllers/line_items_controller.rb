@@ -88,8 +88,8 @@ class LineItemsController < ApplicationController
       search_params[:matching_category_prefix] = params[:categories] if params[:categories].length == 1
       search_params[:categories] = params[:categories] if params[:categories].length > 1
     end
-    @line_items = LineItem.search_with_filters(search_params)
-    @spanned_line_items = LineItem.search_spanned_line_items_with_filters(search_params.merge(support_spanned: true))
+    @line_items = LineItem.search_with_filters(current_user, search_params)
+    @spanned_line_items = LineItem.search_spanned_line_items_with_filters(current_user, search_params.merge(support_spanned: true))
   end
 
   def split

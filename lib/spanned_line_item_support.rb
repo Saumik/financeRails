@@ -35,9 +35,9 @@ module SpannedLineItemSupport
       filter_chain.where(:spanned => (filters[:spanned].present? ? filters[:spanned] : false))
     end
 
-    def add_spanned_items(filters, items)
+    def add_spanned_items(user_or_account, filters, items)
       return items unless !!filters[:support_spanned]
-      all_spanned_items = get_filters(filters.merge(spanned: true, in_month_of_date: nil))
+      all_spanned_items = get_filters(user_or_account, filters.merge(spanned: true, in_month_of_date: nil))
       all_spanned_items.inject(items) do |result, item|
         if filters[:in_month_of_date].present? and item.spans_in?(filters[:in_month_of_date])
           result << item.clone_for_date(filters[:in_month_of_date])
@@ -46,8 +46,8 @@ module SpannedLineItemSupport
       end
     end
 
-    def search_spanned_line_items_with_filters(filters)
-      add_spanned_items(filters, [])
+    def search_spanned_line_items_with_filters(user_or_account, filters)
+      add_spanned_items(user_or_account, filters, [])
     end
   end
 end

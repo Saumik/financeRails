@@ -148,7 +148,7 @@ class LineItem
   def self.sum_with_filters(user_or_account, filters = {}, post_process = nil)
     filter_chain = get_filters(user_or_account, filters)
     items = filter_chain.default_sort.to_a
-    items = add_spanned_items(filters, items)
+    items = add_spanned_items(user_or_account, filters, items)
     items = post_process.present? ? post_process.perform_after(items) : items
     items.sum(&:signed_amount)
   end

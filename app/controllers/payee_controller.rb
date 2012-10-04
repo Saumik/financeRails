@@ -5,7 +5,7 @@ class PayeeController < ApplicationController
 
   def index
     @processing_rules = ProcessingRule.all.to_a
-    @payees = LineItem.payees.collect do |payee_name|
+    @payees = current_user.payees.collect do |payee_name|
       OpenStruct.new(
         payee_name: payee_name,
         processing_rules: @processing_rules.select {|processing_rule| processing_rule.matches? (payee_name) or processing_rule.results_in? (payee_name) }

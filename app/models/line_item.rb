@@ -15,8 +15,10 @@ class LineItem
   TRANSFER_IN = 'Transfer In'
   TRANSFER_OUT = 'Transfer Out'
   TAG_EXCLUDE_FROM_REPORTS = 'Exclude from Reports'
-  TAGS = ['Cash', TAG_EXCLUDE_FROM_REPORTS]
+  TAG_CASH = 'Cash'
+  TAGS = [TAG_CASH, TAG_EXCLUDE_FROM_REPORTS]
   INCOME_CATEGORIES = ['Salary']
+  TRANSFER_CASH_CATEGORY_NAME = 'Transfer:Cash'
 
   around_update :on_around_update_assign_old_payee_name
 
@@ -100,29 +102,6 @@ class LineItem
     new_item
   end
 
-  def self.payees
-    LineItem.only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
-  end
-
-  def self.manual_payees
-    LineItem.where(source: SOURCE_MANUAL).only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
-  end
-
-  def self.valid_payees
-    LineItem.only(:payee_name).where(:original_payee_name.ne => nil).collect(&:payee_name).delete_if(&:nil?).uniq.sort
-  end
-
-  def self.categories
-    LineItem.only(:category_name).collect(&:category_name).delete_if(&:nil?).uniq.sort
-  end
-
-  def self.all_last_data_for_payee
-    LineItem.all.inject({}) do |result, item|
-      result[item.payee_name.to_s] = { amount: item.amount.to_f, category_name: item.category_name }
-      result
-    end
-  end
-
   def has_processing_rule_of_type(item_type, ignore_rule = nil)
     processing_rules.any? do |processing_rule|
       processing_rule.item_type == item_type and (ignore_rule.nil? or processing_rule != ignore_rule)
@@ -148,8 +127,8 @@ class LineItem
     end
   end
 
-  def self.all_unrenamed_payees
-    LineItem.where(source: SOURCE_IMPORT, original_payee_name: nil).inject({}) do |result, line_item|
+  def self.all_unrenamed_payees(account_or_user)
+    account_or_user.line_items.where(source: SOURCE_IMPORT, original_payee_name: nil).inject({}) do |result, line_item|
       result[line_item.payee_name] ||= line_item.category_name if line_item.payee_name.present?
       result
     end
@@ -166,25 +145,28 @@ class LineItem
   # ---------------------------
   # Reporting Functions
 
-  def self.sum_with_filters(filters = {}, post_process = nil)
-    filter_chain = get_filters(filters)
-    filter_chain = post_process.present? ? post_process.perform_after(filter_chain.default_sort.to_a) : filter_chain.default_sort.to_a
-    filter_chain.sum(&:signed_amount)
+  def self.sum_with_filters(user_or_account, filters = {}, post_process = nil)
+    filter_chain = get_filters(user_or_account, filters)
+    items = filter_chain.default_sort.to_a
+    items = add_spanned_items(filters, items)
+    items = post_process.present? ? post_process.perform_after(items) : items
+    items.sum(&:signed_amount)
   end
 
-  def self.search_with_filters(filters = {})
-    filter_chain = get_filters(filters)
+  def self.search_with_filters(user_or_account, filters = {})
+    filter_chain = get_filters(user_or_account, filters)
     filter_chain.default_sort
   end
 
   private
-  def self.get_filters(filters = {})
-    filter_chain = Mongoid::Criteria.new(LineItem)
+  def self.get_filters(user_or_account, filters = {})
+    filter_chain = user_or_account.line_items
+    filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date].present?
     filter_chain = send(filters[:section].to_s + '_items') if filters[:section].present?
     filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories].present?
     filter_chain = filter_chain.where(category_name: /^#{filters[:matching_category_prefix]}.*/) if filters[:matching_category_prefix].present?
-    filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date].present?
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type].present?
+    filter_chain = add_spanning_filters(filter_chain, filters)
     filter_chain
   end
   public

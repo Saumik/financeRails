@@ -9,10 +9,11 @@ To:
 $ For:
 = f.text_field :category_name, class: 'typeahead category_name'
 %br
-= check_box_tag :spanned, 1, f.object.is_spanned
-Span payments for:
-= text_field_tag :spanned_amount, f.object.spanned_months
-Months
+= f.check_box :spanned
+Span payments from:
+= f.text_field :span_from
+To
+= f.text_field :span_until
 %br
 = check_box_tag :always_assign, true
 Always rename and categorize as specified

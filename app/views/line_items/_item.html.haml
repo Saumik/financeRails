@@ -1,15 +1,18 @@
 %tr.item{'data-item-id' => item.id }
-  %td= item.type_name
+  %td
+    = item.type_name
+    = item.tags
   %td= date_format item[:event_date]
   %td.amount!= currency item[:amount]
   %td.payee_name= item[:payee_name]
   %td.category_name= item[:category_name]
   %td.balance!= currency(item[:balance])
   %td.actions
-    = link_to 'Edit', edit_line_item_path(item), :remote => true, :class => 'btn btn-primary edit'
-    &nbsp;
-    &nbsp;
-    = link_to 'Split', line_item_path(item) + '/split', :remote => true, :class => 'btn btn-primary split', :data => {:amount => item.amount}
-    &nbsp;
-    &nbsp;
-    = link_to 'Delete', line_item_path(item), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + item.try(:category_name).to_s + ' transaction?'}, :class => 'btn btn-danger delete'
+    - unless item.spanned
+      = link_to 'Edit', edit_line_item_path(item), :remote => true, :class => 'btn btn-primary edit'
+      &nbsp;
+      &nbsp;
+      = link_to 'Split', line_item_path(item) + '/split', :remote => true, :class => 'btn btn-primary split', :data => {:amount => item.amount}
+      &nbsp;
+      &nbsp;
+      = link_to 'Delete', line_item_path(item), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + item.try(:category_name).to_s + ' transaction?'}, :class => 'btn btn-danger delete'

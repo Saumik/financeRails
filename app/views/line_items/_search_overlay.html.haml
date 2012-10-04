@@ -16,3 +16,18 @@
       %tbody
         != render :collection => @line_items, :partial => 'item'
 
+    - if @spanned_line_items.length > 0
+      %h3 Spanned Line Items
+      %table.main_table.table.table-striped.table-bordered
+        %thead
+          %tr
+            %th.type.st-width       Type
+            %th.event_date.st-width Event Date
+            %th.amount.st-width     Amount
+            %th.payee_name          Payee
+            %th.category_name       Category
+            %th                     Balance
+            %th.actions             Actions
+        %tbody
+          != render :collection => @spanned_line_items, :partial => 'item'
+

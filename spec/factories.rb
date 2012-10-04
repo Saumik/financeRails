@@ -57,6 +57,17 @@ FactoryGirl.define do
       type 0
       amount 100
     end
+    factory :spanned_line_item do
+      type { LineItem::EXPENSE }
+      event_date { Date.new(2012, 1, 1) }
+      category_name 'Shopping'
+      payee_name 'Safeway'
+      amount 100
+
+      span_from { Date.new(2012, 1, 1) }
+      span_until { Date.new(2012, 2, 1) }
+      spanned true
+    end
   end
 
   factory :user do

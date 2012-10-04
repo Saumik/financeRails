@@ -3,6 +3,11 @@
     $(document).ready(function() {
       var view = new financeRails.views.report.ReportView();
     });
+.filters.well.well-small
+  %form
+    = check_box_tag :show_spanning, 'true', @filters[:support_spanned]
+    Show Spanning
+    %input{:type => :submit, :value => 'Apply'}
 
 %table.table.table-striped.table-bordered
   %thead

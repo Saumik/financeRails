@@ -6,7 +6,12 @@ class ReportController < ApplicationController
   end
 
   def month_expenses
-    @presenter = LineItemsReportPresenter.new
+    Mongoid.logger = nil
+
+    @filters = {}
+    @filters[:support_spanned] = params[:show_spanning] == 'true'
+
+    @presenter = LineItemsReportPresenter.new(current_user, @filters)
 
   end
 

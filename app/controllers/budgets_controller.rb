@@ -8,9 +8,9 @@ class BudgetsController < ApplicationController
 
   def index
     @budget_items = BudgetItem.all
-    @categories = LineItem.categories - BudgetItem.existing_categories
+    @categories = current_user.categories - BudgetItem.existing_categories
 
-    @presenter = BudgetReportPresenter.new
+    @presenter = BudgetReportPresenter.new(current_user)
   end
 
   def edit
@@ -30,7 +30,7 @@ class BudgetsController < ApplicationController
   def expense_summary
     @monthly_expenses = []
     months_between(5.months.ago.to_date, Date.today).each do |date|
-      @monthly_expenses << {date: date, expense: LineItem.sum_with_filters(:in_month_of_date => date, :categories => JSON.parse(params[:categories]))}
+      @monthly_expenses << {date: date, expense: LineItem.sum_with_filters(current_user, :in_month_of_date => date, :categories => JSON.parse(params[:categories]))}
     end
 
     render :layout => false

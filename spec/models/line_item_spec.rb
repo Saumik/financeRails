@@ -52,4 +52,19 @@ describe LineItem do
       line_item_1.id.should == original_id
     end
   end
+  describe 'spanned line item support' do
+    before :each do
+      @item1 = FactoryGirl.create :spanned_line_item
+      @item2 = FactoryGirl.create :spanned_line_item
+      @item3 = FactoryGirl.create :line_item_6
+    end
+    it 'should sum spanned line items as normal when spanned is not present' do
+      LineItem.sum_with_filters(in_month_of_date: @item1.span_until ).to_i.should == 0
+      LineItem.sum_with_filters(in_month_of_date: @item1.event_date ).to_i.should == -300
+    end
+    it 'should sum spanned line items for spanning period when spanned is true' do
+      LineItem.sum_with_filters(in_month_of_date: @item1.span_until, support_spanned: true).to_i.should == -100
+      LineItem.sum_with_filters(in_month_of_date: @item1.event_date, support_spanned: true).to_i.should == -200
+    end
+  end
 end

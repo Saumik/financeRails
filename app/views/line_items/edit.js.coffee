@@ -1,6 +1,6 @@
-payees = <%== LineItem.payees.to_json %>
-last_data_for_payee = <%== LineItem.all_last_data_for_payee.to_json %>
-categories = <%== LineItem.categories.to_json %>
+payees = <%== current_user.payees.to_json %>
+last_data_for_payee = <%== current_user.all_last_data_for_payee.to_json %>
+categories = <%== current_user.categories.to_json %>
 
 
 content = '<%= escape_javascript(render(:partial => 'edit'))%>'

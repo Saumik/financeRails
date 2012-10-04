@@ -22,11 +22,7 @@ class LineItemsController < ApplicationController
     changed_line_item.save
 
     @changed_line_items = []
-    if params[:spanned]
-      @changed_line_items += changed_line_item.span(params[:spanned_amount].to_i)
-    else
-      @changed_line_items << changed_line_item
-    end
+    @changed_line_items << changed_line_item
 
     @account.reset_balance
 
@@ -43,10 +39,6 @@ class LineItemsController < ApplicationController
 
   def edit
     @item = LineItem.find(params[:id])
-
-    if @item.spanned
-      @item = LineItem.find(@line_item.spanned.master_line_item_id)
-    end
 
     render :layout => false
   end
@@ -97,6 +89,7 @@ class LineItemsController < ApplicationController
       search_params[:categories] = params[:categories] if params[:categories].length > 1
     end
     @line_items = LineItem.search_with_filters(search_params)
+    @spanned_line_items = LineItem.search_spanned_line_items_with_filters(search_params.merge(support_spanned: true))
   end
 
   def split
@@ -168,7 +161,7 @@ class LineItemsController < ApplicationController
 
   def mass_rename
     perform_mass_rename if request.post?
-    @payees = @account.line_items.all_unrenamed_payees
+    @payees = @account.line_items.all_unrenamed_payees(current_user)
   end
 
   private

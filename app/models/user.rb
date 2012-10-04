@@ -1,5 +1,6 @@
 class User
   include Mongoid::Document
+  include User::LineItemAggregateMethods
 
   has_many :accounts
   has_one :default_account, class_name: 'Account'
@@ -47,4 +48,14 @@ class User
 
   field :last_date, :type => Date
   field :default_account_id
+
+  # cross accounts functions
+  def line_items
+    LineItem.where(:account_id.in => accounts.collect(&:id))
+  end
+  def cash_balance
+    income_cash = line_items.where(:category_name => LineItem::TRANSFER_CASH_CATEGORY_NAME).collect(&:amount).sum
+    line_items_cash = line_items.where(:tags => LineItem::TAG_CASH).collect(&:signed_amount).sum
+    income_cash - line_items_cash
+  end
 end

@@ -1,6 +1,8 @@
 class LineItemsReportPresenter
-  attr_reader :months
-  def initialize
+  attr_reader :months, :current_user
+  def initialize(current_user, filters)
+    @filters = filters
+    @current_user = current_user
     first_date = LineItem.asc(:event_date).first.event_date.beginning_of_month
     last_date = LineItem.desc(:event_date).first.event_date.end_of_month
     @months = []
@@ -31,7 +33,10 @@ class LineItemsReportPresenter
 
   def total_amount_of_type_in_month(section, category_name, month, year, count_for_total)
     current_date = Date.new(year, month, 1)
-    LineItem.sum_with_filters({:matching_category_prefix => category_name, :in_month_of_date => current_date}, LineItemReportProcess.new).tap do |amount|
+    current_filters = @filters.merge({:matching_category_prefix => category_name,
+                                   :in_month_of_date => current_date})
+    LineItem.sum_with_filters(current_user, current_filters,
+                              LineItemReportProcess.new).tap do |amount|
       @month_totals["#{section}:#{month}:#{year}"] ||= 0
       @month_totals["#{section}:#{month}:#{year}"] += amount.to_f.abs if count_for_total
     end

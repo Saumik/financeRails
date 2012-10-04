@@ -1,9 +1,9 @@
 - content_for :javascript do
   :javascript
     $(document).ready(function() {
-      var payees = #{LineItem.payees}
-      var categories = #{LineItem.categories}
-      var last_data_for_payee = #{LineItem.all_last_data_for_payee.to_json}
+      var payees = #{current_user.payees}
+      var categories = #{current_user.categories}
+      var last_data_for_payee = #{current_user.all_last_data_for_payee.to_json}
       var view = new financeRails.views.line_items.MassRenameView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
     });
 

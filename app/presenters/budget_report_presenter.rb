@@ -1,7 +1,8 @@
 class BudgetReportPresenter
-  attr_reader :months
-  def initialize
+  attr_reader :months, :current_user
+  def initialize(current_user)
     @budget_items = BudgetItem.all
+    @current_user = current_user
     last_date = LineItem.desc(:event_date).first.event_date.end_of_month
     if last_date.month == Date.today.month
       last_date = (Date.today - 1.month).end_of_month
@@ -23,7 +24,7 @@ class BudgetReportPresenter
   def total_expenses_for_budget_item_in_month(budget_item, month, year)
     #noinspection RubyArgCount
     current_date = Date.new(year, month, 1)
-    amount = LineItem.sum_with_filters({:categories => budget_item.categories, :in_month_of_date => current_date}, LineItemReportProcess.new)
+    amount = LineItem.sum_with_filters(current_user, {:categories => budget_item.categories, :in_month_of_date => current_date}, LineItemReportProcess.new)
     @totals[budget_item.name] ||= 0
     @totals[budget_item.name] += amount
     amount * -1

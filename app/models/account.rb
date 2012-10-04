@@ -26,10 +26,7 @@ class Account
     current_balance = 0
 
     line_items.default_sort.reverse.each do |item|
-
-      if item.virtual.blank?
-        current_balance += item.amount * item.multiplier
-      end
+      current_balance += item.amount * item.multiplier
 
       if item.balance != current_balance
         item.balance = current_balance

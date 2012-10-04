@@ -2,6 +2,7 @@ class MobileController < MobileApplicationController
   layout 'mobile_application'
 
   def index
+    @current_user = User.first
   end
 
   def sync

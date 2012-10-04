@@ -8,7 +8,7 @@
   %td.category_name= item[:category_name]
   %td.balance!= currency(item[:balance])
   %td.actions
-    - unless item.spanned
+    - unless item.new_record?
       = link_to 'Edit', edit_line_item_path(item), :remote => true, :class => 'btn btn-primary edit'
       &nbsp;
       &nbsp;

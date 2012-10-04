@@ -56,6 +56,6 @@ class User
   def cash_balance
     income_cash = line_items.where(:category_name => LineItem::TRANSFER_CASH_CATEGORY_NAME).collect(&:amount).sum
     line_items_cash = line_items.where(:tags => LineItem::TAG_CASH).collect(&:signed_amount).sum
-    income_cash - line_items_cash
+    income_cash + line_items_cash
   end
 end

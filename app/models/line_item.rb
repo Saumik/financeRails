@@ -185,7 +185,8 @@ class LineItem
                         :category_name => params[:category_name],
                         :payee_name => params[:payee_name],
                         :comment => params[:comment],
-                        :source => SOURCE_MANUAL}
+                        :source => SOURCE_MANUAL,
+                        :tags => [TAG_CASH]}
   end
 
   # end mobile support functions

@@ -1,7 +1,7 @@
 %tr.item{'data-item-id' => item.id }
   %td
     = item.type_name
-    = item.tags
+    = item.tags if item.tags.length > 0
   %td= date_format item[:event_date]
   %td.amount!= currency item[:amount]
   %td.payee_name= item[:payee_name]

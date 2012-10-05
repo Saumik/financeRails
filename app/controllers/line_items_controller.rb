@@ -85,9 +85,10 @@ class LineItemsController < ApplicationController
     search_params = {}
     search_params[:in_month_of_date] = Date.new(params[:year].to_i, params[:month].to_i, 1) if params[:month].present? and params[:year].present?
     if params[:categories].present?
-      search_params[:matching_category_prefix] = params[:categories] if params[:categories].length == 1
+      search_params[:matching_category_prefix] = params[:categories][0] if params[:categories].length == 1
       search_params[:categories] = params[:categories] if params[:categories].length > 1
     end
+    puts search_params.inspect
     @line_items = LineItem.search_with_filters(current_user, search_params)
     @spanned_line_items = LineItem.search_spanned_line_items_with_filters(current_user, search_params.merge(support_spanned: true))
   end

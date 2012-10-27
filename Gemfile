@@ -9,6 +9,7 @@ gem 'rails', '3.2.7'
 gem "mongoid"
 gem "bson_ext"
 
+gem "headless"
 gem "watir-webdriver"
 gem 'execjs'
 gem 'therubyracer'

@@ -4,7 +4,7 @@ module User::LineItemAggregateMethods
   end
 
   def manual_payees
-    line_items.where(source: SOURCE_MANUAL).only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
+    line_items.where(source: LineItem::SOURCE_MANUAL).only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
   end
 
   def valid_payees

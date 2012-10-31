@@ -16,17 +16,17 @@ class ExternalController < ApplicationController
     redirect_to :import and return unless @account.present?
     data = params[:upload].read
 
-    imported_data = nil
-    if params[:upload].original_filename.ends_with? '.qif'
-      import_from_money(data)
-    elsif params[:upload].original_filename.ends_with? '.json'
-      import_from_json(data)
-    elsif params[:upload].original_filename.ends_with? '.csv'
+    #if params[:upload].original_filename.ends_with? '.qif'
+    #  import_from_money(data)
+    #elsif params[:upload].original_filename.ends_with? '.json'
+    #  import_from_json(data)
+    #els
+    if params[:upload].original_filename.ends_with? '.csv'
       @imported_data = Importers.const_get(@account.import_format).new.import data
     end
 
     cache_client = Dalli::Client.new('127.0.0.1:11211')
-    cache_client.set 'imported_1', @imported_data.collect { |line_item| line_item.to_json_as_imported }
+    cache_client.set 'imported_1', @imported_data
   end
 
   def import_from_json(data)
@@ -40,19 +40,9 @@ class ExternalController < ApplicationController
     cache_client = Dalli::Client.new('127.0.0.1:11211')
 
     if params[:commit] == 'Perform Import'
-      all_payee_rules = ProcessingRule.get_payee_rules
-      all_category_rules = ProcessingRule.get_category_name_rules
-      items_to_import = cache_client.get('imported_1')
-      items_to_import.each do |json_str|
-        unless @account.imported_line?(json_str)
-          line_item = @account.line_items.create(JSON.parse(json_str))
-          ProcessingRule.perform_all_matching(all_payee_rules, line_item)
-          ProcessingRule.perform_all_matching(all_category_rules, line_item)
-
-          @account.imported_lines.create(:imported_line => json_str, :line_item_id => line_item.id)
-        end
-      end
-      flash[:success] = "#{items_to_import.length} line items were imported"
+      line_items_jsonified = cache_client.get('imported_1')
+      @account.import_line_items(line_items_jsonified)
+      flash[:success] = "#{line_items_jsonified.length} line items were imported"
     elsif params[:commit] == 'Delete Previous Import'
       imported_lines = @account.imported_lines.where(:imported_line.in => cache_client.get('imported_1'))
       amount_removed = 0

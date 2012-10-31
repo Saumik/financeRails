@@ -20,3 +20,33 @@ th.actions, td.actions {
 .modal.split_form_area {
   width: 830px;
 }
+
+.month_selector {
+  list-style: none;
+  display: table;
+  width: 100%;
+  margin: 0;
+  li {
+    border-left: 1px solid #666;
+    display:table-cell;
+    text-align: center;
+    background-color: #eee;
+    height: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+    &:hover {
+      background-color: #ccc;
+    }
+    &.active {
+      background-color: #ccc;
+      cursor: auto;
+    }
+  }
+  li:last-child {
+    border-right: 1px solid #666;
+  }
+}
+
+#items_list {
+  min-height: 400px;
+}

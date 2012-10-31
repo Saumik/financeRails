@@ -9,6 +9,7 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     #{new_item}
     'ajax:success .create_area': 'onCreateServerOk'
     'financeRails:line-item-modified': 'onLineItemModified'
+    'click .month_selector li': 'onClickChangeMonth'
 
   initialize: (options) ->
     # {new_item}
@@ -16,28 +17,28 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     @render()
 
   render: ->
-    $('.main_table').dataTable( {
-      #"bProcessing": true
-      #"bServerSide": true
-      #"sAjaxSource": '/line_items/get_line_items_data_table'
-      "bSort" : false
-      "iDisplayLength": 20,
-      "aoColumns": [
-          { "mDataProp": "type" },
-          { "mDataProp": "event_date" },
-          { "mDataProp": "amount" },
-          { "mDataProp": "payee_name" },
-          { "mDataProp": "category_name" },
-          { "mDataProp": "balance" },
-          { "mDataProp": "links" }
-      ],
-      # Changes for twitter bootstrap support
-      "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-      "sPaginationType": "bootstrap",
-      "oLanguage": {
-          "sLengthMenu": "_MENU_ Records per page"
-      }
-    } );
+#    $('.main_table').dataTable( {
+#      #"bProcessing": true
+#      #"bServerSide": true
+#      #"sAjaxSource": '/line_items/get_line_items_data_table'
+#      "bSort" : false
+#      "iDisplayLength": 20,
+#      "aoColumns": [
+#          { "mDataProp": "type" },
+#          { "mDataProp": "event_date" },
+#          { "mDataProp": "amount" },
+#          { "mDataProp": "payee_name" },
+#          { "mDataProp": "category_name" },
+#          { "mDataProp": "balance" },
+#          { "mDataProp": "links" }
+#      ],
+#      # Changes for twitter bootstrap support
+#      "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+#      "sPaginationType": "bootstrap",
+#      "oLanguage": {
+#          "sLengthMenu": "_MENU_ Records per page"
+#      }
+#    } );
 
 
   #{new_item}
@@ -49,9 +50,12 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');
 
   onLineItemModified: (e, data) ->
-    datatable = $('.main_table').dataTable()
-    newcontent = data.content
+    @$el.find('[data-item-id=' + data.replace_id + ']').replaceWith(data.content)
+    @$el.find('[data-item-id=' + data.replace_id + ']').highlight();
 
-    datatable.fnUpdateRawHTML(data.content, @$el.find('[data-item-id=' + data.replace_id + ']').get(0), 0)
-    #@$el.find('[data-item-id=' + data.replace_id + ']').replaceWith(data.content)
-    @$el.find('[data-item-id=' + data.replace_id + ']').highlight('fast');
+  onClickChangeMonth: (e) ->
+    active_month = $(e.currentTarget).data('date')
+    $('#items_list tr:not(:first-child)').addClass('hide')
+    $('#items_list tr[data-date=' + active_month + ']').removeClass('hide')
+    $('.month_selector li').removeClass('active');
+    $(e.currentTarget).addClass('active')

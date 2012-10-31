@@ -1,4 +1,4 @@
-class MoneyImporter
+class Money
   def import(data)
     @imported_data = []
 

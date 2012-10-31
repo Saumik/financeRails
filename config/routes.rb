@@ -2,8 +2,6 @@ FinanceRails2::Application.routes.draw do
   get "mobile/index"
   post "mobile/sync"
 
-  resources :accounts
-
   devise_for :users
 
   get "budget/index"
@@ -78,6 +76,12 @@ FinanceRails2::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests
   # match ':controller(/:action(/:id(.:format)))'
+
+  resources :accounts do
+    member do
+      post :fetch
+    end
+  end
 
   resources :line_items do
     collection do

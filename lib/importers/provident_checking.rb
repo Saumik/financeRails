@@ -1,8 +1,9 @@
+require 'csv'
+
 module Importers
-  class ProvidentCheckingImporter
-    # accepts csv returns array of line items
+  class ProvidentChecking
+    # accepts csv returns array of line items as json array
     def import(data)
-      require 'csv'
       CSV.new(data, :headers => :first_row).collect do |row|
         date = row['Date']
         description = row['Description']
@@ -21,7 +22,7 @@ module Importers
         line_item.payee_name = description if check_number.blank?
         line_item.event_date = Date.strptime(date, '%m/%d/%Y')
         line_item
-      end
+      end.collect { |line_item| line_item.to_json_as_imported }
     end
   end
 end

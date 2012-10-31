@@ -22,7 +22,7 @@ class LineItem
 
   around_update :on_around_update_assign_old_payee_name
 
-  belongs_to :account
+  belongs_to :account, touch: true
   has_one :imported_line, :dependent => :destroy
 
   field :type, :type => Integer, :default => 1
@@ -135,11 +135,11 @@ class LineItem
   end
 
   def to_json_as_imported
-    to_json(:only => [:amount, :event_date, :payee_name, :type, :comments])
+    to_json(:only => [:amount, :event_date, :payee_name, :type, :comment])
   end
 
   def self.in_month_of_date(in_month_of_date, filter_chain = Mongoid::Criteria.new(LineItem))
-    filter_chain.where(:event_date => {'$gte' => in_month_of_date.beginning_of_month.to_datetime,'$lte' => in_month_of_date.end_of_month.to_datetime})
+    filter_chain.where(:event_date.gte => in_month_of_date.beginning_of_month.to_datetime, :event_date.lte => in_month_of_date.end_of_month.to_datetime)
   end
 
   # ---------------------------

@@ -3,6 +3,7 @@
 = semantic_form_for @user, :url => '/users/update_profile', :method => :put, :html => { :class => 'edit_user remote_form' } do |f|
   .well
     = f.input :default_account_id, as: :select, collection: @user.accounts
+    = f.input :mobile_password
   .well
     %a.btn(data-dismiss='modal') Cancel
     %input.btn.btn-primary.submit{:type => :submit}

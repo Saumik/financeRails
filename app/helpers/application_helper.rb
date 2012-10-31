@@ -19,6 +19,27 @@ module ApplicationHelper
     Date::MONTHNAMES[m]
   end
 
+  def month_year_short(date)
+    date.month.to_s + date.year.to_s
+  end
+
+  def months_between(start_month, end_month)
+    puts ';'
+    puts start_month
+    puts end_month
+    months = []
+    ptr = start_month
+    while ptr <= end_month.end_of_month do
+      months << ptr
+      ptr = ptr >> 1
+    end
+    months
+  end
+
+  def date_in_month_of(date, date_for_month)
+    date.year == date_for_month.year && date.month == date_for_month.month
+  end
+
   def currency(amount)
     '<span class="dollar">$</span>' + format_number(amount).to_s
   end

@@ -1,25 +1,25 @@
 - content_for :javascript do
-  :javascript
-    $(document).ready(function() {
-      var payees = #{current_user.payees}
-      var categories = #{current_user.categories}
-      var last_data_for_payee = #{current_user.all_last_data_for_payee.to_json}
-      var view = new financeRails.views.LineItemsView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
-    });
-
+  - cache [@account, 'javascript'] do
+    :javascript
+      $(document).ready(function() {
+        var payees = #{current_user.payees}
+        var categories = #{current_user.categories}
+        var last_data_for_payee = #{current_user.all_last_data_for_payee.to_json}
+        var view = new financeRails.views.LineItemsView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
+      });
 - content_for :side_bar_content do
-  %h2 Cash
-  .cash_balance
-    Current Cash Balance:
-    %br
-    != currency @current_user.cash_balance
-
-
+  - cache [@account, 'cash_value'] do
+    %h2 Cash
+    .cash_balance
+      Current Cash Balance:
+      %br
+      != currency @current_user.cash_balance
 
   %h2 Tags
   %ul.tags.nav.nav-list
-    - LineItem::TAGS.each do |tag|
-      %li{:class => (params[:tag] == tag ? 'active' : '')}= link_to tag, controller: :line_items, action: :index, :tag => tag
+    - cache LineItem::TAGS do
+      - LineItem::TAGS.each do |tag|
+        %li{:class => (params[:tag] == tag ? 'active' : '')}= link_to tag, controller: :line_items, action: :index, :tag => tag
 
 // {new_item}
 .create_area
@@ -27,16 +27,28 @@
     = render :partial => 'form', :locals => {:f => f}
     .actions
       = f.submit 'Add New Item', class: 'btn btn-primary'
-#items_list
-  %table.main_table.table.table-striped.table-bordered
-    %thead
-      %tr
-        %th.type.st-width       Type
-        %th.event_date.st-width Event Date
-        %th.amount.st-width     Amount
-        %th.payee_name          Payee
-        %th.category_name       Category
-        %th                     Balance
-        %th.actions             Actions
-    %tbody
-      = render :collection => @items, :partial => 'item'
+.fetch_area.well.well-small
+  =semantic_form_for(:fetch, url: fetch_account_path(@account)) do |f|
+    = f.input :mobile_password, as: :password
+    = f.submit 'Fetch'
+
+%ul.month_selector
+  - months_between(@items.last.event_date, @items.first.event_date).each do |date|
+    %li{data: {date: month_year_short(date)}, class: date_in_month_of(date, Date.today) ? 'active' : ''}= date.strftime('%b %Y')
+
+- cache ['v5', @account] do
+  #items_list
+    %table.main_table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th.type.st-width       Type
+          %th.event_date.st-width Event Date
+          %th.amount.st-width     Amount
+          %th.payee_name          Payee
+          %th.category_name       Category
+          %th                     Balance
+          %th.actions             Actions
+      %tbody
+        - @items.each do |item|
+          - cache ['v5', item] do
+            = render partial: 'item', locals: {item: item}

@@ -15,8 +15,9 @@ class User
   end
 
   ## Database authenticatable
-  field :email,              :type => String, :null => false, :default => ""
-  field :encrypted_password, :type => String, :null => false, :default => ""
+  field :email,              :type => String, :default => ""
+  field :encrypted_password, :type => String, :default => ""
+  field :mobile_password,    :type => String, :default => ""
 
   ## Recoverable
   field :reset_password_token,   :type => String
@@ -57,5 +58,9 @@ class User
     income_cash = line_items.where(:category_name => LineItem::TRANSFER_CASH_CATEGORY_NAME).collect(&:amount).sum
     line_items_cash = line_items.where(:tags => LineItem::TAG_CASH).collect(&:signed_amount).sum
     income_cash + line_items_cash
+  end
+
+  def set_mobile_password(password)
+    self.mobile_password = ::BCrypt::Password.create("#{password}#{self.class.pepper}", :cost => self.class.stretches).to_s
   end
 end

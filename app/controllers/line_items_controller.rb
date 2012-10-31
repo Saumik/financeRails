@@ -7,7 +7,7 @@ class LineItemsController < ApplicationController
 
     @new_item = @account.line_items.build
 
-    @items = @account.line_items.default_sort
+    @items = @account.line_items.default_sort.to_a
 
     @items = @items.where(:tags => params[:tag]) if(params[:tag])
 

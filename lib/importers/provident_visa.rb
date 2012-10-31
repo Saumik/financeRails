@@ -1,5 +1,5 @@
 module Importers
-  class ProvidentVisaImporter
+  class ProvidentVisa
     # accepts csv returns array of line items
     def import(data)
       require 'csv'

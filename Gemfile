@@ -1,13 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.7'
+gem 'rails', '3.2.8'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 #gem 'sqlite3'
-gem "mongoid"
-gem "bson_ext"
+gem "mongoid", '3.0.10'
 
 gem "headless"
 gem "watir-webdriver"
@@ -16,7 +15,6 @@ gem 'therubyracer'
 gem 'rabl'
 gem 'json'
 
-gem 'dalli'
 gem 'formtastic', " ~> 2.1.1"
 gem 'formtastic-bootstrap'
 gem 'slim'
@@ -25,6 +23,8 @@ gem 'haml-rails'
 gem 'coffeebeans'
 gem 'jquery-rails'
 gem 'devise'
+gem 'cache_digests'
+gem 'redis-rails'
 
 # Use unicorn as the web server
 # gem 'unicorn'

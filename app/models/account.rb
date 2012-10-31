@@ -1,5 +1,6 @@
 class Account
   include Mongoid::Document
+  include Mongoid::Timestamps
   include EncryptionHelper
 
   belongs_to :user
@@ -7,18 +8,23 @@ class Account
   has_many :line_items
 
   field :name, :type => String
-  field :encrypted_password, :type => BSON::Binary, :null => false, :default => ""
+  field :encrypted_password, :type => Moped::BSON::Binary, :default => ""
+  field :random_iv, type: Moped::BSON::Binary, :default => ""
   field :import_format, :type => String
 
-  def store_password(user_password, account_password)
-    self.encrypted_password = BSON::Binary.new(encrypt(user_password + MY_SALT, account_password))
+  def store_password(mobile_password, account_password)
+    if mobile_password.present? and account_password.present?
+      iv, enc = encrypt(mobile_password + MY_SALT, account_password)
+      self.random_iv = BSON::Binary.new(iv)
+      self.encrypted_password = BSON::Binary.new(enc)
+    end
   end
 
-  def retrieve_password(user_password)
-    decrypt(user_password + MY_SALT, self.encrypted_password)
+  def retrieve_password(mobile_password)
+    decrypt(mobile_password + MY_SALT, random_iv.to_s, self.encrypted_password.to_s)
   end
 
-  def imported_line?(json_line)
+  def line_already_imported?(json_line)
     imported_lines.where(:imported_line => json_line).length > 0
   end
 
@@ -43,5 +49,25 @@ class Account
   end
 
   # end mobile support functions
+  # ---------------------------
+
+  # ---------------------------
+  # Importing functions
+
+  def import_line_items(line_items_jsonified)
+    all_payee_rules = ProcessingRule.get_payee_rules
+    all_category_rules = ProcessingRule.get_category_name_rules
+    line_items_jsonified.each do |json_str|
+      unless line_already_imported?(json_str)
+        line_item = LineItem.create(JSON.parse(json_str))
+        ProcessingRule.perform_all_matching(all_payee_rules, line_item)
+        ProcessingRule.perform_all_matching(all_category_rules, line_item)
+
+        imported_lines.create(:imported_line => json_str, :line_item_id => line_item.id)
+      end
+    end
+  end
+
+  # end importing
   # ---------------------------
 end

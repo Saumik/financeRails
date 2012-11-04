@@ -48,12 +48,13 @@ class Remote::Providers::ProvidentChecking < Remote::Providers::Base
       sleep(10.seconds)
 
       report_command('close')
-
-      close_browser(agent)
     rescue Watir::Exception::Error => e
       report_error_message(e.message)
-      close_browser(agent)
+      Rails.logger.error "Error importing: #{e.message}"
+      Rails.logger.error e.backtrace
       return
+    ensure
+      close_browser(agent)
     end
 
     csv_file = Dir.glob(Rails.configuration.downloads_path + "/*.csv").sort_by do |f| File.new(f).ctime end.last

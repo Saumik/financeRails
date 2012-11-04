@@ -25,8 +25,7 @@ class ExternalController < ApplicationController
       @imported_data = Importers.const_get(@account.import_format).new.import data
     end
 
-    cache_client = Dalli::Client.new('127.0.0.1:11211')
-    cache_client.set 'imported_1', @imported_data
+    $redis.set "import-data:#{current_user.id}", @imported_data
   end
 
   def import_from_json(data)
@@ -37,10 +36,8 @@ class ExternalController < ApplicationController
     @account = current_user.accounts.find(params[:account_id])
     redirect_to :import and return unless @account.present?
 
-    cache_client = Dalli::Client.new('127.0.0.1:11211')
-
     if params[:commit] == 'Perform Import'
-      line_items_jsonified = cache_client.get('imported_1')
+      line_items_jsonified = $redis.get "import-data:#{current_user.id}"
       @account.import_line_items(line_items_jsonified)
       flash[:success] = "#{line_items_jsonified.length} line items were imported"
     elsif params[:commit] == 'Delete Previous Import'

@@ -25,7 +25,7 @@ class ExternalController < ApplicationController
       @imported_data = Importers.const_get(@account.import_format).new.import data
     end
 
-    $redis.set "import-data:#{current_user.id}", @imported_data
+    $redis.set("import-data:#{current_user.id}", @imported_data.to_json)
   end
 
   def import_from_json(data)
@@ -37,7 +37,7 @@ class ExternalController < ApplicationController
     redirect_to :import and return unless @account.present?
 
     if params[:commit] == 'Perform Import'
-      line_items_jsonified = $redis.get "import-data:#{current_user.id}"
+      line_items_jsonified = $redis.get JSON.parse("import-data:#{current_user.id}")
       @account.import_line_items(line_items_jsonified)
       flash[:success] = "#{line_items_jsonified.length} line items were imported"
     elsif params[:commit] == 'Delete Previous Import'

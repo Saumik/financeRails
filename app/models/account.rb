@@ -59,7 +59,7 @@ class Account
     all_category_rules = ProcessingRule.get_category_name_rules
     line_items_jsonified.each do |json_str|
       unless line_already_imported?(json_str)
-        line_item = LineItem.create(JSON.parse(json_str))
+        line_item = line_items.create(JSON.parse(json_str))
         ProcessingRule.perform_all_matching(all_payee_rules, line_item)
         ProcessingRule.perform_all_matching(all_category_rules, line_item)
 

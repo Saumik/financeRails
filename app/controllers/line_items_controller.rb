@@ -25,6 +25,7 @@ class LineItemsController < ApplicationController
     @changed_line_items << changed_line_item
 
     @account.reset_balance
+    @account.touch
 
     if params[:always_assign]
       ProcessingRule.create_category_rename_rule(all_processing_rules, changed_line_item.payee_name, changed_line_item.category_name)
@@ -57,6 +58,7 @@ class LineItemsController < ApplicationController
     end
 
     @account.reset_balance
+    @account.touch
 
     @response_params = {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}.to_json
 
@@ -69,6 +71,7 @@ class LineItemsController < ApplicationController
     @item = LineItem.find(params[:id])
     @item.delete
     @account.reset_balance
+    @account.touch
 
     @data_response = {:remove_id => params[:id]}
     respond_to do |format|
@@ -110,6 +113,7 @@ class LineItemsController < ApplicationController
     end
 
     @item.save
+    @account.touch
 
     @content = render_to_string('_item', :layout => false, :locals => {:item => @item})
     @data_response = {replace_id: @item.id.to_s, content: @content}
@@ -175,5 +179,6 @@ class LineItemsController < ApplicationController
         ProcessingRule.create_rename_and_assign_rule_if_not_exists(category_processing_rules, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
       end
     end
+    @account.touch
   end
   end

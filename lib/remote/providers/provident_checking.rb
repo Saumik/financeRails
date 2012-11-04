@@ -4,9 +4,11 @@ class Remote::Providers::ProvidentChecking < Remote::Providers::Base
   end
   def fetch
     begin
+      # agent = Watir::Browser.new :chrome
       agent = open_browser
 
       # Step 1: Login
+      # agent.goto("http://www.providentcu.org/index.asp?i=home")
       open_page(agent, "http://www.providentcu.org/index.asp?i=home")
 
       report_command('set id:username')
@@ -41,6 +43,7 @@ class Remote::Providers::ProvidentChecking < Remote::Providers::Base
 
       report_command('Select 92')
       agent.radio(:value => '92').click()
+      agent.button(:value => 'Search').click()
 
       report_command('click Spreadsheet')
       agent.link(:text => 'Spreadsheet').click()

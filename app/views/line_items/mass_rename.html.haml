@@ -7,7 +7,7 @@
       var view = new financeRails.views.line_items.MassRenameView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
     });
 
-= form_tag url_for(:action => :mass_rename), :onkeypress => 'return event.keyCode != 13;' do
+= form_tag url_for(:action => :mass_rename), :onkeypress => 'return event.keyCode != 13;', :autocomplete => 'off' do
   #payees_list
     %table.main_table.table.table-striped.table-bordered
       %thead

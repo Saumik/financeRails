@@ -10,20 +10,19 @@
       %th Amount
       %th Payee Name
       %th Category Name
-      %th Balance
       %th Comment
-  - @imported_data.each do |line_item|
+  - @imported_data.each do |line_item_json|
+    - line_item = JSON.parse(line_item_json)
     %tbody
       %tr
-        %td= line_item.type_name
-        %td= line_item[:event_date]
-        %td= line_item[:amount]
-        %td= line_item[:payee_name]
-        %td= line_item[:category_name]
-        %td= line_item[:balance]
+        %td= LineItem.type_name(line_item['type'])
+        %td= line_item['event_date']
+        %td= line_item['amount']
+        %td= line_item['payee_name']
+        %td= line_item['category_name']
         %td
           = line_item[:comment]
-          - if @account.imported_line? (line_item.to_json_as_imported)
+          - if @account.line_already_imported? (line_item_json)
             %span.label.label-warning Already Imported!
 
 = form_tag(:action => :do_import) do

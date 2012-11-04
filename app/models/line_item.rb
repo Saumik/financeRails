@@ -46,6 +46,10 @@ class LineItem
     TYPE[type].capitalize
   end
 
+  def self.type_name(type)
+    TYPE[type].capitalize
+  end
+
   def income?
     type == INCOME
   end

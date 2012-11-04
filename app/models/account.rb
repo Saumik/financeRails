@@ -15,8 +15,8 @@ class Account
   def store_password(mobile_password, account_password)
     if mobile_password.present? and account_password.present?
       iv, enc = encrypt(mobile_password + MY_SALT, account_password)
-      self.random_iv = Moped::BSON::Binary.new(iv)
-      self.encrypted_password = Moped::BSON::Binary.new(enc)
+      self.random_iv = Moped::BSON::Binary.new(:generic, iv)
+      self.encrypted_password = Moped::BSON::Binary.new(:generic, enc)
     end
   end
 

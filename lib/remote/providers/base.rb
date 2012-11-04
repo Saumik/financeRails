@@ -1,6 +1,12 @@
 class Remote::Providers::Base
   def open_browser
-    agent = Watir::Browser.new :chrome
+    download_directory = Rails.configuration.downloads_path
+
+    profile = Selenium::WebDriver::Chrome::Profile.new
+    profile['download.prompt_for_download'] = false
+    profile['download.default_directory'] = download_directory
+
+    agent = Watir::Browser.new :chrome, :profile => profile
     @browser_session = BrowserSession.open_session
     agent
   end

@@ -2,6 +2,7 @@
 db/*.sqlite3
 log/*.log
 tmp/
+chromedriver.log
 .sass-cache/
 .idea/*
 *.iml

@@ -40,7 +40,7 @@ class Remote::Providers::Base
 
   def close_browser(agent)
     agent.close
-    File.delete("#{RAILS_ROOT}/chromedriver.log")
+    File.delete("#{Rails.root}/chromedriver.log")
     @browser_session.session_end = Time.now
     @browser_session.save
     @current_page.save

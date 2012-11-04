@@ -21,22 +21,27 @@
       - LineItem::TAGS.each do |tag|
         %li{:class => (params[:tag] == tag ? 'active' : '')}= link_to tag, controller: :line_items, action: :index, :tag => tag
 
+#toggles
+  %a.btn.create_toggle Create
+  %a.btn.import_toggle Import Remote
 // {new_item}
-.create_area
+.create_area.hide
   =semantic_form_for(@new_item, :remote => true, :html => {:class => 'well'}) do |f|
     = render :partial => 'form', :locals => {:f => f}
     .actions
       = f.submit 'Add New Item', class: 'btn btn-primary'
-.fetch_area.well.well-small
+.fetch_area.well.well-small.hide
   =semantic_form_for(:fetch, url: fetch_account_path(@account)) do |f|
     = f.input :mobile_password, as: :password
     = f.submit 'Fetch'
+
+= text_field_tag :search
 
 %ul.month_selector
   - months_between(@items.last.event_date, @items.first.event_date).each do |date|
     %li{data: {date: month_year_short(date)}, class: date_in_month_of(date, Date.today) ? 'active' : ''}= date.strftime('%b %Y')
 
-- cache ['v5', @account] do
+- cache ['v6', @account] do
   #items_list
     %table.main_table.table.table-striped.table-bordered
       %thead

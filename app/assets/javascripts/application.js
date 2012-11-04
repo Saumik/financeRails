@@ -12,6 +12,7 @@
 //= require jquery_ujs
 //= require select2
 //= require underscore-1.3.1
+//= require underscore-string-2.3.0
 //= require bootstrap-datepicker
 //= require backbone-0.9.2
 //= require handlebars.runtime

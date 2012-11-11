@@ -4,10 +4,10 @@ module Importers
     def import(data)
       require 'csv'
       CSV.new(data, :headers => :first_row).collect do |row|
-        date = row['Trans Date']
-        description = row['Description']
-        reference_number = row['Reference Number']
-        amount = row['Amount']
+        date = row['Trans Date'] || row['TRANSACTION DATE']
+        description = row['Description']  || row['DESCRIPTION']
+        reference_number = row['Reference Number'] || row['REFERENCE']
+        amount = row['Amount'] || row['AMOUNT']
 
         amount_money = amount.scan(/[0-9.\-]+/).join.to_f
 
@@ -21,7 +21,7 @@ module Importers
         line_item.payee_name = description
         line_item.event_date = Date.strptime(date, '%m/%d/%Y')
         line_item
-      end.compact
+      end.compact.collect { |line_item| line_item.to_json_as_imported }
     end
   end
 end

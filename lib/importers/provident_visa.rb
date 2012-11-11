@@ -19,7 +19,7 @@ module Importers
         line_item.amount = amount_money.abs
         line_item.comment = "Transaction #{reference_number}" if reference_number.present?
         line_item.payee_name = description
-        line_item.event_date = Date.strptime(date, '%m/%d/%Y')
+        line_item.event_date = date.length == 8 ? Date.strptime(date, '%m/%d/%y') : Date.strptime(date, '%m/%d/%Y')
         line_item
       end.compact.collect { |line_item| line_item.to_json_as_imported }
     end

@@ -53,6 +53,7 @@ class ExternalController < ApplicationController
     end
 
     @account.reset_balance
+    @account.touch
 
     cache_client.delete 'imported_1'
     redirect_to :controller => 'line_items', :action => :index, :account_id => @account.id

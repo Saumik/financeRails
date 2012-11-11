@@ -1,7 +1,8 @@
 class BudgetReportPresenter
   attr_reader :months, :current_user
-  def initialize(current_user)
-    @budget_items = BudgetItem.all
+  def initialize(current_user, active_year)
+    @active_year = active_year || Time.now.year
+    @budget_items = BudgetItem.where(budget_year: @active_year)
     @current_user = current_user
     last_date = LineItem.desc(:event_date).first.event_date.end_of_month
     if last_date.month == Date.today.month
@@ -17,6 +18,11 @@ class BudgetReportPresenter
     end
     @totals = {}
   end
+
+  def budget_year_range
+    [Date.new(BudgetItem.min(:budget_year)), Date.new(BudgetItem.max(:budget_year))]
+  end
+
   def budget_items
     @budget_items
   end

@@ -7,10 +7,8 @@ class BudgetsController < ApplicationController
   end
 
   def index
-    @budget_items = BudgetItem.all
     @categories = current_user.categories - BudgetItem.existing_categories
-
-    @presenter = BudgetReportPresenter.new(current_user)
+    @presenter = BudgetReportPresenter.new(current_user, params[:year])
   end
 
   def edit

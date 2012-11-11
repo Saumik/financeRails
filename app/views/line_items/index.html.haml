@@ -56,4 +56,4 @@
       %tbody
         - @items.each do |item|
           - cache ['v5', item] do
-            = render partial: 'item', locals: {item: item}
+            = render partial: 'item', locals: {item: item, hide_not_current: true}

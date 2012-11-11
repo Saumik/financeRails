@@ -25,9 +25,9 @@ class LineItem
   belongs_to :account, touch: true
   has_one :imported_line, :dependent => :destroy
 
-  field :type, :type => Integer, :default => 1
-  field :amount, :type => BigDecimal, :default => 0
-  field :event_date, :type => Date, :default => Time.now.to_date
+  field :type, type: Integer, default: 1
+  field :amount, type: BigDecimal, default: 0
+  field :event_date, type: Date, default: Time.now.to_date
   field :category_name, :type => String
   field :payee_name, :type => String
   field :original_payee_name
@@ -143,7 +143,7 @@ class LineItem
   end
 
   def self.in_month_of_date(in_month_of_date, filter_chain = Mongoid::Criteria.new(LineItem))
-    filter_chain.where(:event_date.gte => in_month_of_date.beginning_of_month.to_datetime, :event_date.lte => in_month_of_date.end_of_month.to_datetime)
+    filter_chain.where(:event_date => in_month_of_date.beginning_of_month..in_month_of_date.end_of_month)
   end
 
   # ---------------------------
@@ -167,7 +167,7 @@ class LineItem
     filter_chain = user_or_account.line_items
     filter_chain = in_month_of_date(filters[:in_month_of_date], filter_chain) if filters[:in_month_of_date].present?
     filter_chain = send(filters[:section].to_s + '_items') if filters[:section].present?
-    filter_chain = where(:category_name.in => filters[:categories]) if filters[:categories].present?
+    filter_chain = filter_chain.where(:category_name.in => filters[:categories]) if filters[:categories].present?
     filter_chain = filter_chain.where(category_name: /^#{filters[:matching_category_prefix]}.*/) if filters[:matching_category_prefix].present?
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type].present?
     filter_chain = add_spanning_filters(filter_chain, filters)

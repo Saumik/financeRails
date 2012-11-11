@@ -1,4 +1,5 @@
-%tr.item{data: {'item-id' => item.id, :date => month_year_short(item.event_date) }, class: date_in_month_of(item.event_date, Date.today) ? '' : 'hide' }
+- hide_not_current ||= false
+%tr.item{data: {'item-id' => item.id, :date => month_year_short(item.event_date) }, class: (hide_not_current && !date_in_month_of(item.event_date, Date.today)) ? 'hide' : '' }
   %td
     = item.type_name
     = item.tags if item.tags.length > 0

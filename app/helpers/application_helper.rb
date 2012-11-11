@@ -24,9 +24,6 @@ module ApplicationHelper
   end
 
   def months_between(start_month, end_month)
-    puts ';'
-    puts start_month
-    puts end_month
     months = []
     ptr = start_month
     while ptr <= end_month.end_of_month do

@@ -77,6 +77,8 @@ class AccountsController < ApplicationController
     downloader = Remote::Downloader.new
     line_items_jsonified = downloader.fetch(Remote::Providers.const_get(@account.import_format).new(account_password))
     @account.import_line_items(line_items_jsonified)
+    @account.reset_balance
+    @account.touch
 
     flash[:success] = "#{line_items_jsonified.length} line items were imported"
     redirect_to :controller => 'line_items', :action => :index, :account_id => @account.id

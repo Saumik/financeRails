@@ -8,6 +8,10 @@
   %h2 Budget items
   %a.btn.btn-primary.open_create_budget_item Create budget item
 
+%ul.year_selector
+  - months_between(*@presenter.budget_year_range).each do |date|
+    %li{data: {date: month_year_short(date)}, class: (date.year == Date.today.year) ? 'active' : ''}= date.strftime('%Y')
+
 = render 'monthly_report'
 
 #budget_item_modal.modal.hide
@@ -26,6 +30,7 @@
       .row-fluid
         %ul.included_categories.span6
       .row-fluid
+        = f.input :budget_year, :input_html => {:class => 'span6 budget_year'}, :input_html => {:value => Time.now.year}
         = f.input :name, :input_html => {:class => 'span6 name'}
         = f.input :limit, :input_html => {:class => 'span6 limit'}
       .expense-data.clear-fix

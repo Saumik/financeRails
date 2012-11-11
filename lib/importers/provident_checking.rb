@@ -12,6 +12,10 @@ module Importers
         amount = row['Amount']
         balance = row['Balance']
 
+        if description.ends_with? '(Pending)'
+          next
+        end
+
         amount_money = amount.scan(/[0-9.\-]+/).join.to_f
 
         line_item = LineItem.new
@@ -22,7 +26,7 @@ module Importers
         line_item.payee_name = description if check_number.blank?
         line_item.event_date = Date.strptime(date, '%m/%d/%Y')
         line_item
-      end.collect { |line_item| line_item.to_json_as_imported }
+      end.compact.collect { |line_item| line_item.to_json_as_imported }
     end
   end
 end

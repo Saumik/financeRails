@@ -81,7 +81,7 @@ class ExternalController < ApplicationController
   end
 
   def export_json
-    db_name = Rails.configuration.mongoid.database.name
+    db_name = Rails.configuration.mongoid.sessions["default"]["database"]
     date_str = Time.now.strftime("%d-%m-%Y--%H-%M")
     result_folder = "#{Dir.pwd}/dumps/dump-#{db_name}-#{date_str}"
     command = "mongodump -d #{db_name} -o #{result_folder}"

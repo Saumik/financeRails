@@ -17,7 +17,7 @@ class LineItem
   TAG_EXCLUDE_FROM_REPORTS = 'Exclude from Reports'
   TAG_CASH = 'Cash'
   TAGS = [TAG_CASH, TAG_EXCLUDE_FROM_REPORTS]
-  INCOME_CATEGORIES = ['Salary']
+  INCOME_CATEGORIES = ['Salary', 'Investments:Dividend', 'Income:Misc']
   TRANSFER_CASH_CATEGORY_NAME = 'Transfer:Cash'
 
   around_update :on_around_update_assign_old_payee_name

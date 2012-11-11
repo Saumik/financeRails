@@ -60,7 +60,7 @@ class ExternalController < ApplicationController
   end
 
   def import_json
-    db_name = Rails.configuration.mongoid.database.name
+    db_name = Rails.configuration.mongoid.sessions["default"]["database"]
     dump_folder = @backup_folders[params[:position].to_i]
     import_folder = "#{Dir.pwd}/dumps/#{dump_folder}"
     command = "mongorestore -d #{db_name} --drop #{import_folder}/"
@@ -131,7 +131,9 @@ class ExternalController < ApplicationController
       budget_item.save
     end
 
-    LineItem.reset_balance
+    current_user.accounts.each do |account|
+      account.reset_balance
+    end
   end
 
 end

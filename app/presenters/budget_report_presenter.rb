@@ -11,10 +11,11 @@ class BudgetReportPresenter
     @grouped_items = {}
     @line_items.each do |line_item|
       next unless line_item.grouped_label.present?
-      item = @grouped_items[line_item.grouped_label] ||= {amount: 0, month: 12}
+      item = @grouped_items[line_item.grouped_label] ||= {amount: 0, month: 12, label: line_item.grouped_label}
       item[:amount] += line_item.signed_amount
       item[:month] = [item[:month], line_item.event_date.month].min
     end
+    @grouped_items = @grouped_items.values.sort_by {|item| item[:month]}
   end
 
   def months
@@ -29,9 +30,9 @@ class BudgetReportPresenter
     @budget_items
   end
 
-  def grouped_item_label(grouped_item_label)
-    item = @grouped_items[grouped_item_label]
-    "#{grouped_item_label} (#{Date.new(@active_year, item[:month]).strftime('%B')}): Total: #{item[:amount]}"
+  def grouped_item_label(grouped_item)
+    item = grouped_item
+    "#{grouped_item[:label]} (#{Date.new(@active_year, item[:month]).strftime('%B')}): Total: #{item[:amount]*-1}"
   end
 
   def in_future?(month)

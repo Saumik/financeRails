@@ -1,93 +1,105 @@
-#create_budget_item_modal {
-  .included_categories {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    list-style: none;
-    margin: 10px 0;
-    padding: 5px;
-  }
-}
+#budgets-body {
 
-.expense-data {
-  ul {
-    list-style: none;
-  }
-  li {
-    float: left;
-    padding: 2px 11px;
-    text-align: center;
-  }
-  b {
-    display: block;
-    text-transform: uppercase;
-  }
-}
-
-#budgets {
-  list-style: none;
-  margin: 0;
-  li {
-    margin: 5px;
-    padding: 5px;
-    border: 1px solid #CCC;
-    border-radius: 5px;
-    background-color: #DDD;
-  }
-  .limit {
-    float: right;
-  }
-}
-
-.report_table {
-  margin-top: 0;
-
-  .categories {
-    list-style: none;
+  .expense-data {
+    ul {
+      list-style: none;
+    }
     li {
-      color: #999;
+      float: left;
+      padding: 2px 11px;
+      text-align: center;
     }
-    padding:0;
+    b {
+      display: block;
+      text-transform: uppercase;
+    }
+  }
+
+  #budgets {
+    list-style: none;
     margin: 0;
-    margin-top: 5px;
+    li {
+      margin: 5px;
+      padding: 5px;
+      border: 1px solid #CCC;
+      border-radius: 5px;
+      background-color: #DDD;
+    }
+    .limit {
+      float: right;
+    }
   }
 
-  .limit {
+  .report_table {
+    margin-top: 0;
+
+    .categories {
+      list-style: none;
+      li {
+        color: #999;
+      }
+      padding:0;
+      margin: 0;
+      margin-top: 5px;
+    }
+
+    .limit {
+    }
+
+    .future {
+        color: #339933;
+      }
+
+    .amount-left {
+      margin-left: 10px;
+      display: inline-block;
+      &.positive {
+        color: green;
+      }
+      &.negative {
+        color: red;
+      }
+    }
   }
 
-  .amount-left {
-    margin-left: 10px;
-    display: inline-block;
-    &.positive {
-      color: green;
+  .year_selector {
+    list-style: none;
+    display: table;
+    width: 100%;
+    margin: 0;
+    li {
+      border-left: 1px solid #666;
+      display:table-cell;
+      text-align: center;
+      background-color: #eee;
+      height: 20px;
+      vertical-align: middle;
+      cursor: pointer;
+      &:hover {
+        background-color: #ccc;
+      }
+      &.active {
+        background-color: #ccc;
+        cursor: auto;
+      }
     }
-    &.negative {
-      color: red;
+    li:last-child {
+      border-right: 1px solid #666;
     }
   }
-}
 
-.year_selector {
-  list-style: none;
-  display: table;
-  width: 100%;
-  margin: 0;
-  li {
-    border-left: 1px solid #666;
-    display:table-cell;
-    text-align: center;
-    background-color: #eee;
-    height: 20px;
-    vertical-align: middle;
-    cursor: pointer;
-    &:hover {
-      background-color: #ccc;
-    }
-    &.active {
-      background-color: #ccc;
-      cursor: auto;
-    }
+  .modal-body {
+    min-height: 400px;
+    max-height: none;
   }
-  li:last-child {
-    border-right: 1px solid #666;
+
+  .formtastic.budget_item {
+    .included_categories {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      list-style: none;
+      margin: 10px 0;
+      padding: 5px;
+    }
   }
 }

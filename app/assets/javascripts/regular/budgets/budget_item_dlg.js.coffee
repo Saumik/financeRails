@@ -3,36 +3,29 @@ window.financeRails.views ||= {}
 window.financeRails.views.budgets ||= {}
 
 class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
-  el: '#budget_item_modal'
   active_categories: []
   events:
     'click .add_category': 'onAddCategory',
     'click .remove': 'onRemoveCategory'
-    'ajax:success #budget_item_modal form': 'reloadPage',
 
-  initialize: ->
+  initialize: (options) ->
     _.bindAll @
-
-  openDialog: (options) ->
-    $el = $(@el)
-    $el.modal()
-    $el.centerModalInWindow()
-    $('.category_name').focus
-
-    if(options.id)
-      @loadExisting(options.id)
-      @$el.find('form').prop('method', 'put')
-      @$el.find('form').prop('action', '/budgets/' + options.id)
+    @$el = $(options.el)
+    $('.category_name').focus()
+    @active_categories = _(options.active_categories).map((category) -> {name: category}) || []
+    @render();
 
   render: ->
     $('.included_categories').html(HandlebarsTemplates['templates/budgets/dlg_budget_category']({categories: @active_categories}))
     category_names = _(@active_categories).map (category) -> category.name
-    $.pjax {
-      url: '/budgets/expense_summary?categories=' + encodeURIComponent(JSON.stringify(category_names)),
-      container: '.expense-data',
-      push: false
-    }
+    if category_names.length > 0
+      $.ajax {
+        url: '/budgets/expense_summary?categories=' + encodeURIComponent(JSON.stringify(category_names)),
+        success: (data, textStatus, jqHR) ->
+          $('.expense-data').html(data)
+      }
     @delegateEvents()
+
 
   onAddCategory: (e) ->
     clicked_item = $(e.currentTarget)
@@ -42,21 +35,9 @@ class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
     @render()
 
   onRemoveCategory: (e) ->
+    e.stopPropagation();
+    e.preventDefault();
     $(e.currentTarget).parents('li').remove();
-
-  loadExisting: (id) ->
-    $.ajax({
-      url: '/budgets/' + id + '/edit',
-      dataType: 'json'
-      success: @onLoadExistingOk
-    })
-
-  onLoadExistingOk: (data, textStatus, jqXHR) ->
-    @id = data.id
-    @active_categories = _(data.budget_item.categories).map((item) -> {name: item})
-    @$el.find('input.name').val(data.budget_item.name)
-    @$el.find('input.limit').val(data.budget_item.limit)
-    @render()
 
   closeNearestModal: (e) ->
       $(e.target).closest('.modal').modal('hide')

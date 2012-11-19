@@ -16,7 +16,8 @@ class LineItem
   TRANSFER_OUT = 'Transfer Out'
   TAG_EXCLUDE_FROM_REPORTS = 'Exclude from Reports'
   TAG_CASH = 'Cash'
-  TAGS = [TAG_CASH, TAG_EXCLUDE_FROM_REPORTS]
+  TAG_HIGHLIGHT = 'Highlight'
+  TAGS = [TAG_CASH, TAG_EXCLUDE_FROM_REPORTS, TAG_HIGHLIGHT]
   INCOME_CATEGORIES = ['Salary', 'Investments:Dividend', 'Income:Misc']
   TRANSFER_CASH_CATEGORY_NAME = 'Transfer:Cash'
 
@@ -32,6 +33,7 @@ class LineItem
   field :payee_name, :type => String
   field :original_payee_name
   field :comment, :type => String
+  field :grouped_label, :type => String
   field :account_id
   field :tags, :type => Array, :default => []
   field :source, :type => Integer, :default => 0
@@ -151,7 +153,7 @@ class LineItem
 
   def self.sum_with_filters(user_or_account, filters = {}, post_process = nil)
     filter_chain = get_filters(user_or_account, filters)
-    items = filter_chain.default_sort.to_a
+    items = filter_chain.to_a
     items = add_spanned_items(user_or_account, filters, items)
     items = post_process.present? ? post_process.perform_after(items) : items
     items.sum(&:signed_amount)
@@ -160,6 +162,13 @@ class LineItem
   def self.search_with_filters(user_or_account, filters = {})
     filter_chain = get_filters(user_or_account, filters)
     filter_chain.default_sort
+  end
+
+  def self.inline_sum_with_filters(items, filters, post_process)
+    items = inline_filter(items, filters)
+    # add spanning
+    items = post_process.present? ? post_process.perform_after(items) : items
+    items.sum(&:signed_amount)
   end
 
   private
@@ -172,6 +181,12 @@ class LineItem
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type].present?
     filter_chain = add_spanning_filters(filter_chain, filters)
     filter_chain
+  end
+
+  def self.inline_filter(items, filters = {})
+    items = items.select { |item| item.event_date.month == filters[:in_month_of_date].month && item.event_date.year == filters[:in_month_of_date].year } if filters[:in_month_of_date].present?
+    items = items.select { |item| filters[:categories].include? item.category_name } if filters[:categories].present?
+    items
   end
   public
 

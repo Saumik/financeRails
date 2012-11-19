@@ -6,7 +6,7 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body id="<%=controller_name%>-body">
 <% if current_user %>
   <div class="navbar">
     <div class="navbar-inner">

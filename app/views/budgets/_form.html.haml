@@ -1,0 +1,19 @@
+%h2 Included Categories:
+.btn-group.row-fluid
+  %a.offset1.btn.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+    Add Category
+    %span.caret
+  %ul.dropdown-menu
+    - @categories.each do |category|
+      %li{'data-name' =>  category}
+        %a.add_category
+          = category
+.row-fluid
+  %ul.included_categories.span6
+.row-fluid
+  = f.input :budget_year, :input_html => {:class => 'span12 budget_year', :value => Time.now.year}, :wrapper_html => {:class => 'span6'}
+  = f.input :name, :wrapper_html => {:class => 'span6'}, :input_html => {:class => 'span12 name'}
+.row-fluid
+  = f.input :limit, :input_html => {:class => 'span12 limit'}, :wrapper_html => {:class => 'span6'}
+  = f.input :estimated_min_monthly_amount, :input_html => {:class => 'span12 limit'}, :wrapper_html => {:class => 'span6'}
+.expense-data.clear-fix

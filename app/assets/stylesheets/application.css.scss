@@ -3,10 +3,22 @@
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *= require_self
- *= require_tree ./regular
 */
 
 @import "bootstrap";
 @improt 'select2';
 @import 'jquery.dataTables';
 @import 'bootstrap-datepicker';
+
+@import 'regular/common.css.scss';
+@import 'regular/account.css.scss';
+@import 'regular/accounts.css.scss';
+@import 'regular/budget.css.scss';
+@import 'regular/external.css.scss';
+@import 'regular/groceries.css.scss';
+@import 'regular/line_items.css.scss';
+@import 'regular/payee.css.scss';
+@import 'regular/plugins.css.scss';
+@import 'regular/report.css.scss';
+@import 'regular/scaffolds.css.scss';
+@import 'regular/users.css.scss';

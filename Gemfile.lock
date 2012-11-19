@@ -79,11 +79,11 @@ GEM
       factory_girl (~> 3.3.0)
       railties (>= 3.0.0)
     ffi (1.0.11)
-    formtastic (2.1.1)
-      actionpack (~> 3.0)
-    formtastic-bootstrap (1.1.1)
-      formtastic
-      rails (~> 3.1)
+    formtastic (2.2.1)
+      actionpack (>= 3.0)
+    formtastic-bootstrap (2.0.0)
+      formtastic (~> 2.2)
+      formtastic-bootstrap
     gherkin (2.10.0)
       json (>= 1.4.6)
     haml (3.1.6)
@@ -235,8 +235,8 @@ DEPENDENCIES
   devise
   execjs
   factory_girl_rails
-  formtastic (~> 2.1.1)
-  formtastic-bootstrap
+  formtastic (~> 2.2.1)
+  formtastic-bootstrap (= 2.0.0)
   haml-rails
   handlebars_assets
   headless

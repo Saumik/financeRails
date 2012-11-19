@@ -10,10 +10,10 @@
   %td.balance!= currency(item[:balance])
   %td.actions
     - unless item.new_record?
-      = link_to 'Edit', edit_line_item_path(item), :remote => true, :class => 'btn btn-primary edit'
+      = link_to 'Edit', edit_line_item_path(item), :remote => true, :class => 'btn btn-primary btn-small edit'
       &nbsp;
       &nbsp;
-      = link_to 'Split', line_item_path(item) + '/split', :remote => true, :class => 'btn btn-primary split', :data => {:amount => item.amount}
+      = link_to 'Split', line_item_path(item) + '/split', :remote => true, :class => 'btn btn-primary btn-small split', :data => {:amount => item.amount}
       &nbsp;
       &nbsp;
-      = link_to 'Delete', line_item_path(item), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + item.try(:category_name).to_s + ' transaction?'}, :class => 'btn btn-danger delete'
+      = link_to 'Delete', line_item_path(item), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + item.try(:category_name).to_s + ' transaction?'}, :class => 'btn btn-danger btn-small delete'

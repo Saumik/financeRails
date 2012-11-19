@@ -108,9 +108,12 @@ FinanceRails2::Application.routes.draw do
     end
   end
 
-  resources :budgets do
+  resources :budget_items, path: 'budgets', controller: 'budgets' do
     collection do
       get :expense_summary
+    end
+    member do
+      get :clone
     end
   end
 

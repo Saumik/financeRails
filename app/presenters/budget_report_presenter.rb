@@ -1,36 +1,57 @@
 class BudgetReportPresenter
-  attr_reader :months, :current_user
+  attr_reader :months, :current_user, :active_year, :grouped_items
+
   def initialize(current_user, active_year)
-    @active_year = active_year || Time.now.year
-    @budget_items = BudgetItem.where(budget_year: @active_year)
+    @active_year = (active_year || Time.now.year).to_i
+    @budget_items = BudgetItem.where(budget_year: @active_year).default_sort
+    @line_items = current_user.line_items.where(event_date: Date.new(@active_year, 1, 1).beginning_of_year..Date.new(@active_year, 1, 1).end_of_year).to_a
     @current_user = current_user
-    last_date = LineItem.desc(:event_date).first.event_date.end_of_month
-    if last_date.month == Date.today.month
-      last_date = (Date.today - 1.month).end_of_month
-    end
-    #first_date = LineItem.where(:event_date.gt => last_date.beginning_of_year).asc(:event_date).first.event_date.beginning_of_month
-    first_date = LineItem.asc(:event_date).first.event_date.beginning_of_month
-    @months = []
-    current_month = first_date
-    while current_month <= last_date do
-      @months << [current_month.month, current_month.year]
-      current_month = current_month.advance(:months => 1)
-    end
     @totals = {}
+
+    @grouped_items = {}
+    @line_items.each do |line_item|
+      next unless line_item.grouped_label.present?
+      item = @grouped_items[line_item.grouped_label] ||= {amount: 0, month: 12}
+      item[:amount] += line_item.signed_amount
+      item[:month] = [item[:month], line_item.event_date.month].min
+    end
+  end
+
+  def months
+    1..12
   end
 
   def budget_year_range
-    [Date.new(BudgetItem.min(:budget_year)), Date.new(BudgetItem.max(:budget_year))]
+    (BudgetItem.min(:budget_year).to_i)..(BudgetItem.max(:budget_year).to_i)
   end
 
   def budget_items
     @budget_items
   end
 
-  def total_expenses_for_budget_item_in_month(budget_item, month, year)
+  def grouped_item_label(grouped_item_label)
+    item = @grouped_items[grouped_item_label]
+    "#{grouped_item_label} (#{Date.new(@active_year, item[:month]).strftime('%B')}): Total: #{item[:amount]}"
+  end
+
+  def in_future?(month)
+    month > Time.now.month and @active_year == Time.now.year
+  end
+
+  def future_amount(budget_item)
+    @totals[budget_item.name] ||= 0
+    @totals[budget_item.name] -= budget_item.estimated_min_monthly_amount
+
+    budget_item.estimated_min_monthly_amount
+  end
+
+  def total_expenses_for_budget_item_in_month(budget_item, month)
     #noinspection RubyArgCount
-    current_date = Date.new(year, month, 1)
-    amount = LineItem.sum_with_filters(current_user, {:categories => budget_item.categories, :in_month_of_date => current_date}, LineItemReportProcess.new)
+    current_date = Date.new(@active_year, month, 1)
+    amount = LineItem.inline_sum_with_filters(@line_items, {
+                                              :categories => budget_item.categories,
+                                              :in_month_of_date => current_date
+                                              }, LineItemReportProcess.new)
     @totals[budget_item.name] ||= 0
     @totals[budget_item.name] += amount
     amount * -1
@@ -41,7 +62,7 @@ class BudgetReportPresenter
   end
 
   def amount_left_budget_item_in_year(budget_item)
-    @totals[budget_item.name] + budget_item.limit.to_i.to_f * @months.length
+    @totals[budget_item.name] + budget_item.limit.to_i.to_f * 12
   end
 
   def total_limit

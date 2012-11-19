@@ -3,23 +3,31 @@ Income,
 = f.radio_button :type, 1
 Expense. On
 = f.text_field :event_date, class: 'event_date'
+%br/
 To:
 = f.text_field :payee_name, class: 'typeahead payee_name'
+$
 = f.text_field :amount, class: 'amount'
-$ For:
+%br/
+For:
 = f.text_field :category_name, class: 'typeahead category_name'
-%br
+%br/
 = f.check_box :spanned
-Span payments from:
+Span payments
+%br/
+From:
 = f.text_field :span_from
 To
 = f.text_field :span_until
-%br
+%br/
 = check_box_tag :always_assign, true
 Always rename and categorize as specified
-%br
+%br/
 Comments:
 = f.text_field :comment, class: 'comment'
+%br/
+Highlight Group:
+= f.text_field :grouped_label, class: 'grouped_label'
 %br
 Tags:
 - LineItem::TAGS.each do |tag|

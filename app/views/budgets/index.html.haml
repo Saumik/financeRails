@@ -6,34 +6,56 @@
 
 .well
   %h2 Budget items
-  %a.btn.btn-primary.open_create_budget_item Create budget item
+  = link_to 'Create budget item', new_budget_item_path(), :remote => true, :class => 'btn btn-primary new'
 
 %ul.year_selector
-  - months_between(*@presenter.budget_year_range).each do |date|
-    %li{data: {date: month_year_short(date)}, class: (date.year == Date.today.year) ? 'active' : ''}= date.strftime('%Y')
+  - @presenter.budget_year_range.each do |year|
+    %li{class: (year == @presenter.active_year) ? 'active' : ''}
+      = link_to year, './budgets?year=' + year.to_s
 
-= render 'monthly_report'
+%table.table.table-striped.table-bordered.report_table
+  %thead
+    %tr
+      %th.name Budget Title
+      - @presenter.months.each do |(month)|
+        %th.date
+          = "#{month_name(month)} #{@presenter.active_year}"
+      %th.total Total
+      %th.actions
+  %tbody
+    - @presenter.budget_items.each do |budget_item|
+      %tr.item-row{:data => {:id => budget_item.id}}
+        %td
+          .categories_popover{data: {content: categories_popover(budget_item), title: 'Categories', html: 'true'}}
+            = budget_item.name + ' - '
+            %span.limit!= currency budget_item.limit
+        - @presenter.months.each do |(month)|
+          %td
+            - if @presenter.in_future?(month)
+              .future!= currency @presenter.future_amount(budget_item)
+            - else
+              = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: @presenter.active_year, categories: budget_item.categories),  {remote: true}, {class: 'open-search-line-items'} do
+                !=currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month)
+        %td
+          - amount_left = @presenter.amount_left_budget_item_in_year(budget_item)
+          != currency @presenter.total_expenses_for_budget_item_in_year(budget_item)
+          %span{:class => 'amount-left ' + (amount_left > 0 ? 'positive' : 'negative')}
+            != currency amount_left
+        %td.actions
+          = link_to 'Edit', edit_budget_item_path(budget_item), :remote => true, :class => 'btn btn-primary btn-small edit_btn'
+          = link_to 'Clone', budget_item_path(budget_item) + '/clone', :remote => true, :class => 'btn btn-small clone_btn'
+          = link_to 'Delete', budget_item_path(budget_item), :remote => true, :method => :delete, :confirm => 'Are you sure delete to delete ' + budget_item.try(:name).to_s + '?', :class => 'btn btn-small btn-danger delete'
+    %tr
+      %td.total
+        Total:
+        != currency @presenter.total_limit
+      - @presenter.months.each do |(month)|
+        %td
+      %td
+      %td
 
-#budget_item_modal.modal.hide
-  = semantic_form_for :budget_item, :url => {:action => :create}, :remote => true do |f|
-    .modal-body.well
-      %h2 Included Categories:
-      .btn-group.row-fluid
-        %a.offset1.btn.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-          Add Category
-          %span.caret
-        %ul.dropdown-menu
-          - @categories.each do |category|
-            %li{'data-name' =>  category}
-              %a.add_category
-                = category
-      .row-fluid
-        %ul.included_categories.span6
-      .row-fluid
-        = f.input :budget_year, :input_html => {:class => 'span6 budget_year'}, :input_html => {:value => Time.now.year}
-        = f.input :name, :input_html => {:class => 'span6 name'}
-        = f.input :limit, :input_html => {:class => 'span6 limit'}
-      .expense-data.clear-fix
-    .modal-footer
-      %a.btn(data-dismiss='modal') Cancel
-      %button.btn.btn-primary.submit{:type => :submit} Submit
+%h2 Highlights
+%ul.highlights
+  - @presenter.grouped_items.keys.each do |grouped_item_label|
+    %li
+      = @presenter.grouped_item_label(grouped_item_label)

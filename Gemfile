@@ -15,8 +15,8 @@ gem 'therubyracer'
 gem 'rabl'
 gem 'json'
 
-gem 'formtastic', " ~> 2.1.1"
-gem 'formtastic-bootstrap'
+gem 'formtastic', " ~> 2.2.1"
+gem 'formtastic-bootstrap', '2.0.0'
 gem 'slim'
 gem 'haml-rails'
 

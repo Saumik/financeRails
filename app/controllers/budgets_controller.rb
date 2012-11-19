@@ -1,17 +1,25 @@
 class BudgetsController < ApplicationController
   MAIN_OBJECT = BudgetItem
   before_filter :assign_section
+
+  def new
+    @categories = current_user.categories - BudgetItem.existing_categories
+    @item = BudgetItem.new
+
+    render layout: false
+  end
+
   def create
     @budget_item = BudgetItem.create(params[:budget_item])
-    render :nothing => true
+    render :layout => false
   end
 
   def index
-    @categories = current_user.categories - BudgetItem.existing_categories
     @presenter = BudgetReportPresenter.new(current_user, params[:year])
   end
 
   def edit
+    @categories = current_user.categories - BudgetItem.existing_categories
     @item = BudgetItem.find(params[:id])
 
     render :layout => false
@@ -22,7 +30,13 @@ class BudgetsController < ApplicationController
     @item.attributes = params[:budget_item]
     @item.save
 
-    render :json => {:refresh => 'true'}
+    render :layout => false
+  end
+
+  def clone
+    @categories = current_user.categories - BudgetItem.existing_categories
+    @item = BudgetItem.find(params[:id])
+    render :layout => false
   end
 
   def expense_summary

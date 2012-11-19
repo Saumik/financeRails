@@ -8,6 +8,10 @@
   padding: 10px;
 }
 
+.main_area {
+  margin-bottom: 100px;
+}
+
 .full-container {
   padding: 0px 20px;
 }
@@ -54,4 +58,11 @@
 
 .typeahead.dropdown-menu {
    z-index: 2000;
+}
+
+.table td {
+  font-size: 13px;
+  line-height: 15px;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }

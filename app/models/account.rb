@@ -32,7 +32,9 @@ class Account
     current_balance = 0
 
     line_items.default_sort.reverse.each do |item|
-      current_balance += item.amount * item.multiplier
+      if item.category_name != TRANSFER_CASH_CATEGORY_NAME
+        current_balance += item.amount * item.multiplier
+      end
 
       if item.balance != current_balance
         item.balance = current_balance

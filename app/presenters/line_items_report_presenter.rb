@@ -5,6 +5,7 @@ class LineItemsReportPresenter
     @line_items = current_user.line_items.where(event_date: Date.new(@active_year, 1, 1).beginning_of_year..Date.new(@active_year, 1, 1).end_of_year).asc(:event_date).to_a
 
     @filters = filters
+
     @current_user = current_user
     first_date = @line_items.first.event_date.beginning_of_month
     last_date = @line_items.last.event_date.end_of_month
@@ -15,6 +16,10 @@ class LineItemsReportPresenter
       @months << [current_month.month, current_month.year]
       current_month = current_month.advance(:months => 1)
     end
+
+    @filters[:avg_from] ||= Date.new(@presenter.months.first[1], @presenter.months.first[0], 1)
+    @filters[:avg_until] ||= Date.new(@presenter.months.first[1], @presenter.months.first[0], 1)
+
     @month_totals = {}
     @category_avgs = {}
   end
@@ -52,12 +57,14 @@ class LineItemsReportPresenter
       @month_totals["#{section}:#{month}:#{year}"] ||= 0
       @month_totals["#{section}:#{month}:#{year}"] += amount.to_f.abs if count_for_total
       @category_avgs["#{section}:#{category_name}:#{count_for_total}"] ||= 0
-      @category_avgs["#{section}:#{category_name}:#{count_for_total}"] += amount.to_f.abs
+      if current_date <= @filters[:avg_until]
+        @category_avgs["#{section}:#{category_name}:#{count_for_total}"] += amount.to_f.abs
+      end
     end
   end
 
   def avg_amount_of_type_in_month(section, category_name, count_for_total)
-    @category_avgs["#{section}:#{category_name}:#{count_for_total}"] / @months.length
+    @category_avgs["#{section}:#{category_name}:#{count_for_total}"] / (@filters[:avg_until].month - @filters[:avg_from].month + 1)
   end
 
   def month_section_total(section, month, year)

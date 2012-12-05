@@ -10,6 +10,8 @@ class ReportController < ApplicationController
 
     @filters = {}
     @filters[:support_spanned] = params[:hide_spanning].present? ? !(params[:hide_spanning] == 'true') : true
+    @filters[:avg_from] = params[:avg_from].present? ? Date.parse(params[:avg_from]) : nil
+    @filters[:avg_until] = params[:avg_until].present? ? Date.parse(params[:avg_until]) : nil
 
     @presenter = LineItemsReportPresenter.new(current_user, @filters, params[:year])
   end

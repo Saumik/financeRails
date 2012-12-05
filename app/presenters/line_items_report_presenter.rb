@@ -17,8 +17,8 @@ class LineItemsReportPresenter
       current_month = current_month.advance(:months => 1)
     end
 
-    @filters[:avg_from] ||= Date.new(@presenter.months.first[1], @presenter.months.first[0], 1)
-    @filters[:avg_until] ||= Date.new(@presenter.months.first[1], @presenter.months.first[0], 1)
+    @filters[:avg_from] ||= Date.new(@months.first[1], @months.first[0], 1)
+    @filters[:avg_until] ||= Date.new(@months.last[1], @months.last[0], 1)
 
     @month_totals = {}
     @category_avgs = {}

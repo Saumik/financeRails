@@ -5,8 +5,8 @@
     });
 .filters.well.well-small
   %form
-    = check_box_tag :show_spanning, 'true', @filters[:support_spanned]
-    Show Spanning
+    = check_box_tag :hide_spanning, 'true', !@filters[:support_spanned]
+    Hide Spanning
     %input{:type => :submit, :value => 'Apply'}
 
 %table.table.table-striped.table-bordered
@@ -16,19 +16,19 @@
       - @presenter.months.each do |(month, year)|
         %th.date
           = "#{month_name(month)} #{year}"
+      %th.avg Avarage
   %tbody
     - @presenter.report_sections.each do |section|
       %tr.section-row
         %td.section_name
           = section.to_s.capitalize
-      - @presenter.root_categories_matching(section).each do |root_category_name|
-        - child_rows = @presenter.child_categories_of(section, root_category_name)
+      - @presenter.root_categories_matching(section).each do |root_category_name, child_categories|
         %tr.item-row
-          = render partial: 'report/monthly_expenses/report_row', locals: {category_name: root_category_name, section: section, expand: true}
-        - if child_rows.length > 1
-          - child_rows.each do |child_category_name|
+          = render partial: 'report/monthly_expenses/report_row', locals: {category_name: root_category_name, contains_categories: child_categories, section: section, expand: true}
+        - if child_categories.length > 1
+          - child_categories.each do |child_category_name|
             %tr.item-row.hide.child_row{data: {child_of: root_category_name }}
-              = render partial: 'report/monthly_expenses/report_row', locals: {category_name: child_category_name, section: section, expand: false}
+              = render partial: 'report/monthly_expenses/report_row', locals: {category_name: child_category_name, contains_categories: [child_category_name], section: section, expand: false}
     - @presenter.report_sections.each do |section|
       %tr.total
         %td.total
@@ -36,8 +36,10 @@
         - @presenter.months.each do |(month, year)|
           %td{:class => "total #{@presenter.section_class(section)}"}
             != currency @presenter.month_section_total(section, month, year)
+        %td
     %tr.total
       %td Total
       - @presenter.months.each do |(month, year)|
         %td.total
           != currency @presenter.month_total(month, year)
+      %td

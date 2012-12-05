@@ -5,4 +5,6 @@
 - @presenter.months.each do |(month, year)|
   %td{:class => @presenter.section_class(section)}
     = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: year, categories: [category_name]),  {remote: true}, {class: 'open-search-line-items'} do
-      !=currency_abs @presenter.total_amount_of_type_in_month(section, category_name, month, year, expand)
+      !=currency_abs @presenter.total_amount_of_type_in_month(section, category_name, contains_categories, month, year, expand)
+%td
+  != currency_abs @presenter.avg_amount_of_type_in_month(section, category_name, expand)

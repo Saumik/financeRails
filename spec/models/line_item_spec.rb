@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe LineItem do
+  before :each do
+    @user = FactoryGirl.create :user_with_account
+    @account = @user.accounts.first
+
+  end
   describe '#rename_payee' do
     it 'should rename the payee name'
     it 'should put under original_payee_name the old name'
@@ -55,7 +60,6 @@ describe LineItem do
   describe 'spanned line item support' do
     before :each do
       @item1 = FactoryGirl.create :spanned_line_item
-      @item2 = FactoryGirl.create :spanned_line_item
       @item3 = FactoryGirl.create :line_item_6
     end
     it 'should sum spanned line items as normal when spanned is not present' do
@@ -65,6 +69,22 @@ describe LineItem do
     it 'should sum spanned line items for spanning period when spanned is true' do
       LineItem.sum_with_filters(in_month_of_date: @item1.span_until, support_spanned: true).to_i.should == -100
       LineItem.sum_with_filters(in_month_of_date: @item1.event_date, support_spanned: true).to_i.should == -200
+    end
+  end
+
+  describe '#inline_sum_with_filters' do
+    it 'should support spanned line items' do
+      @item3 = FactoryGirl.create :line_item_6, account: @account
+      @line_items = LineItem.all.to_a
+
+      LineItem.inline_sum_with_filters(@user, @line_items, {}, nil).to_f.should == @item3.signed_amount.to_f
+
+      @item1 = FactoryGirl.create :spanned_line_item, account: @account
+
+      @line_items = LineItem.all.to_a
+      expected_output = @item3.signed_amount - 50.0
+      LineItem.inline_sum_with_filters(@user, @line_items, {support_spanned: true, in_year: 2012, in_month_of_date: Date.new(2012, 1, 1)}, nil).to_f.should == expected_output
+
     end
   end
 end

@@ -74,6 +74,12 @@ FactoryGirl.define do
     email 'test@test.com'
     password 'mypassword'
     password_confirmation 'mypassword'
+
+    factory :user_with_account do
+      after(:create) do |u|
+        u.accounts << FactoryGirl.create(:account)
+      end
+    end
   end
 
   factory :account do

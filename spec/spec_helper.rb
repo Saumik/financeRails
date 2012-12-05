@@ -34,7 +34,7 @@ RSpec.configure do |config|
   config.extend ControllerMacros, :type => :controller
 
   config.before :each do
-    Mongoid.master.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+    Mongoid.purge!
   end
 
 end

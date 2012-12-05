@@ -20,7 +20,7 @@ module SpannedLineItemSupport
   def clone_for_date(date)
     item = clone_all
     item.event_date.change(month: date.month, year: date.year)
-    item.amount = item.amount / (months_span + 1)
+    item.amount = item.amount / months_span
     item
   end
 
@@ -35,6 +35,11 @@ module SpannedLineItemSupport
       filter_chain.where(:spanned => (filters[:spanned].present? ? filters[:spanned] : false))
     end
 
+    def add_spanning_filters_inline(user_or_account, filters, items)
+      return items unless !!filters[:support_spanned]
+      items.select { |item| item.spanned == (filters[:spanned].present? ? filters[:spanned] : false) }
+    end
+
     def add_spanned_items(user_or_account, filters, items)
       return items unless !!filters[:support_spanned]
       all_spanned_items = get_filters(user_or_account, filters.merge(spanned: true, in_month_of_date: nil))
@@ -44,6 +49,23 @@ module SpannedLineItemSupport
         end
         result
       end
+    end
+
+    def add_spanned_items_inline(user_or_account, filters, items)
+      return items unless !!filters[:support_spanned]
+
+      cache_key = "#{user_or_account.id}:spanned-items"
+      @spanned_line_items_cache ||= {}
+      if @spanned_line_items_cache[cache_key].blank?
+        spanned_items = search_with_filters(user_or_account, filters.merge(spanned: true, in_month_of_date: nil, in_year: nil))
+        @spanned_line_items_cache[cache_key] = spanned_items.to_a
+      end
+
+      inline_filter(user_or_account, @spanned_line_items_cache[cache_key], filters.merge(support_spanned: false)).each do |spanned_item|
+        items << spanned_item.clone_for_date(filters[:in_month_of_date])
+      end
+
+      items
     end
 
     def search_spanned_line_items_with_filters(user_or_account, filters)

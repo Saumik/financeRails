@@ -49,7 +49,7 @@ class BudgetReportPresenter
   def total_expenses_for_budget_item_in_month(budget_item, month)
     #noinspection RubyArgCount
     current_date = Date.new(@active_year, month, 1)
-    amount = LineItem.inline_sum_with_filters(@line_items, {
+    amount = LineItem.inline_sum_with_filters(@current_user, @line_items, {
                                               :categories => budget_item.categories,
                                               :in_month_of_date => current_date
                                               }, LineItemReportProcess.new)

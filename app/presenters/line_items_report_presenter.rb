@@ -1,10 +1,13 @@
 class LineItemsReportPresenter
   attr_reader :months, :current_user
-  def initialize(current_user, filters)
+  def initialize(current_user, filters, active_year)
+    @active_year = (active_year || Time.now.year).to_i
+    @line_items = current_user.line_items.where(event_date: Date.new(@active_year, 1, 1).beginning_of_year..Date.new(@active_year, 1, 1).end_of_year).asc(:event_date).to_a
+
     @filters = filters
     @current_user = current_user
-    first_date = LineItem.asc(:event_date).first.event_date.beginning_of_month
-    last_date = LineItem.desc(:event_date).first.event_date.end_of_month
+    first_date = @line_items.first.event_date.beginning_of_month
+    last_date = @line_items.last.event_date.end_of_month
     @months = []
     @section_to_type = {:income => LineItem::INCOME, :expenses => LineItem::EXPENSE}
     current_month = first_date
@@ -13,33 +16,48 @@ class LineItemsReportPresenter
       current_month = current_month.advance(:months => 1)
     end
     @month_totals = {}
+    @category_avgs = {}
   end
   def report_sections
     [:income, :expenses]
   end
 
   def categories_matching(section)
-    categories = LineItem.send(section.to_s + '_items')
-    categories.to_a.collect(&:category_name).uniq.delete_if(&:blank?).sort
+    @cached_categories ||= {}
+    @cached_categories[section] ||= LineItem.send(section.to_s + '_items').to_a
+    @cached_categories[section].collect(&:category_name).uniq.delete_if(&:blank?).sort
   end
 
   def root_categories_matching(section)
-    categories_matching(section).collect { |name| name.split(':').first }.uniq
+    categories_matching(section).inject({}) do |result, name|
+      root_category_name = name.split(':').first
+      result[root_category_name] ||= []
+      result[root_category_name] << name
+      result
+    end
   end
 
   def child_categories_of(section, category_name)
     categories_matching(section).select { |name| name.split(':').first == category_name }.uniq
   end
 
-  def total_amount_of_type_in_month(section, category_name, month, year, count_for_total)
+  def total_amount_of_type_in_month(section, category_name, contains_categories, month, year, count_for_total)
+    contains_categories ||= [category_name]
     current_date = Date.new(year, month, 1)
-    current_filters = @filters.merge({:matching_category_prefix => category_name,
-                                   :in_month_of_date => current_date})
-    LineItem.sum_with_filters(current_user, current_filters,
-                              LineItemReportProcess.new).tap do |amount|
+    current_filters = @filters.merge({:categories => contains_categories,
+                                   :in_month_of_date => current_date,
+                                     :in_year => @active_year})
+
+    LineItem.inline_sum_with_filters(@current_user, @line_items, current_filters, LineItemReportProcess.new).tap do |amount|
       @month_totals["#{section}:#{month}:#{year}"] ||= 0
       @month_totals["#{section}:#{month}:#{year}"] += amount.to_f.abs if count_for_total
+      @category_avgs["#{section}:#{category_name}:#{count_for_total}"] ||= 0
+      @category_avgs["#{section}:#{category_name}:#{count_for_total}"] += amount.to_f.abs
     end
+  end
+
+  def avg_amount_of_type_in_month(section, category_name, count_for_total)
+    @category_avgs["#{section}:#{category_name}:#{count_for_total}"] / @months.length
   end
 
   def month_section_total(section, month, year)

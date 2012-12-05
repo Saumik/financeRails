@@ -164,9 +164,13 @@ class LineItem
     filter_chain.default_sort
   end
 
-  def self.inline_sum_with_filters(items, filters, post_process)
-    items = inline_filter(items, filters)
-    # add spanning
+  def self.search_inline_with_filters(user_or_account, line_items, filters)
+    inline_filter(user_or_account, line_items, filters)
+  end
+
+  def self.inline_sum_with_filters(user_or_account, items, filters, post_process)
+    items = inline_filter(user_or_account, items, filters)
+    items = add_spanned_items_inline(user_or_account, filters, items)
     items = post_process.present? ? post_process.perform_after(items) : items
     items.sum(&:signed_amount)
   end
@@ -183,9 +187,11 @@ class LineItem
     filter_chain
   end
 
-  def self.inline_filter(items, filters = {})
+  def self.inline_filter(user_or_account, items, filters = {})
     items = items.select { |item| item.event_date.month == filters[:in_month_of_date].month && item.event_date.year == filters[:in_month_of_date].year } if filters[:in_month_of_date].present?
     items = items.select { |item| filters[:categories].include? item.category_name } if filters[:categories].present?
+    items = items.select { |item| item.category_name.present? and item.category_name.starts_with?(filters[:matching_category_prefix]) } if filters[:matching_category_prefix].present?
+    items = add_spanning_filters_inline(user_or_account, filters, items)
     items
   end
   public

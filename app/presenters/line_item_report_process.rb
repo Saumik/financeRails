@@ -12,7 +12,7 @@ class LineItemReportProcess
   end
 
   def ignore_transfers(line_item)
-    line_item.category_name.downcase.include?('transfer') ? nil : line_item
+    (line_item.category_name.present? and line_item.category_name.downcase.include?('transfer')) ? nil : line_item
   end
 
   def ignore_exclude_from_reports(line_item)

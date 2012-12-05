@@ -9,10 +9,9 @@ class ReportController < ApplicationController
     Mongoid.logger = nil
 
     @filters = {}
-    @filters[:support_spanned] = params[:show_spanning] == 'true'
+    @filters[:support_spanned] = params[:hide_spanning].present? ? !(params[:hide_spanning] == 'true') : true
 
-    @presenter = LineItemsReportPresenter.new(current_user, @filters)
-
+    @presenter = LineItemsReportPresenter.new(current_user, @filters, params[:year])
   end
 
   private

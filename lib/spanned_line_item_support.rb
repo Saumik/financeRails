@@ -57,12 +57,14 @@ module SpannedLineItemSupport
       cache_key = "#{user_or_account.id}:spanned-items"
       @spanned_line_items_cache ||= {}
       if @spanned_line_items_cache[cache_key].blank?
-        spanned_items = search_with_filters(user_or_account, filters.merge(spanned: true, in_month_of_date: nil, in_year: nil))
+        spanned_items = search_with_filters(user_or_account, {support_spanned: true, spanned: true, in_year: filters[:in_year]})
         @spanned_line_items_cache[cache_key] = spanned_items.to_a
       end
 
-      inline_filter(user_or_account, @spanned_line_items_cache[cache_key], filters.merge(support_spanned: false)).each do |spanned_item|
-        items << spanned_item.clone_for_date(filters[:in_month_of_date])
+      inline_filter(user_or_account, @spanned_line_items_cache[cache_key], filters.merge(spanned: true, in_month_of_date: nil)).each do |spanned_item|
+        if filters[:in_month_of_date].present? and spanned_item.spans_in?(filters[:in_month_of_date])
+          items << spanned_item.clone_for_date(filters[:in_month_of_date])
+        end
       end
 
       items

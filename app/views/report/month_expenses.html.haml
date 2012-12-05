@@ -41,6 +41,7 @@
           %td{:class => "total #{@presenter.section_class(section)}"}
             != currency @presenter.month_section_total(section, month, year)
         %td
+          != currency @presenter.section_total_avg(section)
     %tr.total
       %td Total
       - @presenter.months.each do |(month, year)|

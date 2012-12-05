@@ -68,7 +68,19 @@ class LineItemsReportPresenter
   end
 
   def month_section_total(section, month, year)
-    @month_totals["#{section}:#{month}:#{year}"] || 0.0
+    current_date = Date.new(year, month, 1)
+    total = @month_totals["#{section}:#{month}:#{year}"] || 0.0
+
+    @category_avgs["#{section}:section-total"] ||= 0
+    if current_date <= @filters[:avg_until]
+      @category_avgs["#{section}:section-total"] += total
+    end
+
+    total
+  end
+
+  def section_total_avg(section)
+    @category_avgs["#{section}:section-total"] / (@filters[:avg_until].month - @filters[:avg_from].month + 1)
   end
 
   def month_total(month, year)

@@ -1,4 +1,6 @@
 FinanceRails2::Application.routes.draw do
+  get "investment/" => 'investment#index'
+
   get "mobile/index"
   post "mobile/sync"
 
@@ -121,6 +123,18 @@ FinanceRails2::Application.routes.draw do
     collection do
       get :report
     end
+  end
+
+  resources :investment_line_items do
+
+  end
+
+  resources :investment_allocation_plans do
+
+  end
+
+  resources :investment_assets do
+
   end
 
   root :to => redirect("/line_items")

@@ -1,0 +1,14 @@
+%tr.item{data: {'item-id' => item.id }}
+  %td.account= item.account.name
+  %td
+    = item.type_name
+  %td= date_format item[:event_date]
+  %td.symbol= item[:symbol]
+  %td.number= item[:number]
+  %td.amount!= currency item[:amount].to_f
+  %td.actions
+    - unless item.new_record?
+      = link_to 'Edit', edit_investment_line_item_path(item), :remote => true, :class => 'btn btn-primary btn-small edit'
+      &nbsp;
+      &nbsp;
+      = link_to 'Delete', investment_line_item_path(item), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + item.try(:symbol).to_s + ' transaction?'}, :class => 'btn btn-danger btn-small delete'

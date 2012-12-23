@@ -50,10 +50,25 @@ class User
   field :last_date, :type => Date
   field :default_account_id
 
+  has_one :investment_plan
+
   # cross accounts functions
   def line_items
     LineItem.where(:account_id.in => accounts.collect(&:id))
   end
+
+  def investment_line_items
+    InvestmentLineItem.where(:account_id.in => accounts.collect(&:id))
+  end
+
+  def investment_allocation_plans
+    investment_plan.investment_allocation_plans.collect(&:investment_allocation_plans).flatten.uniq
+  end
+
+  def investment_assets
+    investment_allocation_plans.collect(&:deep_collect_investment_assets).flatten
+  end
+
   def cash_balance
     income_cash = line_items.where(:category_name => LineItem::TRANSFER_CASH_CATEGORY_NAME).collect(&:amount).sum
     line_items_cash = line_items.where(:tags => LineItem::TAG_CASH).collect(&:signed_amount).sum

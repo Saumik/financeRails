@@ -14,6 +14,7 @@
         <a class="brand" href="/">Smart Finance</a>
         <ul class="nav">
           <li><%= link_to 'Home', :controller => '/line_items', :action => :index %></li>
+          <li><%= link_to_unless controller_name == 'investment', 'Investment', :controller => 'investment', :action => :index %></li>
           <li><%= link_to 'Groceries', :controller => '/groceries', :action => :index %></li>
           <li><%= link_to 'Import', :controller => '/external', :action => :import %></li>
           <li class="dropdown">

@@ -1,0 +1,25 @@
+%table.horizontal_tree
+  - as_table(@investment_plan).each do |row|
+    %tr
+      - row.each do |col|
+        %td{rowspan: col.children_count, 'data-item-id' => col.id}
+          = render partial: 'tile_' + col.class.to_s.underscore, locals: {item: col}
+
+.create_area
+  =semantic_form_for(@new_item, :remote => true, :html => {:class => 'well'}) do |f|
+    = render partial: 'investment_line_items/form', locals: {f: f}
+
+#items_list
+  %table.main_table.table.table-striped.table-bordered
+    %thead
+      %tr
+        %th.account.st-width       Accout
+        %th.type.st-width       Type
+        %th.event_date.st-width Event Date
+        %th.symbol.st-width     Symbol
+        %th.number.st-width      Number
+        %th.amount.st-width     Amount
+        %th.actions             Actions
+    %tbody
+      - @items.each do |item|
+        = render partial: 'investment_line_items/item', locals: {item: item}

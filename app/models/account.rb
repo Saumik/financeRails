@@ -6,6 +6,7 @@ class Account
   belongs_to :user
   has_many :imported_lines
   has_many :line_items
+  has_many :investment_line_items
 
   field :name, :type => String
   field :encrypted_password, :type => Moped::BSON::Binary, :default => ""

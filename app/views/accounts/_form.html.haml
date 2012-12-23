@@ -1,6 +1,7 @@
 = f.input :name
 .well
+
   %h2 Change Password?
   = f.input :mobile_password, as: :password
   = f.input :account_password, as: :password
-= f.input :import_format, as: :select, collection: {'Provident Visa' => 'ProvidentVisa', 'Provident Checking' => 'ProvidentChecking'}, prompt: "Select", required: true
+= f.input :import_format, as: :select, collection: {'Provident Visa' => 'ProvidentVisa', 'Provident Checking' => 'ProvidentChecking', 'Scottrade' => 'Scottrade'}, prompt: "Select", required: true

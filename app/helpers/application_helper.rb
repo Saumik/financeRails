@@ -1,6 +1,6 @@
 module ApplicationHelper
   def format_number(num)
-    number_with_precision(num, :precision => 2, :strip_insignificant_zeros => true)
+    number_with_precision(num, :precision => 2, :strip_insignificant_zeros => true, :delimiter => ',')
   end
 
   def date_format(date)
@@ -38,7 +38,8 @@ module ApplicationHelper
   end
 
   def currency(amount)
-    '<span class="dollar">$</span>' + format_number(amount).to_s
+    whole_class = amount > 0 ? 'positive' : 'negative'
+    '<span class="' + whole_class + '"><span class="dollar">$</span>' + format_number(amount).to_s + '</span>'
   end
 
   def currency_abs(amount)

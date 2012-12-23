@@ -1,0 +1,26 @@
+Account:
+= f.collection_select(:account_id, current_user.accounts, :id, :name)
+%br/
+.form-line
+  Type:
+  %label.radio
+    = f.radio_button :type, InvestmentLineItem::TYPE_STATUS, checked: true
+    Status
+  %label.radio
+    = f.radio_button :type, InvestmentLineItem::TYPE_BUY
+    Buy
+  %label.radio
+    = f.radio_button :type, InvestmentLineItem::TYPE_SELL
+    Sell
+%br
+When:
+= f.text_field :event_date, class: 'event_date'
+%br/
+What:
+= f.text_field :symbol, class: 'symbol'
+, Amount:
+= f.text_field :number, class: 'number'
+Last Price: $
+= f.text_field :amount, class: 'amount'
+.actions
+  = f.submit 'Add Status', class: 'btn btn-primary'

@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
     if(@user.present? and @user.valid_password?(params[:user][:password]))
       if sign_in(:user, @user)
-        redirect_to '/'
+        redirect_to '/line_items/'
       end
     else
       flash[:error] = 'Invalid username or password'

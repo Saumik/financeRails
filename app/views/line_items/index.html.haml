@@ -30,10 +30,11 @@
     = render :partial => 'form', :locals => {:f => f}
     .actions
       = f.submit 'Add New Item', class: 'btn btn-primary'
-.fetch_area.well.well-small.hide
-  =semantic_form_for(:fetch, url: fetch_account_path(@account)) do |f|
-    = f.input :mobile_password, as: :password
-    = f.submit 'Fetch'
+- if @account.present?
+  .fetch_area.well.well-small.hide
+    =semantic_form_for(:fetch, url: fetch_account_path(@account)) do |f|
+      = f.input :mobile_password, as: :password
+      = f.submit 'Fetch'
 
 = text_field_tag :search
 

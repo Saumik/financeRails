@@ -1,13 +1,13 @@
 class LineItemsController < ApplicationController
 
   def index
-    unless @account.present?
-      render 'common/select_account' and return
+    if @account.present?
+      @new_item = @account.line_items.build
+      @items = @account.line_items.default_sort.to_a
+    else
+      @new_item = current_user.accounts.first.line_items.build
+      @items = current_user.line_items.default_sort.to_a
     end
-
-    @new_item = @account.line_items.build
-
-    @items = @account.line_items.default_sort.to_a
 
     @items = @items.where(:tags => params[:tag]) if(params[:tag])
 

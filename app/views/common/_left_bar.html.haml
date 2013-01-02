@@ -1,9 +1,10 @@
 %h2 Accounts
 = link_to 'New Account', new_account_path
 %ul.accounts.nav.nav-list
+  = link_to_unless @account.nil?, 'All Accounts', :controller => :line_items, :account_id => '-1'
   - current_user.accounts.each do |account|
     %li{:class => @account == account ? 'active' : ''}
-    = link_to account.name, :controller => :line_items, :account_id => account.id
+    = link_to_unless @account == account, account.name, :controller => :line_items, :account_id => account.id
     %span.float-right
       (
       = link_to 'Edit', edit_account_path(account), :remote => true, :class => 'edit_account'

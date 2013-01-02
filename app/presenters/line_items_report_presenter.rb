@@ -1,5 +1,5 @@
 class LineItemsReportPresenter
-  attr_reader :months, :current_user
+  attr_reader :months, :current_user, :active_year
   def initialize(current_user, filters, active_year)
     @active_year = (active_year || Time.now.year).to_i
     @line_items = current_user.line_items.where(event_date: Date.new(@active_year, 1, 1).beginning_of_year..Date.new(@active_year, 1, 1).end_of_year).asc(:event_date).to_a
@@ -7,8 +7,12 @@ class LineItemsReportPresenter
     @filters = filters
 
     @current_user = current_user
-    first_date = @line_items.first.event_date.beginning_of_month
-    last_date = @line_items.last.event_date.end_of_month
+    if @line_items.length > 0
+      first_date = @line_items.first.event_date.beginning_of_month
+      last_date = @line_items.last.event_date.end_of_month
+    else
+      last_date = first_date = Time.now
+    end
     @months = []
     @section_to_type = {:income => LineItem::INCOME, :expenses => LineItem::EXPENSE}
     current_month = first_date
@@ -23,6 +27,11 @@ class LineItemsReportPresenter
     @month_totals = {}
     @category_avgs = {}
   end
+
+  def line_items_year_range
+    (LineItem.min(:event_date).year)..(LineItem.max(:event_date).year)
+  end
+
   def report_sections
     [:income, :expenses]
   end

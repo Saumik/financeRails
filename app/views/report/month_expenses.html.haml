@@ -13,6 +13,12 @@
     Hide Spanning
     %input{:type => :submit, :value => 'Apply'}
 
+%ul.year_selector
+  - @presenter.line_items_year_range.each do |year|
+    %li{class: (year == @presenter.active_year) ? 'active' : ''}
+      = link_to year, '/report/month_expenses?year=' + year.to_s
+
+
 %table.table.table-striped.table-bordered
   %thead
     %tr

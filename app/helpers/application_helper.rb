@@ -38,7 +38,7 @@ module ApplicationHelper
   end
 
   def currency(amount)
-    whole_class = amount > 0 ? 'positive' : 'negative'
+    whole_class = amount.to_i > 0 ? 'positive' : 'negative'
     '<span class="' + whole_class + '"><span class="dollar">$</span>' + format_number(amount).to_s + '</span>'
   end
 

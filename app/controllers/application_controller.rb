@@ -7,11 +7,16 @@ class ApplicationController < ActionController::Base
   before_filter :prepare_backup_list, :except => [:login]
 
   def prepare_account
-    if params[:account_id]
+    if params[:account_id].present? and params[:account_id] == '-1'
+      session[:account_id] = nil
+      return
+    end
+
+    if params[:account_id].present?
       session[:account_id] = params[:account_id]
     end
 
-    if session[:account_id] and user_signed_in?
+    if session[:account_id].present? and user_signed_in?
       begin
         @account = current_user.accounts.find(session[:account_id])
       rescue Mongoid::Errors::DocumentNotFound

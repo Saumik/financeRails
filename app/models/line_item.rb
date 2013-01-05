@@ -24,7 +24,7 @@ class LineItem
   around_update :on_around_update_assign_old_payee_name
 
   belongs_to :account, touch: true
-  has_one :imported_line, :dependent => :destroy
+  has_one :imported_line
 
   field :type, type: Integer, default: 1
   field :amount, type: BigDecimal, default: 0

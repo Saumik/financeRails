@@ -26,7 +26,7 @@ class InvestmentLineItem
   scope :default_sort, desc(:event_date, :created_at, :id)
 
   belongs_to :account
-  has_one :imported_line, dependent: :destroy
+  has_one :imported_line
 
   def type_name
     type.capitalize

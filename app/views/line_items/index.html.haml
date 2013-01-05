@@ -24,6 +24,7 @@
 #toggles
   %a.btn.create_toggle Create
   %a.btn.import_toggle Import Remote
+  = link_to 'Delete All Caches', cache_refresh_line_items_path, method: :post, class: 'btn btn-danger'
 // {new_item}
 .create_area.hide
   =semantic_form_for(@new_item, :remote => true, :html => {:class => 'well'}) do |f|

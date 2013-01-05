@@ -181,6 +181,12 @@ class LineItemsController < ApplicationController
     redirect_to mass_rename_line_items_path
   end
 
+  def cache_refresh
+    keys = $redis.keys 'cache:*'
+    $redis.del keys
+    redirect_to line_items_path
+  end
+
   private
 
   def perform_mass_rename

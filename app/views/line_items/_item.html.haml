@@ -3,6 +3,7 @@
   %td
     = item.type_name
     = item.tags if item.tags.length > 0
+    = '(' + item.comment + ')' if item.comment.present?
     = '(' + item.grouped_label + ')' if item.grouped_label.present?
   %td= date_format item[:event_date]
   %td.amount!= currency item[:amount]

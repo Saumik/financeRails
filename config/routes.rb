@@ -95,6 +95,7 @@ FinanceRails2::Application.routes.draw do
       get :search_overlay
       post :mass_rename
       post :ignore_rename
+      post :cache_refresh
     end
     member do
       get :split

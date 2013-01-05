@@ -6,7 +6,7 @@ class InvestmentController < ApplicationController
 
     @new_item = InvestmentLineItem.new
     @investment_plan = current_user.investment_plan
-    @items = current_user.investment_line_items.all.to_a
+    @items = current_user.investment_line_items.default_sort.to_a
   end
 
   private

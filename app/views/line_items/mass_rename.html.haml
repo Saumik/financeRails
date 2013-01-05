@@ -15,14 +15,18 @@
           %th.payee_name_col.st-width Original Payee Name
           %th.payee_name_col.st-width Rename To
           %th.assign_category_col.st-width Assign Category
+          %th
       %tbody
         - @payees.keys.sort.each_with_index do |payee_name, index|
           %tr
             %td.payee_name_col
-              = payee_name
-              = hidden_field_tag "mass_rename[#{index}][original_payee_name]", payee_name, :class => 'original_payee_name'
+              = link_to url_for(controller: :line_items, action: 'search_overlay', payee_name: payee_name),  {remote: true}, {class: 'open-search-line-items'} do
+                = payee_name
+                = hidden_field_tag "mass_rename[#{index}][original_payee_name]", payee_name, :class => 'original_payee_name'
             %td.payee_name_col
               = text_field_tag "mass_rename[#{index}][payee_name]", capitalize_words(payee_name), :class => 'typeahead payee_name', :autocomplete => 'off'
             %td.assign_category_col
               = text_field_tag "mass_rename[#{index}][category_name]", @payees[payee_name], :class => 'typeahead category_name', :autocomplete => 'off'
+            %td
+              = link_to 'Ignore', ignore_rename_line_items_path(payee_name: payee_name), :method => :post, :data => {:confirm => 'Are you sure delete to ignore ' + payee_name + ' and remove from list?'}, :class => 'btn btn-danger btn-small ignore'
   = button_tag 'Submit Changes', class: 'btn-primary'

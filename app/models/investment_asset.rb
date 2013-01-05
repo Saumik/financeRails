@@ -37,19 +37,13 @@ class InvestmentAsset
     worth - PORTFOLIO_SIZE * (actual_percent)
   end
 
-  def update_on_status(amount, number)
-    investment_asset.last_price = amount
-    investment_asset.number = number
-  end
-
-  def update_on_buy(amount, number)
-    investment_asset.last_price = amount
-    investment_asset.number += number
-  end
-
-  def update_on_sell(amount, number)
-    investment_asset.last_price = amount
-    investment_asset.number -= number
+  def update_from_last_status(investment_line_items)
+    last_status = investment_line_items.select {|ila| ila.type == InvestmentLineItem::TYPE_STATUS and ila.symbol == symbol}.sort_by(&:event_date).last
+    if last_status.present?
+      self.number = last_status.number
+      self.last_price = last_status.amount
+      save
+    end
   end
 
   def self.find_in_array(collection, id)

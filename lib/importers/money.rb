@@ -1,5 +1,5 @@
 class Money
-  def import(data)
+  def import(data, file_name = nil)
     @imported_data = []
 
     balance = 0

@@ -92,3 +92,14 @@
     border-right: 1px solid #666;
   }
 }
+
+.form-line {
+  .radio {
+    display: inline-block;
+    input {
+      padding-right: 0px;
+      margin-left: -16px;
+    }
+    padding-right: 2px
+  }
+}

@@ -38,8 +38,9 @@ module ApplicationHelper
   end
 
   def currency(amount)
-    whole_class = amount.to_i > 0 ? 'positive' : 'negative'
-    '<span class="' + whole_class + '"><span class="dollar">$</span>' + format_number(amount).to_s + '</span>'
+    #whole_class = amount.to_i > 0 ? 'positive' : 'negative'
+    #'<span class="' + whole_class + '">  '</span>'
+    number_to_currency(amount, :strip_insignificant_zeros => true).to_s
   end
 
   def currency_abs(amount)

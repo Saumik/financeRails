@@ -1,29 +1,56 @@
 = form_tag(:action => :do_import) do
   = hidden_field_tag :account_id, @account.id
   = submit_tag
-
-%table.table.table-striped
-  %thead
-    %tr
-      %th Type
-      %th Date
-      %th Amount
-      %th Payee Name
-      %th Category Name
-      %th Comment
-  - @imported_data.each do |line_item_json|
-    - line_item = JSON.parse(line_item_json)
-    %tbody
+- if @account.investment_account?
+  %table.table.table-striped
+    %thead
       %tr
-        %td= LineItem.type_name(line_item['type'])
-        %td= line_item['event_date']
-        %td= line_item['amount']
-        %td= line_item['payee_name']
-        %td= line_item['category_name']
-        %td
-          = line_item[:comment]
-          - if @account.line_already_imported? (line_item_json)
-            %span.label.label-warning Already Imported!
+        %th Type
+        %th Date
+        %th Symbol
+        %th Number
+        %th Amount
+        %th Total Amount
+        %th Fee
+        %th
+    - @imported_data.each do |line_item_json|
+      - line_item = JSON.parse(line_item_json)
+      %tbody
+        %tr
+          %td= line_item['type']
+          %td= line_item['event_date']
+          %td= line_item['symbol']
+          %td= line_item['number']
+          %td= currency line_item['amount']
+          %td= currency line_item['total_amount']
+          %td= currency line_item['fee']
+          %td
+            - if @account.line_already_imported? (line_item_json)
+              %span.label.label-warning Already Imported!
+
+- else
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Type
+        %th Date
+        %th Amount
+        %th Payee Name
+        %th Category Name
+        %th Comment
+    - @imported_data.each do |line_item_json|
+      - line_item = JSON.parse(line_item_json)
+      %tbody
+        %tr
+          %td= LineItem.type_name(line_item['type'])
+          %td= line_item['event_date']
+          %td= currency line_item['amount']
+          %td= line_item['payee_name']
+          %td= line_item['category_name']
+          %td
+            = line_item['comment']
+            - if @account.line_already_imported? (line_item_json)
+              %span.label.label-warning Already Imported!
 
 = form_tag(:action => :do_import) do
   = hidden_field_tag :account_id, @account.id

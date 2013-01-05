@@ -3,7 +3,7 @@ class Account
   include Mongoid::Timestamps
   include EncryptionHelper
 
-  belongs_to :user
+  belongs_to :user, :inverse_of => :accounts
   has_many :imported_lines
   has_many :line_items
   has_many :investment_line_items
@@ -58,19 +58,37 @@ class Account
   # Importing functions
 
   def import_line_items(line_items_jsonified)
-    all_payee_rules = ProcessingRule.get_payee_rules
-    all_category_rules = ProcessingRule.get_category_name_rules
-    line_items_jsonified.each do |json_str|
-      unless line_already_imported?(json_str)
-        line_item = line_items.create(JSON.parse(json_str))
-        ProcessingRule.perform_all_matching(all_payee_rules, line_item)
-        ProcessingRule.perform_all_matching(all_category_rules, line_item)
+    if investment_account?
+      symbols_updated = []
+      line_items_jsonified.each do |json_str|
+        unless line_already_imported?(json_str)
+          line_item = investment_line_items.create(JSON.parse(json_str))
+          symbols_updated << line_item.symbol
+          imported_lines.create(:imported_line => json_str, :investment_line_item => line_item)
+        end
+      end
+      symbols_updated.uniq.each do |symbol|
+        user.update_asset_by_symbol(symbol)
+      end
+    else
+      all_payee_rules = ProcessingRule.get_payee_rules
+      all_category_rules = ProcessingRule.get_category_name_rules
+      line_items_jsonified.each do |json_str|
+        unless line_already_imported?(json_str)
+          line_item = line_items.create(JSON.parse(json_str))
+          ProcessingRule.perform_all_matching(all_payee_rules, line_item)
+          ProcessingRule.perform_all_matching(all_category_rules, line_item)
 
-        imported_lines.create(:imported_line => json_str, :line_item_id => line_item.id)
+          imported_lines.create(:imported_line => json_str, :line_item => line_item)
+        end
       end
     end
   end
 
   # end importing
   # ---------------------------
+
+  def investment_account?
+    import_format == 'Scottrade'
+  end
 end

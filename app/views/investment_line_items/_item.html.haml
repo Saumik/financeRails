@@ -5,7 +5,8 @@
   %td= date_format item[:event_date]
   %td.symbol= item[:symbol]
   %td.number= item[:number]
-  %td.amount!= currency item[:amount].to_f
+  %td.amount= currency item[:amount].to_f
+  %td.fee= currency item[:fee].to_f
   %td.actions
     - unless item.new_record?
       = link_to 'Edit', edit_investment_line_item_path(item), :remote => true, :class => 'btn btn-primary btn-small edit'

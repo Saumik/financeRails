@@ -1,7 +1,7 @@
 module Importers
   class ProvidentVisa
     # accepts csv returns array of line items
-    def import(data)
+    def import(data, file_name = nil)
       require 'csv'
       CSV.new(data, :headers => :first_row).collect do |row|
         date = row['Trans Date'] || row['TRANSACTION DATE']

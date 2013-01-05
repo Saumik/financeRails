@@ -183,6 +183,7 @@ class LineItem
     filter_chain = filter_chain.where(:category_name.in => filters[:categories]) if filters[:categories].present?
     filter_chain = filter_chain.where(category_name: /^#{filters[:matching_category_prefix]}.*/) if filters[:matching_category_prefix].present?
     filter_chain = filter_chain.where(:type => filters[:type]) if filters[:type].present?
+    filter_chain = filter_chain.where(:payee_name => filters[:payee_name]) if filters[:payee_name].present?
     filter_chain = add_spanning_filters(filter_chain, filters)
     filter_chain
   end

@@ -1,7 +1,3 @@
-Dir[Rails.root + 'lib/importers/*.rb'].each do |file|
-  require file
-end
-
 class ExternalController < ApplicationController
 
   def first_match(match_data)
@@ -21,8 +17,8 @@ class ExternalController < ApplicationController
     #elsif params[:upload].original_filename.ends_with? '.json'
     #  import_from_json(data)
     #els
-    if params[:upload].original_filename.ends_with? '.csv'
-      @imported_data = Importers.const_get(@account.import_format).new.import data
+    if params[:upload].original_filename.downcase.ends_with? '.csv'
+      @imported_data = Importers.const_get(@account.import_format).new.import(data, params[:upload].original_filename.downcase)
     end
 
     $redis.set("import-data:#{current_user.id}", @imported_data.to_json)
@@ -52,11 +48,16 @@ class ExternalController < ApplicationController
       flash[:success] = "#{amount_removed} imported items were removed"
     end
 
-    @account.reset_balance
-    @account.touch
-
     $redis.del("import-data:#{current_user.id}")
-    redirect_to :controller => 'line_items', :action => :index, :account_id => @account.id
+
+    if @account.investment_account?
+      redirect_to :controller => 'investment', :action => :index
+    else
+      @account.reset_balance
+      @account.touch
+
+      redirect_to :controller => 'line_items', :action => :index, :account_id => @account.id
+    end
   end
 
   def import_json

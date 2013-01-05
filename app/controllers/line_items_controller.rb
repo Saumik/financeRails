@@ -1,5 +1,4 @@
 class LineItemsController < ApplicationController
-
   def index
     if @account.present?
       @new_item = @account.line_items.build
@@ -86,12 +85,16 @@ class LineItemsController < ApplicationController
 
   def search_overlay
     search_params = {}
-    search_params[:in_month_of_date] = Date.new(params[:year].to_i, params[:month].to_i, 1) if params[:month].present? and params[:year].present?
+    if params[:month].present? and params[:year].present?
+      search_params[:in_month_of_date] = Date.new(params[:year].to_i, params[:month].to_i, 1)
+    end
     if params[:categories].present?
       search_params[:matching_category_prefix] = params[:categories][0] if params[:categories].length == 1
       search_params[:categories] = params[:categories] if params[:categories].length > 1
     end
-    puts search_params.inspect
+    if params[:payee_name].present?
+      search_params[:payee_name] = params[:payee_name]
+    end
     @line_items = LineItem.search_with_filters(current_user, search_params)
     @spanned_line_items = LineItem.search_spanned_line_items_with_filters(current_user, search_params.merge(support_spanned: true))
   end
@@ -167,6 +170,15 @@ class LineItemsController < ApplicationController
   def mass_rename
     perform_mass_rename if request.post?
     @payees = @account.line_items.all_unrenamed_payees(current_user)
+  end
+
+  def ignore_rename
+    current_user.line_items.where(payee_name: params[:payee_name], original_payee_name: nil).each do |line_item|
+      line_item.original_payee_name = line_item.payee_name
+      line_item.save
+    end
+
+    redirect_to mass_rename_line_items_path
   end
 
   private

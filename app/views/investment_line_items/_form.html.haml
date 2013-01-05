@@ -12,6 +12,15 @@ Account:
   %label.radio
     = f.radio_button :type, InvestmentLineItem::TYPE_SELL
     Sell
+  %label.radio
+    = f.radio_button :type, InvestmentLineItem::TYPE_DEPOSIT
+    Deposit
+  %label.radio
+    = f.radio_button :type, InvestmentLineItem::TYPE_DIVIDEND
+    Dividend
+  %label.radio
+    = f.radio_button :type, InvestmentLineItem::TYPE_INTEREST
+    Interest
 %br
 When:
 = f.text_field :event_date, class: 'event_date'
@@ -22,5 +31,9 @@ What:
 = f.text_field :number, class: 'number'
 Last Price: $
 = f.text_field :amount, class: 'amount'
+Total Amount: $
+= f.text_field :total_amount, class: 'amount'
+Fee: $
+= f.text_field :fee, class: 'fee'
 .actions
   = f.submit 'Add Status', class: 'btn btn-primary'

@@ -3,7 +3,7 @@ require 'csv'
 module Importers
   class ProvidentChecking
     # accepts csv returns array of line items as json array
-    def import(data)
+    def import(data, file_name = nil)
       CSV.new(data, :headers => :first_row).collect do |row|
         date = row['Date']
         description = row['Description']

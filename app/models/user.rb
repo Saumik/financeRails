@@ -75,6 +75,11 @@ class User
     income_cash + line_items_cash
   end
 
+  def update_asset_by_symbol(symbol)
+    investment_asset = investment_assets.find {|ia| symbol == ia.symbol}
+    investment_asset.update_from_last_status(investment_line_items) if investment_asset.present?
+  end
+
   def set_mobile_password(password)
     self.mobile_password = ::BCrypt::Password.create("#{password}#{self.class.pepper}", :cost => self.class.stretches).to_s
   end

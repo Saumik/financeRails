@@ -26,6 +26,8 @@ class LineItemsReportPresenter
 
     @month_totals = {}
     @category_avgs = {}
+
+    @total_income = @line_items.select { |li| LineItem::INCOME_CATEGORIES.include? li.category_name }.sum(&:signed_amount)
   end
 
   def line_items_year_range
@@ -55,7 +57,7 @@ class LineItemsReportPresenter
     categories_matching(section).select { |name| name.split(':').first == category_name }.uniq
   end
 
-  def total_amount_of_type_in_month(section, category_name, contains_categories, month, year, count_for_total)
+  def amount_of_type_in_month(section, category_name, contains_categories, month, year, count_for_total)
     contains_categories ||= [category_name]
     current_date = Date.new(year, month, 1)
     current_filters = @filters.merge({:categories => contains_categories,
@@ -74,6 +76,14 @@ class LineItemsReportPresenter
 
   def avg_amount_of_type_in_month(section, category_name, count_for_total)
     @category_avgs["#{section}:#{category_name}:#{count_for_total}"] / (@filters[:avg_until].month - @filters[:avg_from].month + 1)
+  end
+
+  def total_amount_of_type_in_month(section, category_name, count_for_total)
+    @category_avgs["#{section}:#{category_name}:#{count_for_total}"]
+  end
+
+  def percent_of_expenses_from_income(section, category_name, count_for_total)
+    ((@category_avgs["#{section}:#{category_name}:#{count_for_total}"].to_f / @total_income.to_f) * 100).to_i.to_s + '%'
   end
 
   def month_section_total(section, month, year)

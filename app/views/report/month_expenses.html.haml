@@ -27,6 +27,8 @@
         %th.date
           = "#{month_name(month)} #{year}"
       %th.avg Avarage
+      %th.total Total
+      %th.percent Percent
   %tbody
     - @presenter.report_sections.each do |section|
       %tr.section-row

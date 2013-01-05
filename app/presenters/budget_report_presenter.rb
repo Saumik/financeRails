@@ -69,4 +69,17 @@ class BudgetReportPresenter
   def total_limit
     @budget_items.collect(&:limit).compact.sum
   end
+
+  def income_at(month)
+    @totals['Income'] ||= 0
+    @totals['Income'] += @line_items.select { |li| li.event_date.month == month and LineItem::INCOME_CATEGORIES.include? li.category_name }.sum(&:signed_amount)
+  end
+
+  def total_income
+    @totals['Income']
+  end
+
+  def percent_expense(budget_item)
+    (((@totals[budget_item.name] * -1).to_f / @totals['Income'].to_f) * 100).to_i.to_s + '%'
+  end
 end

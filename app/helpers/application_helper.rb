@@ -47,6 +47,11 @@ module ApplicationHelper
     '<span class="dollar">$</span>' + format_number(amount.abs)
   end
 
+  def currency_with_sign_class(amount)
+    whole_class = amount.to_i > 0 ? 'positive' : 'negative'
+    '<span class="' + whole_class + '">' + currency(amount) +  '</span>'
+  end
+
   def sign_and_currency(amount)
     amount > 0 ? '+' + currency(amount) : '-' + currency(amount)
   end

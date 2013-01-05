@@ -23,6 +23,15 @@
       %th.total Total
       %th.actions
   %tbody
+    %tr.item-row
+      %td
+        Income
+      - @presenter.months.each do |(month)|
+        %td
+          != currency_with_sign_class @presenter.income_at(month)
+      %td
+        != currency_with_sign_class @presenter.total_income
+      %td
     - @presenter.budget_items.each do |budget_item|
       %tr.item-row{:data => {:id => budget_item.id}}
         %td
@@ -35,12 +44,14 @@
               .future!= currency @presenter.future_amount(budget_item)
             - else
               = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: @presenter.active_year, categories: budget_item.categories),  {remote: true}, {class: 'open-search-line-items'} do
-                !=currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month)
+                =currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month)
         %td
           - amount_left = @presenter.amount_left_budget_item_in_year(budget_item)
           != currency @presenter.total_expenses_for_budget_item_in_year(budget_item)
-          %span{:class => 'amount-left ' + (amount_left > 0 ? 'positive' : 'negative')}
-            != currency amount_left
+          (
+          != @presenter.percent_expense(budget_item)
+          )
+          != currency_with_sign_class amount_left
         %td.actions
           = link_to 'Edit', edit_budget_item_path(budget_item), :remote => true, :class => 'btn btn-primary btn-small edit_btn'
           = link_to 'Clone', budget_item_path(budget_item) + '/clone', :remote => true, :class => 'btn btn-small clone_btn'

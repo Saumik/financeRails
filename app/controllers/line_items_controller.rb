@@ -1,4 +1,7 @@
 class LineItemsController < ApplicationController
+  # Fixing payee issue:
+  # db.line_items.find({account_id: '5015e0d99e65db9218000004'}).sort({'_id': -1})
+  # db.line_items.update({account_id: '5015e0d99e65db9218000004'}, { $set: {account_id: ObjectId('5015e0d99e65db9218000004')}}, false, true)
   def index
     if @account.present?
       @new_item = @account.line_items.build

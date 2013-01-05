@@ -1,5 +1,6 @@
 class LineItemsController < ApplicationController
   # Fixing payee issue:
+  # use finance_rails2_production
   # db.line_items.find({account_id: '5015e0d99e65db9218000004'}).sort({'_id': -1})
   # db.line_items.update({account_id: '5015e0d99e65db9218000004'}, { $set: {account_id: ObjectId('5015e0d99e65db9218000004')}}, false, true)
   def index
@@ -51,6 +52,7 @@ class LineItemsController < ApplicationController
 
     original_payee_name = @item.payee_name
     @item.attributes = params[:line_item]
+    @item.account_id = Moped::BSON::ObjectId.from_string(params[:line_item][:account_id])
     @item.tags.reject!(&:blank?)
     @item.original_payee_name = original_payee_name if @item.payee_name != original_payee_name and @item.original_payee_name.blank?
     @item.save

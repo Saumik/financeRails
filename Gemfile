@@ -6,7 +6,7 @@ gem 'rails', '3.2.8'
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 #gem 'sqlite3'
-gem "mongoid", '3.0.10'
+gem "mongoid", '3.0.16'
 
 gem "headless"
 gem "watir-webdriver"

@@ -21,6 +21,8 @@ class InvestmentLineItemsController < ApplicationController
     @item.attributes = params[:investment_line_item]
     @item.save
 
+    current_user.update_asset_by_symbol(@item.symbol)
+
     respond_to do |format|
       format.js { render :layout => false }
     end

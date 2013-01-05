@@ -123,8 +123,8 @@ class LineItem
     end
   end
 
-  def self.mass_rename_and_assign_category(account, original_payee_name, payee_name, category_name)
-    @line_items = account.line_items.where(:payee_name => original_payee_name, :original_payee_name => nil)
+  def self.mass_rename_and_assign_category(account_or_user, original_payee_name, payee_name, category_name)
+    @line_items = account_or_user.line_items.where(:payee_name => original_payee_name, :original_payee_name => nil)
     @line_items.each do |item|
       item.original_payee_name ||= payee_name
       item.payee_name = payee_name

@@ -102,6 +102,18 @@ class LineItemsReportPresenter
     @category_avgs["#{section}:section-total"] / (@filters[:avg_until].month - @filters[:avg_from].month + 1)
   end
 
+  def section_total_sum(section)
+    @category_avgs["#{section}:section-total"]
+  end
+
+  def section_avg_gain
+    section_total_avg(:income) - section_total_avg(:expenses)
+  end
+
+  def total_gain
+    section_total_sum(:income) - section_total_sum(:expenses)
+  end
+
   def month_total(month, year)
     (@month_totals["income:#{month}:#{year}"] || 0.0).to_f - (@month_totals["expenses:#{month}:#{year}"] || 0.0).to_f
   end

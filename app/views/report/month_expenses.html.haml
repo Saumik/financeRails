@@ -50,9 +50,14 @@
             != currency @presenter.month_section_total(section, month, year)
         %td
           != currency @presenter.section_total_avg(section)
+        %td
+          != currency @presenter.section_total_sum(section)
     %tr.total
       %td Total
       - @presenter.months.each do |(month, year)|
         %td.total
-          != currency @presenter.month_total(month, year)
+          != currency_with_sign_class @presenter.month_total(month, year)
       %td
+        != currency_with_sign_class @presenter.section_avg_gain
+      %td
+        != currency_with_sign_class @presenter.total_gain

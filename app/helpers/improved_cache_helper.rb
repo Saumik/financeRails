@@ -2,7 +2,7 @@ module ImprovedCacheHelper
   CACHE_VERSION = 2
 
   def my_cache(name = {}, options = nil, &block)
-    if controller.perform_caching and false
+    if controller.perform_caching
       safe_concat(fragment_for(cache_key(name), options, &block))
     else
       yield

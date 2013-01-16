@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include ImprovedCacheHelper
+
   def format_number(num)
     number_with_precision(num, :precision => 2, :strip_insignificant_zeros => true, :delimiter => ',')
   end

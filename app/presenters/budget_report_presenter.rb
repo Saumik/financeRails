@@ -46,6 +46,14 @@ class BudgetReportPresenter
     budget_item.estimated_min_monthly_amount
   end
 
+  def future_income(month)
+    found_income = current_user.planned_items.where(:event_date_begin.gt => Date.new(@active_year, month, 1), :event_date_end.lt => Date.new(@active_year, month, 1).end_of_month ).first
+    income_for_month = found_income ? found_income.amount : 0
+    @totals['Income'] ||= 0
+    @totals['Income'] += income_for_month
+    income_for_month
+  end
+
   def total_expenses_for_budget_item_in_month(budget_item, month)
     #noinspection RubyArgCount
     current_date = Date.new(@active_year, month, 1)
@@ -71,8 +79,10 @@ class BudgetReportPresenter
   end
 
   def income_at(month)
+    income_for_month = @line_items.select { |li| li.event_date.month == month and LineItem::INCOME_CATEGORIES.include? li.category_name }.sum(&:signed_amount)
     @totals['Income'] ||= 0
-    @totals['Income'] += @line_items.select { |li| li.event_date.month == month and LineItem::INCOME_CATEGORIES.include? li.category_name }.sum(&:signed_amount)
+    @totals['Income'] += income_for_month
+    income_for_month
   end
 
   def total_income

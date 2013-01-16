@@ -6,7 +6,8 @@
 
 .well
   %h2 Budget items
-  = link_to 'Create budget item', new_budget_item_path(), :remote => true, :class => 'btn btn-primary new'
+  = link_to 'Create Budget Item', new_budget_item_path(), :remote => true, :class => 'btn btn-primary new'
+  = link_to 'Create Planned Item', new_budget_item_path(), :remote => true, :class => 'btn btn-primary new'
 
 %ul.year_selector
   - @presenter.budget_year_range.each do |year|
@@ -28,7 +29,10 @@
         Income
       - @presenter.months.each do |(month)|
         %td
-          != currency_with_sign_class @presenter.income_at(month)
+          - if @presenter.in_future?(month)
+            .future!= currency @presenter.future_income(month)
+          - else
+            != currency_with_sign_class @presenter.income_at(month)
       %td
         != currency_with_sign_class @presenter.total_income
       %td

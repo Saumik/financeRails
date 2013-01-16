@@ -1,10 +1,13 @@
 - hide_not_current ||= false
 %tr.item{data: {'item-id' => item.id, :date => month_year_short(item.event_date) }, class: (hide_not_current && !date_in_month_of(item.event_date, Date.today)) ? 'hide' : '' }
   %td
+    - if item.tags.length > 0
+      %i.icon-tags.display-tooltip{rel: :tooltip, title: item.tags}
+    - if item.comment.present?
+      %i.icon-comment.display-tooltip{rel: :tooltip, title: item.comment}
+    - if item.grouped_label.present?
+      %i.icon-plane.display-tooltip{rel: :tooltip, title: item.grouped_label}
     = item.type_name
-    = item.tags if item.tags.length > 0
-    = '(' + item.comment + ')' if item.comment.present?
-    = '(' + item.grouped_label + ')' if item.grouped_label.present?
   %td= date_format item[:event_date]
   %td.amount!= currency item[:amount]
   %td.payee_name= item[:payee_name]

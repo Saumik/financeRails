@@ -1,5 +1,5 @@
 - content_for :javascript do
-  - cache [@account, 'javascript'] do
+  - my_cache [@account, 'javascript'] do
     :javascript
       $(document).ready(function() {
         var payees = #{current_user.payees}
@@ -8,7 +8,7 @@
         var view = new financeRails.views.LineItemsView({payees: payees, categories: categories, last_data_for_payee: last_data_for_payee});
       });
 - content_for :side_bar_content do
-  - cache [@account, 'cash_value'] do
+  - my_cache [@account, 'cash_value'] do
     %h2 Cash
     .cash_balance
       Current Cash Balance:
@@ -44,7 +44,7 @@
     - months_between(@items.last.event_date, @items.first.event_date).each do |date|
       %li{data: {date: month_year_short(date)}, class: date_in_month_of(date, Date.today) ? 'active' : ''}= date.strftime('%b %Y')
 
-- cache ['v8', @account] do
+- my_cache @account do
   #items_list
     %table.main_table.table.table-striped.table-bordered
       %thead
@@ -58,5 +58,5 @@
           %th.actions             Actions
       %tbody
         - @items.each do |item|
-          - cache ['v8', item] do
+          - my_cache item do
             = render partial: 'item', locals: {item: item, hide_not_current: true}

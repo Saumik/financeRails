@@ -3,6 +3,7 @@ class User
   include User::LineItemAggregateMethods
 
   has_many :accounts
+  has_many :planned_items
   has_one :default_account, class_name: 'Account'
 
   # Include default devise modules. Others available are:

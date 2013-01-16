@@ -1,0 +1,8 @@
+.row-fluid
+  = f.select :type
+.row-fluid
+  = f.input :event_date_start, :input_html => {:class => 'span12 budget_year'}, :wrapper_html => {:class => 'span6'}
+  = f.input :event_date_end, :wrapper_html => {:class => 'span6'}, :input_html => {:class => 'span12 name'}
+.row-fluid
+  = f.input :type, :input_html => {:class => 'span12 limit'}, :wrapper_html => {:class => 'span6'}
+  = f.input :estimated_min_monthly_amount, :input_html => {:class => 'span12 limit'}, :wrapper_html => {:class => 'span6'}

@@ -1,4 +1,6 @@
 FinanceRails2::Application.routes.draw do
+  resources :planned_items
+
   get "investment/" => 'investment#index'
 
   get "mobile/index"

@@ -20,6 +20,7 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     @render()
 
   render: ->
+    $('.display-tooltip').tooltip()
 #    $('.main_table').dataTable( {
 #      #"bProcessing": true
 #      #"bServerSide": true

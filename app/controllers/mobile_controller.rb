@@ -15,6 +15,7 @@ class MobileController < MobileApplicationController
       end
     end
     current_account.reset_balance
+    current_account.touch
 
     respond_to do |format|
       format.json do

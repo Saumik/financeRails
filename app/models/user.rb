@@ -63,7 +63,10 @@ class User
   end
 
   def investment_allocation_plans
-    investment_plan.investment_allocation_plans.collect(&:investment_allocation_plans).flatten.uniq
+    first_level = investment_plan.investment_allocation_plans
+    second_level = first_level.collect(&:investment_allocation_plans).flatten
+    third_level = second_level.collect(&:investment_allocation_plans).flatten
+    first_level + second_level + third_level
   end
 
   def investment_assets

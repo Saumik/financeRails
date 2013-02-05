@@ -48,6 +48,6 @@ class InvestmentAsset
 
   def self.find_in_array(collection, id)
     id = Moped::BSON::ObjectId.from_string(id)
-    collection.find { |item| item.id == id }
+    collection.to_a.find { |item| item.id == id }
   end
 end

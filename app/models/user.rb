@@ -52,6 +52,7 @@ class User
   field :default_account_id
 
   has_one :investment_plan
+  has_many :planned_items
 
   # cross accounts functions
   def line_items

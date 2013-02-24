@@ -7,7 +7,7 @@
 .well
   %h2 Budget items
   = link_to 'Create Budget Item', new_budget_item_path(), :remote => true, :class => 'btn btn-primary new'
-  = link_to 'Create Planned Item', new_budget_item_path(), :remote => true, :class => 'btn btn-primary new'
+  = link_to 'Create Planned Item', new_planned_item_path(), :remote => true, :class => 'btn btn-primary new'
 
 %ul.year_selector
   - @presenter.budget_year_range.each do |year|
@@ -27,47 +27,39 @@
     %tr.item-row
       %td
         Income
-      - @presenter.months.each do |(month)|
+      - @presenter.income_box.row_column_values(:income).each do |(month, values)|
         %td
           - if @presenter.in_future?(month)
-            .future!= currency @presenter.future_income(month)
+            .future!= currency values[:future_income]
           - else
-            != currency_with_sign_class @presenter.income_at(month)
+            != currency_with_sign_class values[:amount]
       %td
         != currency_with_sign_class @presenter.total_income
       %td
-    - @presenter.budget_items.each do |budget_item|
-      %tr.item-row{:data => {:id => budget_item.id}}
+    - @presenter.expense_box.rows.each do |budget_item|
+      %tr.item-row
         %td
           .categories_popover{data: {content: categories_popover(budget_item), title: 'Categories', html: 'true'}}
             = budget_item.name + ' - '
             %span.limit!= currency budget_item.limit
-        - @presenter.months.each do |(month)|
+        - @presenter.expense_box.row_column_values(budget_item).each do |(month, values)|
           %td
             - if @presenter.in_future?(month)
-              .future!= currency @presenter.future_amount(budget_item)
+              .future!= currency values[:future_expense]
+              .future!= currency values[:planned_expense]
             - else
               = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: @presenter.active_year, categories: budget_item.categories),  {remote: true}, {class: 'open-search-line-items'} do
-                =currency @presenter.total_expenses_for_budget_item_in_month(budget_item, month)
+                =currency values[:expense]*-1
         %td
-          - amount_left = @presenter.amount_left_budget_item_in_year(budget_item)
           != currency @presenter.total_expenses_for_budget_item_in_year(budget_item)
           (
           != @presenter.percent_expense(budget_item)
           )
-          != currency_with_sign_class amount_left
+          != currency_with_sign_class @presenter.amount_left_budget_item_in_year(budget_item)
         %td.actions
           = link_to 'Edit', edit_budget_item_path(budget_item), :remote => true, :class => 'btn btn-primary btn-small edit_btn'
           = link_to 'Clone', budget_item_path(budget_item) + '/clone', :remote => true, :class => 'btn btn-small clone_btn'
           = link_to 'Delete', budget_item_path(budget_item), :remote => true, :method => :delete, :confirm => 'Are you sure delete to delete ' + budget_item.try(:name).to_s + '?', :class => 'btn btn-small btn-danger delete'
-    %tr
-      %td.total
-        Total:
-        != currency @presenter.total_limit
-      - @presenter.months.each do |(month)|
-        %td
-      %td
-      %td
 
 %h2 Highlights
 %ul.highlights

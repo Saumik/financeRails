@@ -1,0 +1,3 @@
+- @items.each do |item|
+  - my_cache item do
+    = render partial: 'item', locals: {item: item, hide_not_current: false}

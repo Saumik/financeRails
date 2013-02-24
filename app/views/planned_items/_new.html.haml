@@ -1,0 +1,7 @@
+.new_modal_dialog.modal.hide
+  = semantic_form_for @item, :remote => true, :html => { :class => 'new_form remote_form' } do |f|
+    .modal-body.well
+      = render :partial => 'form', :locals => {:f => f}
+    .modal-footer
+      %button.edit_item_btn.btn.btn-primary.submit{:type => :submit} Submit
+      %a.btn(data-dismiss='modal') Cancel

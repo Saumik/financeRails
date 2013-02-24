@@ -18,4 +18,16 @@ class LineItemReportProcess
   def ignore_exclude_from_reports(line_item)
     line_item.tags.include?(LineItem::TAG_EXCLUDE_FROM_REPORTS) ? nil : line_item
   end
+
+  def self.ignore_transfers(line_item)
+    (line_item.category_name.present? and line_item.category_name.downcase.include?('transfer'))
+  end
+
+  def self.ignore_exclude_from_reports(line_item)
+    line_item.tags.include?(LineItem::TAG_EXCLUDE_FROM_REPORTS)
+  end
+
+  def self.should_ignore?(line_item)
+    ignore_transfers(line_item) || ignore_exclude_from_reports(line_item)
+  end
 end

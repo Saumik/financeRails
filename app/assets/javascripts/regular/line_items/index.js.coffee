@@ -9,7 +9,7 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     #{new_item}
     'ajax:success .create_area': 'onCreateServerOk'
     'financeRails:line-item-modified': 'onLineItemModified'
-    'click .month_selector li': 'onClickChangeMonth'
+    #'click .month_selector li': 'onClickChangeMonth'
     'click .import_toggle': 'onToggleImportRemote'
     'click .create_toggle': 'onToggleCreate'
     'keyup #search': 'onChangeSearch'
@@ -57,12 +57,12 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
     @$el.find('[data-item-id=' + data.replace_id + ']').replaceWith(data.content)
     @$el.find('[data-item-id=' + data.replace_id + ']').highlight();
 
-  onClickChangeMonth: (e) ->
-    active_month = $(e.currentTarget).data('date')
-    $('#items_list tbody tr').addClass('hide')
-    $('#items_list tbody tr[data-date=' + active_month + ']').removeClass('hide')
-    $('.month_selector li').removeClass('active');
-    $(e.currentTarget).addClass('active')
+#  onClickChangeMonth: (e) ->
+#    active_month = $(e.currentTarget).data('date')
+#    $('#items_list tbody tr').addClass('hide')
+#    $('#items_list tbody tr[data-date=' + active_month + ']').removeClass('hide')
+#    $('.month_selector li').removeClass('active');
+#    $(e.currentTarget).addClass('active')
 
   onToggleImportRemote: (e) ->
     $('.fetch_area').toggleClass('hide')
@@ -76,8 +76,8 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
       $('.month_selector li.active').click()
       return
 
-    $('#items_list tbody tr').addClass('hide')
-    $('#items_list td.category_name,#items_list td.payee_name').each (index, item) ->
-      if $(item).text().match(new RegExp(term, "i"))
-        $(item).parent().removeClass('hide')
-    true
+#    $('#items_list tbody tr').addClass('hide')
+#    $('#items_list td.category_name,#items_list td.payee_name').each (index, item) ->
+#      if $(item).text().match(new RegExp(term, "i"))
+#        $(item).parent().removeClass('hide')
+#    true

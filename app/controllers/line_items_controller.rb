@@ -6,14 +6,28 @@ class LineItemsController < ApplicationController
   def index
     if @account.present?
       @new_item = @account.line_items.build
-      @items = @account.line_items.default_sort.to_a
+      @items = @account.line_items.default_sort
     else
       @new_item = current_user.accounts.first.line_items.build
-      @items = current_user.line_items.default_sort.to_a
+      @items = current_user.line_items.default_sort
     end
 
-    @items = @items.where(:tags => params[:tag]) if(params[:tag])
+    @first_item = @items.last
+    @last_item = @items.first
 
+    params[:month] ||= @last_item.event_date.month
+    params[:year] ||= @last_item.event_date.year
+
+
+    query_date_begin = Date.new(params[:year].to_i, params[:month].to_i, 1).beginning_of_month
+    query_date_end = query_date_begin.end_of_month
+    @active_date = query_date_begin
+    @items = @items.where(:event_date => query_date_begin..query_date_end)
+
+    respond_to do |format|
+      format.html {  }
+      format.js { render :layout => false }
+    end
   end
 
   def create

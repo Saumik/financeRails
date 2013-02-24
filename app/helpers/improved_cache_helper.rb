@@ -1,5 +1,5 @@
 module ImprovedCacheHelper
-  CACHE_VERSION = 2
+  CACHE_VERSION = 3
 
   def my_cache(name = {}, options = nil, &block)
     if controller.perform_caching

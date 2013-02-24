@@ -39,24 +39,22 @@
 
 = text_field_tag :search
 
-- if @items.length > 0
-  %ul.month_selector
-    - months_between(@items.last.event_date, @items.first.event_date).each do |date|
-      %li{data: {date: month_year_short(date)}, class: date_in_month_of(date, Date.today) ? 'active' : ''}= date.strftime('%b %Y')
+%ul.month_selector
+  - months_between(@first_item.event_date, @last_item.event_date).each do |date|
+    %li{data: {date: month_year_short(date)}, class: date_in_month_of(date, @active_date) ? 'active' : ''}
+      = year_display(date.year)
+      = link_to date.strftime('%b'), line_items_path(month: date.month, year: date.year), remote: true
 
-- my_cache @account do
-  #items_list
-    %table.main_table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th.type.st-width       Type
-          %th.event_date.st-width Event Date
-          %th.amount.st-width     Amount
-          %th.payee_name          Payee
-          %th.category_name       Category
-          %th                     Balance
-          %th.actions             Actions
-      %tbody
-        - @items.each do |item|
-          - my_cache item do
-            = render partial: 'item', locals: {item: item, hide_not_current: true}
+#items_list
+  %table.main_table.table.table-striped.table-bordered
+    %thead
+      %tr
+        %th.type.st-width       Type
+        %th.event_date.st-width Event Date
+        %th.amount.st-width     Amount
+        %th.payee_name          Payee
+        %th.category_name       Category
+        %th                     Balance
+        %th.actions             Actions
+    %tbody
+      = render 'items'

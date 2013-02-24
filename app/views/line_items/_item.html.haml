@@ -1,5 +1,4 @@
-- hide_not_current ||= false
-%tr.item{data: {'item-id' => item.id, :date => month_year_short(item.event_date) }, class: (hide_not_current && !date_in_month_of(item.event_date, Date.today)) ? 'hide' : '' }
+%tr.item{data: {'item-id' => item.id, :date => month_year_short(item.event_date) } }
   %td
     - if item.tags.length > 0
       %i.icon-tags.display-tooltip{rel: :tooltip, title: item.tags}

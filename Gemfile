@@ -54,8 +54,15 @@ group :test do
   gem "database_cleaner"
   gem "factory_girl_rails"
   gem 'rr', '1.0.4'
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'rb-inotify', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
+  gem 'guard-livereload'
 end
 
 group :test, :development do
   gem "rspec-rails", '2.12.0'
+  gem 'rack-livereload'
 end

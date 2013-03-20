@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FinanceRails2</title>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body id="<%=controller_name%>-body">
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="brand" href="#">FinanceRails</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <!--<li class="dropdown">-->
+              <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>-->
+              <!--<ul class="dropdown-menu">-->
+                <!--<li><a href="#">Action</a></li>-->
+                <!--<li><a href="#">Another action</a></li>-->
+                <!--<li><a href="#">Something else here</a></li>-->
+                <!--<li class="divider"></li>-->
+                <!--<li class="nav-header">Nav header</li>-->
+                <!--<li><a href="#">Separated link</a></li>-->
+                <!--<li><a href="#">One more separated link</a></li>-->
+              <!--</ul>-->
+            <!--</li>-->
+          </ul>
+          <%= form_for(:user, url: '/users/login', html: { class: 'navbar-form pull-right' }) do |f| %>
+            <%= f.email_field :email, class: 'span2', placeholder: 'Email' %>
+            <%= f.password_field :password, class: 'span2', placeholder: 'Password' %>
+            <button type="submit" class="btn">Sign in</button>
+          <% end %>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="container-susy">
+      <%= yield %>
+    </div>
+  </div>
+  <div class="push">
+
+  </div>
+  <footer>
+    <div class="container-susy">
+      &copy; Finance Rails Inc.
+    </div>
+  </footer>
+</body>
+</html>

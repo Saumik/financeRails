@@ -7,8 +7,12 @@
 
 @import "bootstrap";
 @improt 'select2';
+@import "susy";
 @import 'jquery.dataTables';
 @import 'bootstrap-datepicker';
+
+$fontAwesomePath: '../font';
+@import 'font-awesome';
 
 @import 'regular/common.css.scss';
 @import 'regular/account.css.scss';
@@ -23,3 +27,4 @@
 @import 'regular/report.css.scss';
 @import 'regular/scaffolds.css.scss';
 @import 'regular/users.css.scss';
+@import 'regular/pages.css.scss';

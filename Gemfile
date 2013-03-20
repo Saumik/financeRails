@@ -38,6 +38,8 @@ group :assets do
   gem 'handlebars_assets'
   gem 'coffee-rails'
   gem 'uglifier'
+  gem 'compass-rails'
+  gem 'susy'
 end
 
 # Deploy with Capistrano

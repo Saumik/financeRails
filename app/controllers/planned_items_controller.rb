@@ -13,4 +13,17 @@ class PlannedItemsController < ApplicationController
       format.js { render layout: false }
     end
   end
+  def edit
+    @item = current_user.planned_items.find(params[:id])
+    respond_to do |format|
+      format.js { render layout: false }
+    end
+  end
+  def update
+    @item = PlannedItem.find(params[:id])
+    @item.attributes = params[:planned_item]
+    @item.save
+
+    render :layout => false
+  end
 end

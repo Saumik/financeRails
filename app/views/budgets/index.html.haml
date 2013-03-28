@@ -61,6 +61,17 @@
           = link_to 'Clone', budget_item_path(budget_item) + '/clone', :remote => true, :class => 'btn btn-small clone_btn'
           = link_to 'Delete', budget_item_path(budget_item), :remote => true, :method => :delete, :confirm => 'Are you sure delete to delete ' + budget_item.try(:name).to_s + '?', :class => 'btn btn-small btn-danger delete'
 
+%h2 Planned Items
+%ul.planned_items
+  - @presenter.planned_items.each do |item|
+    %li
+      = item.type
+      = item.event_date_start
+      = item.event_date_end
+      = item.category_name
+      = item.amount
+      = link_to 'Edit', edit_planned_item_path(item), :remote => true, :class => 'btn btn-primary btn-small edit_btn'
+
 %h2 Highlights
 %ul.highlights
   - @presenter.grouped_items.each do |grouped_item|

@@ -1,5 +1,5 @@
 class BudgetReportPresenter
-  attr_reader :months, :current_user, :active_year, :grouped_items, :expense_box, :income_box
+  attr_reader :months, :current_user, :active_year, :grouped_items, :expense_box, :income_box, :planned_items
 
   def initialize(current_user, active_year)
     @active_year = (active_year || Time.now.year).to_i

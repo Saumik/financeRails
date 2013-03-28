@@ -10,7 +10,9 @@ class BudgetItem
 
   scope :default_sort, asc(:name)
 
-  def self.existing_categories
-    BudgetItem.all.collect(&:categories).flatten
+  belongs_to :user
+
+  def self.existing_categories(current_user)
+    current_user.budget_items.collect(&:categories).flatten
   end
 end

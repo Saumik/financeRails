@@ -16,7 +16,7 @@ class window.financeRails.views.budgets.BudgetItemDlg extends Backbone.View
     @render();
 
   render: ->
-    $('.included_categories').html(HandlebarsTemplates['templates/budgets/dlg_budget_category']({categories: @active_categories}))
+    $('.included_categories').html(HandlebarsTemplates['budgets/dlg_budget_category']({categories: @active_categories}))
     category_names = _(@active_categories).map (category) -> category.name
     if category_names.length > 0
       $.ajax {

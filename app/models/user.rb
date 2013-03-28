@@ -2,10 +2,6 @@ class User
   include Mongoid::Document
   include User::LineItemAggregateMethods
 
-  has_many :accounts
-  has_many :planned_items
-  has_one :default_account, class_name: 'Account'
-
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -53,6 +49,10 @@ class User
 
   has_one :investment_plan
   has_many :planned_items
+  has_many :accounts
+  has_many :budget_items
+  has_one :default_account, class_name: 'Account'
+
 
   # cross accounts functions
   def line_items

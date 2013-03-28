@@ -3,14 +3,14 @@ class BudgetsController < ApplicationController
   before_filter :assign_section
 
   def new
-    @categories = current_user.categories - BudgetItem.existing_categories
+    @categories = current_user.categories - BudgetItem.existing_categories(current_user)
     @item = BudgetItem.new
 
     render layout: false
   end
 
   def create
-    @budget_item = BudgetItem.create(params[:budget_item])
+    @item = current_user.budget_items.create(params[:budget_item])
     render :layout => false
   end
 
@@ -19,14 +19,14 @@ class BudgetsController < ApplicationController
   end
 
   def edit
-    @categories = current_user.categories - BudgetItem.existing_categories
-    @item = BudgetItem.find(params[:id])
+    @categories = current_user.categories - BudgetItem.existing_categories(current_user)
+    @item = current_user.budget_items.find(params[:id])
 
     render :layout => false
   end
 
   def update
-    @item = BudgetItem.find(params[:id])
+    @item = current_user.budget_items.find(params[:id])
     @item.attributes = params[:budget_item]
     @item.save
 
@@ -34,7 +34,7 @@ class BudgetsController < ApplicationController
   end
 
   def clone
-    @categories = current_user.categories - BudgetItem.existing_categories
+    @categories = current_user.categories - BudgetItem.existing_categories(current_user)
     @item = BudgetItem.find(params[:id])
     render :layout => false
   end
@@ -49,7 +49,7 @@ class BudgetsController < ApplicationController
   end
 
   def destroy
-    @item = MAIN_OBJECT.find(params[:id])
+    @item = current_user.budget_items.find(params[:id])
     @item.destroy
     render :json => {:refresh_page => 'true'}
   end

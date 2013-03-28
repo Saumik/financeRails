@@ -36,30 +36,32 @@ class BudgetReportPresenter
     @income_box = Box.new
     @income_box.add_row(:income)
     @income_box.set_columns(1..12, [:amount, :future_income])
-    # add expenses
+    # add expenses/income
     @line_items.each do |line_item|
       if !LineItemReportProcess.should_ignore?(line_item)
         if line_item.expense?
           @expense_box.add_to_value(category_to_budget[line_item.category_name], line_item.event_date.month, :expense, line_item.signed_amount)
-        else
+        elsif LineItem::INCOME_CATEGORIES.include? line_item.category_name
           @income_box.add_to_value(:income, line_item.event_date.month, :amount, line_item.signed_amount)
         end
       end
     end
     # add future expenses
-    current_month = Time.now.month
-    @budget_items.each do |budget_item|
-      (current_month..12).each do |future_month|
-        @expense_box.add_to_value(budget_item, future_month, :future_expense, budget_item.estimated_min_monthly_amount)
+    if @active_year == Time.now.year
+      current_month = Time.now.month
+      @budget_items.each do |budget_item|
+        (current_month..12).each do |future_month|
+          @expense_box.add_to_value(budget_item, future_month, :future_expense, budget_item.estimated_min_monthly_amount)
+        end
       end
-    end
-    # add planned items
-    @planned_items.each do |planned_item|
-      (planned_item.beginning_month_in_year(@active_year)..planned_item.end_month_in_year(@active_year)).each do |month|
-        if planned_item.income?
-          @income_box.add_to_value(:income, month, :future_income, planned_item.amount)
-        else
-          @expense_box.add_to_value(category_to_budget[planned_item.category_name], month, :planned_expense, planned_item.amount)
+      # add planned items
+      @planned_items.each do |planned_item|
+        (planned_item.beginning_month_in_year(@active_year)..planned_item.end_month_in_year(@active_year)).each do |month|
+          if planned_item.income?
+            @income_box.add_to_value(:income, month, :future_income, planned_item.amount)
+          else
+            @expense_box.add_to_value(category_to_budget[planned_item.category_name], month, :planned_expense, planned_item.amount)
+          end
         end
       end
     end

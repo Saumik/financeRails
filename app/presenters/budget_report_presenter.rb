@@ -45,7 +45,7 @@ class BudgetReportPresenter
         elsif LineItem::INCOME_CATEGORIES.include? line_item.category_name
           @income_box.add_to_value(:income, line_item.event_date.month, :amount, line_item.signed_amount)
         else
-          @expense_box.add_to_value(category_to_budget[line_item.category_name], line_item.event_date.month, :expense, line_item.signed_amount*-1)
+          @expense_box.add_to_value(category_to_budget[line_item.category_name], line_item.event_date.month, :expense, line_item.signed_amount)
         end
       end
     end

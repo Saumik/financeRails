@@ -64,7 +64,7 @@ class BudgetReportPresenter
     if @active_year == Time.now.year
       current_month = Time.now.month
       @budget_items.each do |budget_item|
-        (current_month..12).each do |future_month|
+        ((current_month+1)..12).each do |future_month|
           @expense_box.add_to_value(budget_item, future_month, :future_expense, budget_item.estimated_min_monthly_amount)
         end
       end

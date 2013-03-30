@@ -12,7 +12,7 @@ class BudgetItem
 
   belongs_to :user
 
-  def self.existing_categories(current_user)
-    current_user.budget_items.collect(&:categories).flatten
+  def self.existing_categories(current_user, year = Time.now.year)
+    current_user.budget_items.where(budget_year: year).collect(&:categories).flatten
   end
 end

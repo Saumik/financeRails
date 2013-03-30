@@ -19,8 +19,8 @@ class BudgetsController < ApplicationController
   end
 
   def edit
-    @categories = current_user.categories - BudgetItem.existing_categories(current_user)
     @item = current_user.budget_items.find(params[:id])
+    @categories = current_user.categories - BudgetItem.existing_categories(current_user, @item.budget_year)
 
     render :layout => false
   end

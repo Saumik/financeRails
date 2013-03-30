@@ -10,11 +10,15 @@ module SpannedLineItemSupport
 
   # Spanning Support
   def is_spanned
-    spanned != nil
+    self.spanned == true
   end
 
   def spans_in?(month)
     span_from.beginning_of_month <= month && span_until.end_of_month >= month
+  end
+
+  def spanned_amount
+    amount / months_span
   end
 
   def clone_for_date(date)

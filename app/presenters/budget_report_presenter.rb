@@ -40,10 +40,24 @@ class BudgetReportPresenter
     @line_items.each do |line_item|
       if !LineItemReportProcess.should_ignore?(line_item)
         if line_item.expense?
+          next if line_item.spanned
           @expense_box.add_to_value(category_to_budget[line_item.category_name], line_item.event_date.month, :expense, line_item.signed_amount)
         elsif LineItem::INCOME_CATEGORIES.include? line_item.category_name
           @income_box.add_to_value(:income, line_item.event_date.month, :amount, line_item.signed_amount)
+        else
+          @expense_box.add_to_value(category_to_budget[line_item.category_name], line_item.event_date.month, :expense, line_item.signed_amount*-1)
         end
+      end
+    end
+    # add spanned items
+    current_user.line_items.where(spanned: true).each do |spanned_item|
+      next if spanned_item.span_from.year != @active_year and spanned_item.span_until.year != @active_year
+      month_from = spanned_item.span_from.month
+      month_from = 1 if spanned_item.span_from.year != @active_year
+      month_until = spanned_item.span_until.month
+      month_until = 1 if spanned_item.span_until.year != @active_year
+      (month_from..month_until).each do |month|
+        @expense_box.add_to_value(category_to_budget[spanned_item.category_name], month, :expense, spanned_item.spanned_amount * -1)
       end
     end
     # add future expenses

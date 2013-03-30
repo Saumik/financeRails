@@ -51,10 +51,16 @@
               = link_to url_for(controller: :line_items, action: 'search_overlay', month: month, year: @presenter.active_year, categories: budget_item.categories),  {remote: true}, {class: 'open-search-line-items'} do
                 =currency values[:expense]*-1
         %td
+          Total:
+          = currency budget_item.limit*12
+          %br/
+          Expenses:
           != currency @presenter.total_expenses_for_budget_item_in_year(budget_item)
           (
           != @presenter.percent_expense(budget_item)
           )
+          %br/
+          Left:
           != currency_with_sign_class @presenter.amount_left_budget_item_in_year(budget_item)
         %td.actions
           = link_to 'Edit', edit_budget_item_path(budget_item), :remote => true, :class => 'btn btn-primary btn-small edit_btn'

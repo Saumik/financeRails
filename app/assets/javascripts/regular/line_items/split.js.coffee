@@ -19,8 +19,7 @@ class window.financeRails.views.line_items.SplitFormView extends Backbone.View
     $('.item').each (index, item) =>
       @formViews.push new @domain.FormView($.extend(@options, {el: '#' + $(item).attr('id')}))
 
-    @$el.find('.payee_name').typeahead({source: options.payees, show_current: true})
-    @$el.find('.category_name').typeahead({source: options.categories, show_current: true})
+    financeRails.common.autocomplete_category(@$el.find('.category_name'))
 
     @render()
 

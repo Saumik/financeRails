@@ -19,6 +19,7 @@ gem 'formtastic', " ~> 2.2.1"
 gem 'formtastic-bootstrap', '2.0.0'
 gem 'slim'
 gem 'haml-rails'
+gem 'simple_form'
 
 gem 'coffeebeans'
 gem 'jquery-rails'

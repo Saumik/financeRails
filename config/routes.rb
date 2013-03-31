@@ -32,10 +32,9 @@ FinanceRails2::Application.routes.draw do
 
   resources :line_items do
     collection do
-      get :autocomplete_payee
-      get :autocomplete_category
-      get :get_line_items_data_table
-      get :get_category_for_payee
+      get :category_names
+      get :payee_names
+      get :payee_data
       get :mass_rename
       get :search_overlay
       post :mass_rename

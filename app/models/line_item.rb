@@ -23,9 +23,6 @@ class LineItem
 
   around_update :on_around_update_assign_old_payee_name
 
-  belongs_to :account, touch: true
-  has_one :imported_line
-
   field :type, type: Integer, default: 1
   field :amount, type: BigDecimal, default: 0
   field :event_date, type: Date, default: Time.now.to_date
@@ -40,6 +37,8 @@ class LineItem
 
   field :balance, :type => BigDecimal
 
+  belongs_to :account, touch: true
+  has_one :imported_line
   has_and_belongs_to_many :processing_rules, inverse_of: nil
 
   scope :default_sort, desc(:event_date, :created_at, :id)

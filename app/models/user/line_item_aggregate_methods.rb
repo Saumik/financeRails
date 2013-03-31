@@ -1,6 +1,6 @@
 module User::LineItemAggregateMethods
   def payees
-      line_items.only(:payee_name).collect(&:payee_name).delete_if(&:nil?).uniq.sort
+    line_items.only(:payee_name).collect(&:payee_name).uniq.compact
   end
 
   def manual_payees
@@ -12,7 +12,7 @@ module User::LineItemAggregateMethods
   end
 
   def categories
-    line_items.only(:category_name).collect(&:category_name).delete_if(&:nil?).uniq.sort
+    line_items.only(:category_name).collect(&:category_name).uniq.compact.sort
   end
 
   def all_last_data_for_payee

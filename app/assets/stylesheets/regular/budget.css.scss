@@ -62,9 +62,11 @@
     }
   }
 
-  .modal-body {
-    min-height: 400px;
-    max-height: none;
+  .modal.budget {
+    .modal-body {
+      min-height: 400px;
+      max-height: none;
+    }
   }
 
   .formtastic.budget_item {

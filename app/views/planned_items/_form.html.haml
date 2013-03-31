@@ -1,12 +1,6 @@
-.row-fluid
-  = f.radio_button :type, :income
-  Income,
-  = f.radio_button :type, :expense
-  Expense
-.row-fluid
-  = f.input :category_name
-.row-fluid
-  = f.input :event_date_start, :input_html => {:class => 'span12 budget_year'}, :wrapper_html => {:class => 'span6'}
-  = f.input :event_date_end, :wrapper_html => {:class => 'span6'}, :input_html => {:class => 'span12 name'}
-.row-fluid
-  = f.input :amount, :input_html => {:class => 'span12 amount'}, :wrapper_html => {:class => 'span6'}
+= f.input :type, collection: [['income', 'Income'] ,['expense', 'Expense']], label_method: :last, value_method: :first, as: :radio_buttons, item_wrapper_class: :inline
+= f.input :category_name, :input_html => {:autocomplete => 'off'}
+= f.input :event_dates, item_wrapper_class: :inline do
+  = f.input_field :event_date_start, class: 'inline', style: 'width: 27%'
+  = f.input_field :event_date_end, class: 'inline', style: 'width: 27%'
+= f.input :amount, :input_html => {:class => 'amount'}, :wrapper_html => {:class => ''}

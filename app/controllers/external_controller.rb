@@ -123,18 +123,38 @@ class ExternalController < ApplicationController
 
   def randomize_data
     LineItem.all.each do |line_item|
-      line_item.amount = (line_item.amount * (1+rand)).round(2)
+      line_item.amount = random_float(line_item.amount)
       line_item.save
     end
 
     BudgetItem.all.each do |budget_item|
-      budget_item.limit = (budget_item.limit * (1+rand)).round.to_i
+      budget_item.limit = random_number(budget_item.limit)
       budget_item.save
+    end
+
+    InvestmentLineItem.each do |investment_item|
+      investment_item.number = random_number(investment_item.number)
+      investment_item.amount = random_float(investment_item.number)
+      investment_item.total_amount = investment_item.number * investment_item.amount
+      investment_item.save
+    end
+
+    PlannedItem.each do |planned_item|
+      planned_item.amount = random_number(planned_item.amount)
+      planned_item.save
     end
 
     current_user.accounts.each do |account|
       account.reset_balance
     end
+  end
+
+  def random_number(num)
+    (num * (1+rand)).round.to_i
+  end
+
+  def random_float(num)
+    (num * (1+rand)).round(2)
   end
 
 end

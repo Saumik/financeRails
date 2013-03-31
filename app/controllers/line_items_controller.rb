@@ -33,6 +33,7 @@ class LineItemsController < ApplicationController
   def create
     render :nothing => true and return if params[:line_item][:amount].to_i == 0
 
+    @account = current_user.accounts.find(params[:line_item][:account_id])
     changed_line_item = @account.line_items.build(params[:line_item])
     changed_line_item.source = LineItem::SOURCE_MANUAL
     changed_line_item.tags.reject!(&:blank?)
@@ -41,8 +42,8 @@ class LineItemsController < ApplicationController
     @changed_line_items = []
     @changed_line_items << changed_line_item
 
-    @account.reset_balance
-    @account.touch
+    changed_line_item.account.reset_balance
+    changed_line_item.account.touch
 
     if params[:always_assign]
       ProcessingRule.create_category_rename_rule(all_processing_rules, changed_line_item.payee_name, changed_line_item.category_name)
@@ -75,10 +76,10 @@ class LineItemsController < ApplicationController
       ProcessingRule.create_rename_and_assign_rule_if_not_exists(ProcessingRule.get_category_name_rules, original_payee_name, @item.payee_name, @item.category_name)
     end
 
-    @account.reset_balance
-    @account.touch
+    @item.account.reset_balance
+    @item.account.touch
 
-    @response_params = {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}.to_json
+    @response_params = {:replace_id => params[:id], :content => render_to_string('_item', :layout => false, :locals => {:item => @item})}
 
     respond_to do |format|
       format.js { render :layout => false }
@@ -145,45 +146,16 @@ class LineItemsController < ApplicationController
     end
   end
 
-  def autocomplete_payee
-    query = params[:q]
-    limit = params[:limit].to_i || 10
-
-    results = LineItem.only(:payee_name).collect(&:payee_name).uniq.compact.keep_if {|item| item.downcase.include?(query)}[0, limit]
-
-    render :text => results.join("\n")
+  def category_names
+    render :json => {results: current_user.categories }
   end
 
-  def autocomplete_category
-    query = params[:q]
-    limit = params[:limit].to_i || 10
-
-    results = LineItem.only(:category_name).collect(&:category_name).uniq.compact.keep_if {|item| item.downcase.include? query}[0, limit]
-
-    render :text => results.join("\n")
+  def payee_names
+    render :json => {results: current_user.payees}
   end
 
-  respond_to :json
-
-  def get_line_items_data_table
-    #Rails.logger.info request.env.inspect
-
-    display_start = params[:iDisplayStart].to_i
-    display_length = params[:iDisplayLength].to_i
-
-    @line_items = LineItem.regular.default_sort.skip(display_start).limit(display_length)
-
-    @dt_params = {:echo => params[:sEcho].to_i, :total_records => LineItem.count, :total_display_records =>  @line_items.length}
-
-    @line_items_json = @line_items.collect {|line_item| render_to_string line_item}.join(',')
-  end
-
-  def get_category_for_payee
-    line_item = LineItem.where(:payee_name => params[:payee]).last
-
-    raise ActionController::RoutingError.new('Not Found') if line_item.nil?
-
-    render :text => line_item.category_name
+  def payee_data
+    render :json => {results: current_user.all_last_data_for_payee }
   end
 
   def mass_rename

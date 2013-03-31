@@ -1,4 +1,4 @@
-.new_modal_dialog.modal.hide
+.new_modal_dialog.budget.modal.hide
   = semantic_form_for @item, :remote => true, :html => { :class => 'new_form remote_form' } do |f|
     .modal-body.well
       = render :partial => 'form', :locals => {:f => f}

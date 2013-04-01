@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def month_name(m)
-    Date::MONTHNAMES[m]
+    Date::ABBR_MONTHNAMES[m]
   end
 
   def month_year_short(date)

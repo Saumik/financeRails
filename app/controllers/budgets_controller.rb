@@ -15,6 +15,7 @@ class BudgetsController < ApplicationController
   end
 
   def index
+    @hide_left_bar = true
     @presenter = BudgetReportPresenter.new(current_user, params[:year])
   end
 

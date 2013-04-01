@@ -49,10 +49,12 @@
   <% if current_user %>
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="left-bar span2">
-          <%= render 'common/left_bar' %>
-        </div>
-        <div class="main_area span10">
+        <% unless @hide_left_bar %>
+          <div class="left-bar span2">
+            <%= render 'common/left_bar' %>
+          </div>
+        <% end %>
+        <div class="main_area <%=@hide_left_bar ? 'small_margin' : 'span10'%>">
           <%= render partial: 'common/flash_messages' %>
           <%= yield %>
         </div>

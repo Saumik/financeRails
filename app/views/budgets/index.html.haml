@@ -76,9 +76,12 @@ Total Budgeted:
     %li
       = item.type
       = item.event_date_start
-      = item.event_date_end
+      - if item.event_date_start != item.event_date_end
+        = '-'
+        = item.event_date_end
       = item.category_name
       = item.amount
+      = item.description
       = link_to 'Edit', edit_planned_item_path(item), :remote => true, :class => 'btn btn-primary btn-small edit_btn'
 
 %h2 Highlights

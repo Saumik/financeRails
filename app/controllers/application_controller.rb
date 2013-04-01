@@ -28,4 +28,8 @@ class ApplicationController < ActionController::Base
   def prepare_backup_list
     @backup_folders = Dir.glob('dumps/*').collect { |folder| folder.split('/').last }
   end
+
+  def convert_to_date(str)
+    Date.strptime(str, I18n.translate("date.formats.#{format}"))
+  end
 end

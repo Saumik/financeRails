@@ -25,7 +25,7 @@ class LineItem
 
   field :type, type: Integer, default: 1
   field :amount, type: BigDecimal, default: 0
-  field :event_date, type: Date, default: Time.now.to_date
+  field :event_date, type: Date, default: Date.today
   field :category_name, :type => String
   field :payee_name, :type => String
   field :original_payee_name
@@ -111,6 +111,10 @@ class LineItem
     processing_rules.any? do |processing_rule|
       processing_rule.item_type == item_type and (ignore_rule.nil? or processing_rule != ignore_rule)
     end
+  end
+
+  def self.min_date
+    only(:event_date).collect(&:event_date).min
   end
 
   def self.rename_payee(old_name, new_name)

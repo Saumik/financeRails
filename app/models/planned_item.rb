@@ -11,6 +11,7 @@ class PlannedItem
   field :event_date_start, type: Date, default: Time.now.to_date
   field :event_date_end, type: Date, default: Time.now.to_date
   field :category_name, type: String
+  field :description, type: String
   field :amount, type: Integer
 
   belongs_to :user

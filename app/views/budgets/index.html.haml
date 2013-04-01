@@ -45,7 +45,7 @@
             %br/
             %span.now
               Now:
-              = currency @presenter.amount_available_now(budget_item)
+              != currency_with_sign_class @presenter.amount_available_now(budget_item)
         - @presenter.expense_box.row_column_values(budget_item).each do |(month, values)|
           %td
             - if @presenter.in_future?(month)

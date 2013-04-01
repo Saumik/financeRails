@@ -71,6 +71,7 @@ class BudgetReportPresenter
       # add planned items
       @planned_items.each do |planned_item|
         (planned_item.beginning_month_in_year(@active_year)..planned_item.end_month_in_year(@active_year)).each do |month|
+          next if month <= current_month or @active_year != Time.now.year
           if planned_item.income?
             @income_box.add_to_value(:income, month, :future_income, planned_item.amount)
           else

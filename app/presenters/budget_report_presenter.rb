@@ -164,4 +164,13 @@ class BudgetReportPresenter
   def percent_expense(budget_item)
     ((total_expenses_for_budget_item_in_year(budget_item).to_f / total_income.to_f) * 100).to_i.to_s + '%'
   end
+
+  def amount_available_now(budget_item)
+    return 'N/A' if Time.now.year != @active_year
+    expenses_so_far = 0
+    (1..Time.now.month).each do |month|
+      expenses_so_far += expense_box.row_column_values(budget_item)[month - 1][1][:expense]
+    end
+    (budget_item.limit * Time.now.month) - (expenses_so_far*-1)
+  end
 end

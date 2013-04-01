@@ -42,6 +42,10 @@
           .categories_popover{data: {content: categories_popover(budget_item), title: 'Categories', html: 'true'}}
             = budget_item.name + ' - '
             %span.limit!= currency budget_item.limit
+            %br/
+            %span.now
+              Now:
+              = currency @presenter.amount_available_now(budget_item)
         - @presenter.expense_box.row_column_values(budget_item).each do |(month, values)|
           %td
             - if @presenter.in_future?(month)

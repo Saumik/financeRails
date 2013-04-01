@@ -6,9 +6,9 @@
 .filters.well.well-small
   %form
     Avarage - From:
-    %input{name: 'avg_from', type: 'text', value: @filters[:avg_from]}
+    %input{name: 'avg_from', type: 'text', value: @filters[:avg_from].to_s{:default}}
     Until:
-    %input{name: 'avg_until', type: 'text', value: @filters[:avg_until]}
+    %input{name: 'avg_until', type: 'text', value: @filters[:avg_until].to_s{:default}}
     = check_box_tag :hide_spanning, 'true', !@filters[:support_spanned]
     Hide Spanning
     %input{:type => :submit, :value => 'Apply'}

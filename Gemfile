@@ -14,6 +14,7 @@ gem 'execjs'
 gem 'therubyracer'
 gem 'rabl'
 gem 'json'
+gem 'american_date'
 
 gem 'formtastic', " ~> 2.2.1"
 gem 'formtastic-bootstrap', '2.0.0'

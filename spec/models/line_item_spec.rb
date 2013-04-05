@@ -84,7 +84,13 @@ describe LineItem do
       @line_items = LineItem.all.to_a
       expected_output = @item3.signed_amount - 50.0
       LineItem.inline_sum_with_filters(@user, @line_items, {support_spanned: true, in_year: 2012, in_month_of_date: Date.new(2012, 1, 1)}, nil).to_f.should == expected_output
-
+    end
+  end
+  describe '#after_create' do
+    it 'should save original event date' do
+      event_date = Date.today + 1.day
+      li = LineItem.create(event_date: event_date)
+      li.original_event_date.should == event_date
     end
   end
 end

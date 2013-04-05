@@ -14,6 +14,7 @@ class window.financeRails.views.line_items.FormView extends Backbone.View
     @$el.find('.event_date').focus()
     @$el.find('.event_date').select()
     @$el.find('.event_date').datepicker()
+    @$el.find('.original_event_date').datepicker()
     @render()
 
   render: ->

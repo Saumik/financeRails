@@ -22,10 +22,12 @@ class LineItem
   TRANSFER_CASH_CATEGORY_NAME = 'Transfer:Cash'
 
   around_update :on_around_update_assign_old_payee_name
+  before_create :save_original_event_date
 
   field :type, type: Integer, default: 1
   field :amount, type: BigDecimal, default: 0
   field :event_date, type: Date, default: Date.today
+  field :original_event_date, type: Date
   field :category_name, :type => String
   field :payee_name, :type => String
   field :original_payee_name
@@ -42,6 +44,7 @@ class LineItem
   has_and_belongs_to_many :processing_rules, inverse_of: nil
 
   scope :default_sort, desc(:event_date, :created_at, :id)
+  scope :sort_for_balance, desc(:original_event_date, :created_at, :id)
 
   def type_name
     TYPE[type].capitalize
@@ -227,8 +230,12 @@ class LineItem
     previous_name = payee_name
     yield
     if payee_name != previous_name and original_payee_name.blank?
-      original_payee_name = previous_name
+      self.original_payee_name = previous_name
       save
     end
+  end
+
+  def save_original_event_date
+    self.original_event_date = event_date
   end
 end

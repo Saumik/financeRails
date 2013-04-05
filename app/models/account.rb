@@ -32,7 +32,7 @@ class Account
   def reset_balance
     current_balance = 0
 
-    line_items.default_sort.reverse.each do |item|
+    line_items.sort_for_balance.reverse.each do |item|
       unless item.tags.include? LineItem::TAG_CASH
         current_balance += item.signed_amount
       end

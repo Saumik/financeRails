@@ -31,7 +31,7 @@ class LineItemsReportPresenter
   end
 
   def line_items_year_range
-    (current_user.line_items.min_date.year)..(current_user.line_items.max(:event_date).year)
+    (current_user.line_items.min(:event_date).year)..(current_user.line_items.max(:event_date).year)
   end
 
   def report_sections

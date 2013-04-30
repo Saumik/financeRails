@@ -8,8 +8,8 @@ class PlannedItem
   TYPE_EXPENSE = :expense
 
   field :type, type: Symbol, default: TYPE_INCOME
-  field :event_date_start, type: Date, default: Time.now.to_date
-  field :event_date_end, type: Date, default: Time.now.to_date
+  field :event_date_start, type: Date, default: ->{ Date.today }
+  field :event_date_end, type: Date, default: ->{ Date.today }
   field :category_name, type: String
   field :description, type: String
   field :amount, type: Integer

@@ -26,7 +26,7 @@ class LineItem
 
   field :type, type: Integer, default: 1
   field :amount, type: BigDecimal, default: 0
-  field :event_date, type: Date, default: Date.today
+  field :event_date, type: Date, default: ->{ Date.today }
   field :original_event_date, type: Date
   field :category_name, :type => String
   field :payee_name, :type => String

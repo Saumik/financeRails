@@ -16,7 +16,7 @@ class InvestmentLineItem
   # deposit: amount
   # dividend
   field :type, type: Symbol, default: TYPE_STATUS
-  field :event_date, type: Date, default: Time.now.to_date
+  field :event_date, type: Date, default: ->{ Date.today }
   field :symbol, type: String
   field :number, type: Integer, default: 0
   field :amount, type: BigDecimal, default: 0

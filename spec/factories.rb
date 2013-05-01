@@ -36,18 +36,13 @@ FactoryGirl.define do
 
     factory :processing_rule_payee_1 do
       item_type 'payee'
-      expression 'Safe*'
-      replacement 'mb'
-    end
-    factory :processing_rule_payee_partial do
-      item_type 'payee'
-      expression 'Safe'
-      replacement 'mb'
+      expression 'Safeway SF Caus'
+      replacement 'Safeway'
     end
     factory :processing_rule_category_1 do
       item_type 'category'
       expression 'Safeway'
-      replacement 'Dining'
+      replacement 'Groceries'
     end
   end
 
@@ -84,6 +79,10 @@ FactoryGirl.define do
 
   factory :account do
     name 'Test'
+    import_format 'ProvidentChecking'
+    after(:create) do |account|
+      account.store_password('mobile_password', 'account password')
+    end
   end
 
   #noinspection RubyArgCount

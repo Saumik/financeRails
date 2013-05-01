@@ -1,29 +1,11 @@
 require 'spec_helper'
 
 describe ProcessingRule do
-  let(:line_item) { FactoryGirl.create :line_item_2 }
+  let(:user) { FactoryGirl.create :user_with_account }
+  let(:line_item) { FactoryGirl.create :line_item_6 }
 
   context 'payee processing rules' do
-    let(:processing_rule_payee) { FactoryGirl.create :processing_rule_payee_1 }
-
-    describe '#wildcard_match - matching that allows *' do
-      it 'should work with *' do
-        processing_rule_payee.wildcard_match('before*', 'before test').should be_true
-      end
-      it 'should return false for empty string' do
-        processing_rule_payee.wildcard_match('before*', '').should be_false
-      end
-    end
-    describe '#matches? - should match line item or string depending on the type' do
-      it 'should match line item' do
-        processing_rule_payee.matches?(line_item).should be_true
-      end
-      it 'should not payee with longer name' do
-        processing_rule_partial = FactoryGirl.create :processing_rule_payee_partial
-        processing_rule_partial.matches?(line_item).should == false
-
-      end
-    end
+    let(:processing_rule_payee) { FactoryGirl.create(:processing_rule_payee_1, user: user) }
 
     describe '#perform - should apply the processing rule to line item' do
       let!(:original_name) {line_item.payee_name}
@@ -83,16 +65,18 @@ describe ProcessingRule do
   end
 
   describe '#create_rename_and_assign_rule_if_not_exists' do
-    let!(:line_item) { FactoryGirl.create :line_item_6 }
     it "should not create the item if a rule already exists" do
-      all_processing_rules = []
-      ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
-      all_processing_rules.length.should == 1
-      ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
-      all_processing_rules.length.should == 1
+      category_processing_rules = []
+      payee_rules = []
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(user, category_processing_rules, payee_rules, line_item.payee_name, 'Safeway', 'Shopping')
+      category_processing_rules.length.should == 1
+      payee_rules.length.should == 1
+      ProcessingRule.create_rename_and_assign_rule_if_not_exists(user, category_processing_rules, payee_rules, line_item.payee_name, 'Safeway', 'Shopping')
+      category_processing_rules.length.should == 1
+      payee_rules.length.should == 1
 
       created_rules = ProcessingRule.all
-      created_rules.length.should == 3
+      created_rules.length.should == 2
 
       created_rules.each { |rule| rule.perform(line_item) }
 
@@ -103,17 +87,14 @@ describe ProcessingRule do
   end
 
   describe '#perform_all_matching' do
-    let!(:line_item) { FactoryGirl.create :line_item_6 }
     it 'should perform all rules available on the line item' do
-      all_processing_rules = []
-      ProcessingRule.create_rename_and_assign_rule_if_not_exists(all_processing_rules, line_item.payee_name, 'Safeway', 'Shopping')
-      created_payee_rules = ProcessingRule.get_payee_rules
-      created_category_rules = ProcessingRule.get_category_name_rules
-      (created_category_rules.length + created_payee_rules.length).should == 2
-      ProcessingRule.perform_all_matching(created_payee_rules, line_item)
-      ProcessingRule.perform_all_matching(created_category_rules, line_item)
+      FactoryGirl.create :processing_rule_payee_1, user: user
+      FactoryGirl.create :processing_rule_category_1, user: user
+
+      ProcessingRule.perform_all_matching(ProcessingRule.get_payee_rules(user), line_item)
+      ProcessingRule.perform_all_matching(ProcessingRule.get_category_name_rules(user), line_item)
       line_item.payee_name.should == 'Safeway'
-      line_item.category_name.should == 'Shopping'
+      line_item.category_name.should == 'Groceries'
       line_item.original_payee_name.should == 'Safeway SF Caus'
     end
   end

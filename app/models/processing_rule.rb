@@ -1,26 +1,25 @@
 class ProcessingRule
   include Mongoid::Document
 
-  field :expression
-  field :replacement
-  field :type
+  field :expression, type: String
+  field :replacement, type: String
+  field :type, type: String
   field :item_type
 
   PAYEE_TYPE = "payee"
   CATEGORY_TYPE = "category"
 
-  def wildcard_match(exp, matcher)
-    !!Regexp.new('^' + Regexp.escape(exp) + '$').match(matcher)
-  end
+  belongs_to :user
 
   def matches?(item)
     return false if type != 'process'
-    if item_type == PAYEE_TYPE or item_type == CATEGORY_TYPE
+    if (item_type == PAYEE_TYPE or item_type == CATEGORY_TYPE)
       if item.instance_of?(LineItem)
-        wildcard_match(expression, item.payee_name)
+        expression == item.payee_name
       else
-        wildcard_match(expression, item)
+        expression == item
       end
+
     else
       false
     end
@@ -35,12 +34,12 @@ class ProcessingRule
         item_type == CATEGORY_TYPE and replacement == category_name
   end
 
-  def self.get_payee_rules
-    where(:type => 'process', :item_type.in => [PAYEE_TYPE ])
+  def self.get_payee_rules(user)
+    where(type: 'process', item_type: PAYEE_TYPE, user_id: user.id)
   end
 
-  def self.get_category_name_rules
-    where(:type => 'process', :item_type.in => [CATEGORY_TYPE ])
+  def self.get_category_name_rules(user)
+    where(type: 'process', item_type: CATEGORY_TYPE, user_id: user.id)
   end
 
   def perform(item)
@@ -78,10 +77,12 @@ class ProcessingRule
     ProcessingRule.create(:type => 'process', :item_type => ProcessingRule::CATEGORY_TYPE, :expression => payee_name, :replacement => category_name)
   end
 
-  def self.create_rename_and_assign_rule_if_not_exists(category_processing_rules, original_payee_name, payee_name, category_name)
-    ProcessingRule.create(:type => 'process', :item_type => PAYEE_TYPE, :expression => original_payee_name, :replacement => payee_name)
+  def self.create_rename_and_assign_rule_if_not_exists(user, category_processing_rules, payee_rules, original_payee_name, payee_name, category_name)
+    unless payee_rules.any? { |rule| rule.matches?(original_payee_name) }
+      payee_rules << user.processing_rules.create(:type => 'process', :item_type => PAYEE_TYPE, :expression => original_payee_name, :replacement => payee_name)
+    end
     unless category_processing_rules.any? { |rule| rule.matches?(payee_name) }
-      category_processing_rules << ProcessingRule.create(:type => 'process', :item_type => CATEGORY_TYPE, :expression => payee_name, :replacement => category_name)
+      category_processing_rules << user.processing_rules.create(:type => 'process', :item_type => CATEGORY_TYPE, :expression => payee_name, :replacement => category_name)
     end
   end
 

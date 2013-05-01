@@ -34,7 +34,7 @@ class ExternalController < ApplicationController
 
     if params[:commit] == 'Perform Import'
       line_items_jsonified = JSON.parse($redis.get("import-data:#{current_user.id}"))
-      @account.import_line_items(line_items_jsonified)
+      @account.import_line_items(current_user, line_items_jsonified)
       flash[:success] = "#{line_items_jsonified.length} line items were imported"
     elsif params[:commit] == 'Delete Previous Import'
       imported_lines = @account.imported_lines.where(:imported_line.in => cache_client.get('imported_1'))

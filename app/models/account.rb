@@ -57,7 +57,7 @@ class Account
   # ---------------------------
   # Importing functions
 
-  def import_line_items(line_items_jsonified)
+  def import_line_items(user, line_items_jsonified)
     if investment_account?
       symbols_updated = []
       line_items_jsonified.each do |json_str|
@@ -71,8 +71,8 @@ class Account
         user.update_asset_by_symbol(symbol)
       end
     else
-      all_payee_rules = ProcessingRule.get_payee_rules
-      all_category_rules = ProcessingRule.get_category_name_rules
+      all_payee_rules = ProcessingRule.get_payee_rules(user)
+      all_category_rules = ProcessingRule.get_category_name_rules(user)
       line_items_jsonified.each do |json_str|
         unless line_already_imported?(json_str)
           line_item = line_items.create(JSON.parse(json_str))

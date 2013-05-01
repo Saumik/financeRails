@@ -1,14 +1,11 @@
 require 'spec_helper'
 
 describe LineItemsController do
-  include Devise::TestHelpers
+  login_user
 
   describe '#perform_split' do
     it 'should work' do
-      @request.env["devise.mapping"] = Devise.mappings[:user]
-      sign_in FactoryGirl.create(:user)
-
-      line_item_1 = FactoryGirl.create :line_item_1
+      line_item_1 = FactoryGirl.create :line_item_1, account: subject.current_user.accounts.first
       original_amount = line_item_1.amount
 
       post :perform_split, {:line_item =>{

@@ -11,16 +11,6 @@ describe LineItem do
     it 'should put under original_payee_name the old name'
     it 'unless it already contains a value'
   end
-  describe "#expense_in_month" do
-    it 'should return expenses on months' do
-      line_item_1 = FactoryGirl.create :line_item_1
-      line_item_2 = FactoryGirl.create :line_item_2
-      line_item_3 = FactoryGirl.create :line_item_3
-
-      LineItem.expense_in_month(line_item_1.event_date.to_date, ['Shopping']).to_i.should == 0
-      LineItem.expense_in_month(line_item_3.event_date.to_date, ['Shopping']).to_i.should == 100
-    end
-  end
   describe '#mass_rename_and_assign_category' do
     let!(:account) {FactoryGirl.create :account}
     it 'should assign category and rename payee' do
@@ -59,16 +49,16 @@ describe LineItem do
   end
   describe 'spanned line item support' do
     before :each do
-      @item1 = FactoryGirl.create :spanned_line_item
-      @item3 = FactoryGirl.create :line_item_6
+      @item1 = FactoryGirl.create :spanned_line_item, account: @account
+      @item3 = FactoryGirl.create :line_item_6, account: @account
     end
     it 'should sum spanned line items as normal when spanned is not present' do
-      LineItem.sum_with_filters(in_month_of_date: @item1.span_until ).to_i.should == 0
-      LineItem.sum_with_filters(in_month_of_date: @item1.event_date ).to_i.should == -300
+      LineItem.sum_with_filters(@account, in_month_of_date: @item1.span_until ).to_i.should == 0
+      LineItem.sum_with_filters(@account, in_month_of_date: @item1.event_date ).to_i.should == -200
     end
     it 'should sum spanned line items for spanning period when spanned is true' do
-      LineItem.sum_with_filters(in_month_of_date: @item1.span_until, support_spanned: true).to_i.should == -100
-      LineItem.sum_with_filters(in_month_of_date: @item1.event_date, support_spanned: true).to_i.should == -200
+      LineItem.sum_with_filters(@account, in_month_of_date: @item1.span_until, support_spanned: true).to_i.should == -50
+      LineItem.sum_with_filters(@account, in_month_of_date: @item1.event_date, support_spanned: true).to_i.should == -150
     end
   end
 

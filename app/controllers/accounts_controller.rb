@@ -1,27 +1,23 @@
 class AccountsController < ApplicationController
-  respond_to :js, :only => :edit
-
-  # GET /accounts
-  # GET /accounts.json
-  def index
-    @accounts = Account.all
-  end
-
   # GET /accounts/1
   # GET /accounts/1.json
   def show
-    @account = Account.find(params[:id])
+    @account = current_user.accounts.find(params[:id])
   end
 
   # GET /accounts/new
   # GET /accounts/new.json
   def new
-    @account = Account.new
+    @account = current_user.accounts.new
   end
 
   # GET /accounts/1/edit
   def edit
-    @account = Account.find(params[:id])
+    @account = current_user.accounts.find(params[:id])
+
+    respond_to do |format|
+      format.js {}
+    end
   end
 
   # POST /accounts
@@ -39,8 +35,6 @@ class AccountsController < ApplicationController
     end
   end
 
-  # PUT /accounts/1
-  # PUT /accounts/1.json
   def update
     @account = Account.find(params[:id])
 
@@ -51,21 +45,8 @@ class AccountsController < ApplicationController
       if @account.save
         format.js { }
       else
-        format.html { render action: "edit" }
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # DELETE /accounts/1
-  # DELETE /accounts/1.json
-  def destroy
-    @account = Account.find(params[:id])
-    @account.destroy
-
-    respond_to do |format|
-      format.html { redirect_to accounts_url }
-      format.json { head :no_content }
     end
   end
 

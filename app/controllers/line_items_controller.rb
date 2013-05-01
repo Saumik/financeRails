@@ -136,7 +136,7 @@ class LineItemsController < ApplicationController
     end
 
     @item.save
-    @account.touch
+    @item.account.touch
 
     @content = render_to_string('_item', :layout => false, :locals => {:item => @item})
     @data_response = {replace_id: @item.id.to_s, content: @content}
@@ -181,11 +181,12 @@ class LineItemsController < ApplicationController
   private
 
   def perform_mass_rename
-    category_processing_rules = ProcessingRule.get_category_name_rules
+    category_processing_rules = ProcessingRule.get_category_name_rules(current_user)
+    payee_rules = ProcessingRule.get_payee_rules(current_user)
     params[:mass_rename].each do |(index, mass_rename_item)|
       unless mass_rename_item[:category_name].blank?
         LineItem.mass_rename_and_assign_category(current_user, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
-        ProcessingRule.create_rename_and_assign_rule_if_not_exists(category_processing_rules, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
+        ProcessingRule.create_rename_and_assign_rule_if_not_exists(current_user, category_processing_rules, payee_rules, mass_rename_item[:original_payee_name], mass_rename_item[:payee_name], mass_rename_item[:category_name])
       end
     end
     @account.touch

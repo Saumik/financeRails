@@ -52,6 +52,7 @@ class User
   has_many :accounts
   has_many :budget_items
   has_one :default_account, class_name: 'Account'
+  has_many :processing_rules
 
 
   # cross accounts functions

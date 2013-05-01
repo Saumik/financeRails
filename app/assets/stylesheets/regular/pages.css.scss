@@ -9,6 +9,10 @@ $show-grid-backgrounds  : true;
   @include container;
 }
 
+$container-style: fluid;
+
+.container-susy-fluid { @include container; }
+
 html, body {
   height:  100%;
 }

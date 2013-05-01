@@ -9,3 +9,4 @@ chromedriver.log
 dumps/*
 .bundle\n
 vendor/cache/*
+**secret**

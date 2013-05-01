@@ -65,12 +65,6 @@ FinanceRails2::Application.routes.draw do
     end
   end
 
-  resources :groceries, :as => :grocery_line_items do
-    collection do
-      get :report
-    end
-  end
-
   resources :investment_line_items do
 
   end

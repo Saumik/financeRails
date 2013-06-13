@@ -3,8 +3,8 @@ FinanceRails2::Application.routes.draw do
 
   get "investment/" => 'investment#index'
 
-  get "mobile/index"
-  post "mobile/sync"
+  #get "mobile/index"
+  #post "mobile/sync"
 
   devise_for :users
 

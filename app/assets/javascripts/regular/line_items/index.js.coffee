@@ -15,7 +15,6 @@ class window.financeRails.views.line_items.IndexView extends Backbone.View
   initialize: (options) ->
     # {new_item}
     @form_view = new @domain.FormView({el: '.create_area'})
-    @convertTableToLi()
     @render()
 
   render: ->

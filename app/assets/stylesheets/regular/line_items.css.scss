@@ -54,3 +54,70 @@ th.actions, td.actions {
 #toggles {
   margin-bottom: 8px;
 }
+
+@media (max-width: 400px) {
+  .month_selector {
+    display: block;
+    margin-bottom: 10px;
+    overflow: hidden;
+
+    li {
+      display: block;
+      float: left;
+      padding:  0 8px;
+
+      &:nth-child(8n) {
+        clear: left;
+      }
+    }
+  }
+  .main_table {
+    thead {
+      display: none;
+    }
+    tbody {
+      display: block;
+      tr {
+        display: block;
+        overflow: hidden;
+
+        td {
+          display: block;
+          float: left;
+          border-left: 0;
+          border-top: 0;
+          &.type {
+            display: none;
+          }
+          &.category_name {
+            width:  220px;
+            font-size: 0.85em;
+            color: #999999;
+          }
+          &.amount {
+            float: right;
+          }
+          &.balance {
+            display: none;
+          }
+          &.actions {
+            float: right;
+            .btn {
+              box-shadow: none;
+              border:  none;
+              background:  none;
+              color: rgb(0, 85, 128);
+              padding: 2px 2px;
+              text-shadow: none;
+            }
+          }
+        }
+      }
+    }
+    &.table-striped {
+      tbody tr td {
+        background: none;
+      }
+    }
+  }
+}

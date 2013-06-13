@@ -160,7 +160,7 @@ class LineItemsController < ApplicationController
 
   def mass_rename
     perform_mass_rename if request.post?
-    @payees = @account.line_items.all_unrenamed_payees(current_user)
+    @payees = current_user.line_items.all_unrenamed_payees(current_user)
   end
 
   def ignore_rename

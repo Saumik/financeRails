@@ -1,5 +1,5 @@
 %tr.item{data: {'item-id' => item.id, :date => month_year_short(item.event_date) } }
-  %td
+  %td.type
     - if item.tags.length > 0
       %i.icon-tags.display-tooltip{rel: :tooltip, title: item.tags}
     - if item.comment.present?
@@ -7,7 +7,7 @@
     - if item.grouped_label.present?
       %i.icon-plane.display-tooltip{rel: :tooltip, title: item.grouped_label}
     = item.type_name
-  %td= date_format item[:event_date]
+  %td.event_date= date_format item[:event_date]
   %td.amount!= currency item[:amount]
   %td.payee_name= item[:payee_name]
   %td.category_name= item[:category_name]
@@ -15,9 +15,5 @@
   %td.actions
     - unless item.new_record?
       = link_to 'Edit', edit_line_item_path(item), :remote => true, :class => 'btn btn-primary btn-small edit'
-      &nbsp;
-      &nbsp;
       = link_to 'Split', line_item_path(item) + '/split', :remote => true, :class => 'btn btn-primary btn-small split', :data => {:amount => item.amount}
-      &nbsp;
-      &nbsp;
       = link_to 'Delete', line_item_path(item), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + item.try(:category_name).to_s + ' transaction?'}, :class => 'btn btn-danger btn-small delete'

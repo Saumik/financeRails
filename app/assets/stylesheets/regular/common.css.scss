@@ -1,6 +1,9 @@
 * {
   box-sizing: border-box;
 }
+
+// grid
+
 .small_margin {
   padding: 0 20px;
 }
@@ -12,10 +15,45 @@
 .left-bar {
   background-color: #eee;
   padding: 10px;
+  @include span-columns(2, 12);
+
 }
 
 .main_area {
   margin-bottom: 100px;
+  @include span-columns(10 omega, 12);
+}
+
+.hide_left_bar {
+  .main_area {
+  }
+}
+
+[data-display-on] {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .left-bar {
+    @include reset-columns;
+    margin-bottom: 10px;
+  }
+  .main_area {
+    @include reset-columns;
+  }
+
+  [data-display-on~=tablet] {
+    display: block;
+  }
+}
+
+@media (max-width: 400px) {
+  [data-display-on~=mobile] {
+    display: block;
+  }
+  body {
+    padding:  0;
+  }
 }
 
 .full-container {

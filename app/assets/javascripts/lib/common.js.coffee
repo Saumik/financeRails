@@ -60,3 +60,9 @@ class CommonFunctions
 
 
 window.financeRails.common = new CommonFunctions();
+
+$(document).ready =>
+  # expand global elements
+  $('.expand-item').click (e) =>
+    item = $(e.currentTarget).data('expand-item')
+    $(item).toggleClass('hide')

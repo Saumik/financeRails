@@ -2,7 +2,7 @@
   - my_cache [@account, 'javascript'] do
     :javascript
       $(document).ready(function() {
-        var view = new financeRails.views.LineItemsView();
+        window.activeView= new financeRails.views.LineItemsView();
       });
 - content_for :side_bar_content do
   - my_cache [@account, 'cash_value'] do

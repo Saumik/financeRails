@@ -1,4 +1,4 @@
-cd ~/www/financeRails/public/
+cd /home/mb/www/financeRails/public/
 git pull
 bundle install --path ../shared/bundle/
 RAILS_ENV=production bundle exec rake assets:precompile

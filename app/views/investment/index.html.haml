@@ -1,6 +1,7 @@
 .create_area
+  Total worth:
+  = currency @investment_plan.portfolio_size
   = link_to 'Create Stock', new_investment_asset_path, :remote => true, :class => 'btn btn-primary new'
-
 %table.horizontal_tree
   - as_table(@investment_plan).each do |row|
     %tr
@@ -27,3 +28,13 @@
     %tbody
       - @items.each do |item|
         = render partial: 'investment_line_items/item', locals: {item: item}
+
+%h2 Investment Assets
+%ul
+  - current_user.investment_assets.each do |asset|
+    %li
+      = asset.name
+      (
+      = asset.symbol
+      )
+      = link_to 'Delete', investment_asset_path(asset), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + asset.try(:symbol).to_s + ' symbol?'}, :class => 'btn btn-danger btn-small delete'

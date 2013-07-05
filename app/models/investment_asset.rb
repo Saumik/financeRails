@@ -32,9 +32,9 @@ class InvestmentAsset
     percent * investment_allocation_plan.actual_percent
   end
 
-  PORTFOLIO_SIZE = 60000
-  def total_gap
-    worth - PORTFOLIO_SIZE * (actual_percent)
+  def total_gap(portfolio_size)
+    puts actual_percent
+    worth - (portfolio_size * actual_percent)
   end
 
   def update_from_last_status(investment_line_items)

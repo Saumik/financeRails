@@ -33,4 +33,9 @@ class InvestmentAssetsController < ApplicationController
       format.js { render :layout => false }
     end
   end
+
+  def destroy
+    @item = current_user.invesment_assets.find {|asset| asset.id.to_s == params[:id]}
+    @item.destroy
+  end
 end

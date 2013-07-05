@@ -41,11 +41,11 @@ class InvestmentAllocationPlan
     end
   end
 
-  def total_gap
+  def total_gap(portfolio_size)
     if investment_assets.length > 0
-      investment_assets.collect { |asset| asset.total_gap }.sum
+      investment_assets.collect { |asset| asset.total_gap(portfolio_size) }.sum
     else
-      investment_allocation_plans.collect { |plan| plan.total_gap }.sum
+      investment_allocation_plans.collect { |plan| plan.total_gap(portfolio_size) }.sum
     end
   end
 

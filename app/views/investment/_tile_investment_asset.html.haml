@@ -7,5 +7,9 @@ at
 != currency item.last_price
 ='='
 != currency item.worth.round
+(
+= item.percent
+!= currency item.total_gap(@investment_plan.portfolio_size)
+)
 
 = link_to '[Edit]', edit_investment_asset_path(item), :remote => true, :class => 'edit'

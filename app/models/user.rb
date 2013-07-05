@@ -72,7 +72,7 @@ class User
   end
 
   def investment_assets
-    investment_allocation_plans.collect(&:deep_collect_investment_assets).flatten
+    investment_plan.investment_allocation_plans.collect(&:deep_collect_investment_assets).flatten
   end
 
   def cash_balance

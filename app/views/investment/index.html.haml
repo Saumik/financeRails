@@ -1,6 +1,8 @@
 .create_area
   Total worth:
   = currency @investment_plan.portfolio_size
+  Cash:
+  = currency current_user.total_balance_in_investment
   = link_to 'Create Stock', new_investment_asset_path, :remote => true, :class => 'btn btn-primary new'
 %table.horizontal_tree
   - as_table(@investment_plan).each do |row|

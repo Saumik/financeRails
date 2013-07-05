@@ -64,6 +64,10 @@ class User
     InvestmentLineItem.where(:account_id.in => accounts.collect(&:id))
   end
 
+  def total_balance_in_investment
+    investment_line_items.sum(&:balance_modifier)
+  end
+
   def investment_allocation_plans
     first_level = investment_plan.investment_allocation_plans
     second_level = first_level.collect(&:investment_allocation_plans).flatten

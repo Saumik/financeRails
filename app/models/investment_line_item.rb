@@ -28,6 +28,17 @@ class InvestmentLineItem
   belongs_to :account
   has_one :imported_line
 
+  def balance_modifier
+    return 0 if type == TYPE_STATUS
+    return 0 if type == TYPE_DEPOSIT and total_amount < 0
+    return total_amount if type == TYPE_DEPOSIT
+    return total_amount if type == TYPE_DIVIDEND
+    return total_amount if type == TYPE_INTEREST
+    return (total_amount * -1) - fee if type == TYPE_BUY
+    return total_amount - fee if type == TYPE_SELL
+    0
+  end
+
   def type_name
     type.capitalize
   end

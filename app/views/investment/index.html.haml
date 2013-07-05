@@ -1,3 +1,6 @@
+.create_area
+  = link_to 'Create Stock', new_investment_asset_path, :remote => true, :class => 'btn btn-primary new'
+
 %table.horizontal_tree
   - as_table(@investment_plan).each do |row|
     %tr

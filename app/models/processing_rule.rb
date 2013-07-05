@@ -13,7 +13,7 @@ class ProcessingRule
 
   def matches?(item)
     return false if type != 'process'
-    if (item_type == PAYEE_TYPE or item_type == CATEGORY_TYPE)
+    if item_type == PAYEE_TYPE or item_type == CATEGORY_TYPE
       if item.instance_of?(LineItem)
         expression == item.payee_name
       else

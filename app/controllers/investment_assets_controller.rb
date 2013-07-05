@@ -2,27 +2,23 @@ class InvestmentAssetsController < ApplicationController
   MODEL_CLASS = InvestmentAsset
   PARAMS_OBJECT = :investment_asset
 
-  def create
-    investment_account = current_user.accounts.find(params[:investment_line_item][:account_id])
-    redirect_to controller: :investment, action: :index unless investment_account.present?
+  def new
+    @item = MODEL_CLASS.new
+    @investment_allocation_plans = current_user.investment_allocation_plans
+    render layout: false
+  end
 
-    @item = investment_account.investment_line_items.create params[:investment_line_item]
-    if @item.type == InvestmentLineItem::TYPE_STATUS
-      investment_asset = current_user.investment_assets.find {|ia| @item.symbol == ia.symbol}
-      if investment_asset.present?
-        method_call = "update_on_#{@item.type.to_s}"
-        if investment_asset.respond_to? method_call
-          investment_asset.send(method_call)
-          investment_asset.save
-        end
-      end
-    end
+  def create
+    allocation_plan = current_user.investment_allocation_plans.to_a.find {|ap| ap.id.to_s == params[:investment_asset][:investment_allocation_plan].to_s }
+    params[:investment_asset].delete(:investment_allocation_plan)
+    allocation_plan.investment_assets.create(params[:investment_asset])
 
     render layout: false
   end
 
   def edit
     @item = MODEL_CLASS.find_in_array(current_user.investment_assets, params[:id])
+    @investment_allocation_plans = current_user.investment_allocation_plans
     raise Mongoid::Errors::DocumentNotFound.new(MODEL_CLASS, params, [params[:id]]) if @item.nil?
     render layout: false
   end

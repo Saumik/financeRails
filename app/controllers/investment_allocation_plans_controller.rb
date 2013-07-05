@@ -33,6 +33,8 @@ class InvestmentAllocationPlansController < ApplicationController
     @item.attributes = params[PARAMS_OBJECT]
     @item.save
 
+    @investment_plan = current_user.investment_plan
+
     respond_to do |format|
       format.js { render :layout => false }
     end

@@ -26,6 +26,7 @@ class InvestmentAssetsController < ApplicationController
   def update
     @item = MODEL_CLASS.find_in_array(current_user.investment_assets, params[:id])
     raise Mongoid::Errors::DocumentNotFound.new(MODEL_CLASS, params, [params[:id]]) if @item.nil?
+    params[:investment_asset].delete(:investment_allocation_plan)
     @item.attributes = params[PARAMS_OBJECT]
     @item.save
 

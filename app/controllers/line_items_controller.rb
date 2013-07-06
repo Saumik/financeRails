@@ -15,8 +15,13 @@ class LineItemsController < ApplicationController
     @first_item = @items.last
     @last_item = @items.first
 
-    params[:month] ||= @last_item.event_date.month
-    params[:year] ||= @last_item.event_date.year
+    if @items.length == 0
+      params[:month] ||= Time.now.month
+      params[:year] ||= Time.now.year
+    else
+      params[:month] ||= @last_item.event_date.month
+      params[:year] ||= @last_item.event_date.year
+    end
 
 
     query_date_begin = Date.new(params[:year].to_i, params[:month].to_i, 1).beginning_of_month

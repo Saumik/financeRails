@@ -65,6 +65,9 @@ FinanceRails2::Application.routes.draw do
     end
   end
 
+  resources :investment_plan do
+  end
+
   resources :investment_line_items do
 
   end

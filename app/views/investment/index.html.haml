@@ -1,9 +1,14 @@
 .create_area
   Total worth:
   = currency @investment_plan.portfolio_size
+  ,
   Cash:
   = currency current_user.total_balance_in_investment
+  ,
+  Portfolio Worth:
+  = currency current_user.investment_plan.portfolio_amount
   = link_to 'Create Stock', new_investment_asset_path, :remote => true, :class => 'btn btn-primary new'
+  = link_to 'Edit Plan', edit_investment_plan_path(current_user.investment_plan), :remote => true, :class => 'btn btn-primary new'
 %table.horizontal_tree
   - as_table(@investment_plan).each do |row|
     %tr
@@ -39,4 +44,9 @@
       (
       = asset.symbol
       )
+      ,
+      Dividend:
+      = currency asset.total_dividend(@items)
+      Gain:
+      = currency asset.total_gain(@items)
       = link_to 'Delete', investment_asset_path(asset), :remote => true, :method => :delete, :data => {:confirm => 'Are you sure delete to delete ' + asset.try(:symbol).to_s + ' symbol?'}, :class => 'btn btn-danger btn-small delete'

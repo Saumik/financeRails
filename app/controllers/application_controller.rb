@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
     end
 
     if session[:account_id].present? and user_signed_in?
+      
       begin
         @account = current_user.accounts.find(session[:account_id])
       rescue Mongoid::Errors::DocumentNotFound

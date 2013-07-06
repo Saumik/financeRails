@@ -2,6 +2,6 @@
 = item.percent
 %br/
 != currency item.total_amount.round
-!= currency item.total_gap(@investment_plan.portfolio_size)
+!= currency item.total_gap(@investment_plan.portfolio_amount)
 
 = link_to '[Edit]', edit_investment_allocation_plan_path(item), :remote => true, :class => 'edit'

@@ -36,7 +36,7 @@ class InvestmentAssetsController < ApplicationController
   end
 
   def destroy
-    @item = current_user.invesment_assets.find {|asset| asset.id.to_s == params[:id]}
+    @item = current_user.investment_assets.to_a.find {|asset| asset.id.to_s == params[:id]}
     @item.destroy
   end
 end

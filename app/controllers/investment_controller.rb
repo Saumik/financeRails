@@ -9,6 +9,27 @@ class InvestmentController < ApplicationController
     @items = current_user.investment_line_items.default_sort.to_a
   end
 
+  def update_last_prices
+    symbols = current_user.investment_assets.collect {|is| is.symbol.present? ? 'stock=' + is.symbol : nil }.compact.join('&')
+    results = HTTParty.get('http://www.google.com/ig/api?' + symbols)
+
+
+    results["xml_api_reply"]["finance"].each do |item|
+      symbol = item["symbol"]["data"]
+      amount = item["last"]["data"].to_f
+
+      asset = current_user.investment_assets.to_a.find {|ia| ia.symbol == symbol}
+      if asset.present?
+        asset.last_price = amount
+        asset.save
+      else
+        puts 'asset ' +  symbol + ' not found'
+      end
+    end
+
+    redirect_to investment_path
+  end
+
   private
 
   def create_plans

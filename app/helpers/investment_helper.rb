@@ -30,7 +30,6 @@ module InvestmentHelper
       end
     end
 
-    puts table_data.inspect
     table_data
   end
 

@@ -9,6 +9,7 @@
   = currency current_user.investment_plan.portfolio_amount
   = link_to 'Create Stock', new_investment_asset_path, :remote => true, :class => 'btn btn-primary new'
   = link_to 'Edit Plan', edit_investment_plan_path(current_user.investment_plan), :remote => true, :class => 'btn btn-primary new'
+  = link_to 'Update Prices', update_last_prices_path(), :method => :post, :class => 'btn btn-primary new'
 %table.horizontal_tree
   - as_table(@investment_plan).each do |row|
     %tr

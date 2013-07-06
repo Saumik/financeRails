@@ -33,7 +33,6 @@ class InvestmentAsset
   end
 
   def total_gap(portfolio_size)
-    puts actual_percent
     worth - (portfolio_size * actual_percent)
   end
 

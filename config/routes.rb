@@ -1,7 +1,8 @@
 FinanceRails2::Application.routes.draw do
   resources :planned_items
 
-  get "investment/" => 'investment#index'
+  get "investment/" => 'investment#index', as: :investment
+  post 'investment/update_last_prices' => 'investment#update_last_prices', as: :update_last_prices
 
   #get "mobile/index"
   #post "mobile/sync"

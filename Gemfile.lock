@@ -127,6 +127,9 @@ GEM
     headless (1.0.1)
     hike (1.2.1)
     http_parser.rb (0.5.3)
+    httparty (0.11.0)
+      multi_json (~> 1.0)
+      multi_xml (>= 0.5.2)
     i18n (0.6.4)
     journey (1.0.4)
     jquery-rails (2.2.1)
@@ -149,6 +152,7 @@ GEM
       tzinfo (~> 0.3.22)
     moped (1.4.3)
     multi_json (1.7.0)
+    multi_xml (0.5.4)
     nokogiri (1.5.6)
     origin (1.0.11)
     orm_adapter (0.4.0)
@@ -298,6 +302,7 @@ DEPENDENCIES
   haml-rails
   handlebars_assets
   headless
+  httparty
   jquery-rails
   json
   mongoid (= 3.0.16)

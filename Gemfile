@@ -27,6 +27,7 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'cache_digests'
 gem 'redis-rails'
+gem 'httparty'
 
 # Use unicorn as the web server
 # gem 'unicorn'

@@ -12,4 +12,6 @@ vendor/cache/*
 **secret**
 .htaccess
 chrome_debug.log
-public/assets/x
+public/assets/
+*.sublime-workspace
+*.sublime-project

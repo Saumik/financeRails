@@ -65,6 +65,7 @@ group :test do
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
   gem 'guard-livereload'
+  gem 'ci_reporter'
 end
 
 group :test, :development do

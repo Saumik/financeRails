@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
       session[:account_id] = params[:account_id]
     end
 
-    if session[:account_id].present? and user_signed_in?
+    if session[:account_id].present? and user_signed_in? and action_name != 'new'
       
       begin
         @account = current_user.accounts.find(session[:account_id])

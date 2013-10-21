@@ -3,6 +3,7 @@
 %ul.accounts.nav.nav-list
   = link_to_unless @account.nil?, 'All Accounts', :controller => :line_items, :account_id => '-1'
   - current_user.accounts.each do |account|
+    - next if account.name.blank?
     %li{:class => @account == account ? 'active' : ''}
     = link_to_unless @account == account, account.name, :controller => :line_items, :account_id => account.id
     %span.float-right

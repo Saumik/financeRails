@@ -1,9 +1,4 @@
 class AccountsController < ApplicationController
-  # GET /accounts/1
-  # GET /accounts/1.json
-  def show
-    @account = current_user.accounts.find(params[:id])
-  end
 
   # GET /accounts/new
   # GET /accounts/new.json
@@ -19,6 +14,13 @@ class AccountsController < ApplicationController
       format.js {}
     end
   end
+
+  # GET /accounts/1
+  # GET /accounts/1.json
+  def show
+    @account = current_user.accounts.find(params[:id])
+  end
+
 
   # POST /accounts
   # POST /accounts.json

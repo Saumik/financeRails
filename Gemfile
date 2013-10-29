@@ -30,7 +30,7 @@ gem 'redis-rails'
 gem 'httparty'
 
 # Use unicorn as the web server
-# gem 'unicorn'
+gem 'unicorn'
 
 # gem 'sprockets', :git => 'https://github.com/sstephenson/sprockets.git'
 

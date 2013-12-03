@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include DateTimeHelpers
   protect_from_forgery
+  force_ssl
 
   before_filter :authenticate_user!, :except => [:login]
   before_filter :prepare_account, :except => [:login]

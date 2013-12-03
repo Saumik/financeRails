@@ -162,6 +162,7 @@ class BudgetReportPresenter
   end
 
   def percent_expense(budget_item)
+    return 'N/A' if total_income == 0
     ((total_expenses_for_budget_item_in_year(budget_item).to_f / total_income.to_f) * 100).to_i.to_s + '%'
   end
 

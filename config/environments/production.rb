@@ -51,4 +51,8 @@ FinanceRails2::Application.configure do
   config.active_support.deprecation = :notify
 
   config.downloads_path = '/home/mb/www/financeRails/Downloads'
+
+  config.to_prepare { Devise::SessionsController.force_ssl }
+  config.to_prepare { Devise::RegistrationsController.force_ssl }
+  config.to_prepare { Devise::PasswordsController.force_ssl }
 end
